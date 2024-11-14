@@ -76,10 +76,10 @@ const doctors: Doctor[] = [
     bio: "Dr. Sharma is a world-renowned orthopedic surgeon specializing in advanced joint replacement and arthroscopic surgeries. With over two decades of experience, he has pioneered several minimally invasive techniques that have revolutionized the field.",
     achievements: [
       "Professor in Orthopedics Rims",
-          "Ranchi Specialist & Incharge in Orthopedics HEC Hospital",
-          "Ranchi Reader in Orthopedics Mahatma Gandhi Institute of Medical Science",
-          "Wardha Lecturer (Jr.) Hand Reconstructive Surgery CMC Vellore, Tamil Nadu"
-        ],
+      "Ranchi Specialist & Incharge in Orthopedics HEC Hospital",
+      "Ranchi Reader in Orthopedics Mahatma Gandhi Institute of Medical Science",
+      "Wardha Lecturer (Jr.) Hand Reconstructive Surgery CMC Vellore, Tamil Nadu"
+    ],
     availability: ["Mon", "Wed", "Fri"]
   },
   {
@@ -91,11 +91,11 @@ const doctors: Doctor[] = [
     rating: 4.8,
     bio: "Dr. Verma is a leading pediatric orthopedic surgeon known for her groundbreaking work in treating complex congenital deformities. Her innovative approaches have improved the lives of thousands of children worldwide.",
     achievements: [
-    " Medical Officer(Orthopaedics) in Bihar/Jharkhand",
-          "Registrar(RIMS)",
-          "Assistant Professor in Orthopaedics (RIMS)",
-          "Professor Orthopaedics (RIMS)"
-        ],
+      " Medical Officer(Orthopaedics) in Bihar/Jharkhand",
+      "Registrar(RIMS)",
+      "Assistant Professor in Orthopaedics (RIMS)",
+      "Professor Orthopaedics (RIMS)"
+    ],
     availability: ["Tue", "Thu", "Sat"]
   },
   {
@@ -314,9 +314,9 @@ export default function AdvancedOrthopedicsDNB() {
           ...blog,
           image: blog.image
             ? `http://localhost:5555/blogs/${blog.image
-                .toString()
-                .replace(/^uploads[\\/]/, "")
-                .replace(/\\/g, "/")}`
+              .toString()
+              .replace(/^uploads[\\/]/, "")
+              .replace(/\\/g, "/")}`
             : undefined,
         }));
 
@@ -329,7 +329,7 @@ export default function AdvancedOrthopedicsDNB() {
     fetchBlogs();
   }, []);
 
-  const filteredDoctors = doctors.filter(doctor => 
+  const filteredDoctors = doctors.filter(doctor =>
     doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
     (filterSpecialty === "" || doctor.specialty === filterSpecialty)
   )
@@ -345,10 +345,10 @@ export default function AdvancedOrthopedicsDNB() {
         className="fixed bottom-0 left-0 right-0 h-1 bg-primary z-50"
         style={{ scaleX }}
       />
-      
+
 
       {/* Hero Section with Video Background */}
-      <motion.div 
+      <motion.div
         ref={heroRef}
         className="relative h-screen flex items-center justify-center overflow-hidden pt-16"
         initial={{ opacity: 0 }}
@@ -359,12 +359,13 @@ export default function AdvancedOrthopedicsDNB() {
           autoPlay
           loop
           muted
+          preload="auto"
           className="absolute w-auto min-w-full min-h-full max-w-none"
         >
-          <source src="https://example.com/your-video.mp4" type="video/mp4" />
+          <source src="/hospital/medvid.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        <div className="absolute inset-0 bg-white bg-opacity-80" />
+        <div className="absolute inset-0 bg-gray-500 bg-opacity-50" />
         <div className="relative z-10 text-center px-4 max-w-5xl">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -378,23 +379,23 @@ export default function AdvancedOrthopedicsDNB() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-xl sm:text-2xl md:text-3xl mb-8 text-gray-700"
+            className="text-xl sm:text-2xl md:text-3xl mb-8 text-gray-900"
           >
             Elevate Your Expertise with World-Class Training
           </motion.p>
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
             className="space-x-4"
           >
-            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
+            <Button size="lg" className="bg-primary hover:bg-blue-700 text-white">
               Explore Programs
             </Button>
-            <Button size="lg" variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white">
+            <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-blue-600 hover:text-white">
               Virtual Tour
             </Button>
-          </motion.div>
+          </motion.div> */}
         </div>
         <motion.div
           className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
@@ -519,9 +520,8 @@ export default function AdvancedOrthopedicsDNB() {
                       <Image
                         src={doctor.image}
                         alt={doctor.name}
-                        layout="fill"
-                        objectFit="cover"
-                        
+                        fill
+                        style={{ objectFit: 'cover' }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-white to-transparent" />
                       <div className="absolute bottom-4 left-4 right-4">
@@ -610,7 +610,7 @@ export default function AdvancedOrthopedicsDNB() {
                           <Star className="h-4 w-4 text-yellow-400 mr-1" />
                           <span className="text-sm font-semibold text-gray-900">{course.rating}</span>
                         </div>
-                        <span className="text-lg font-bold text-teal-600">RS {course.price.toLocaleString()}</span>
+                        <span className="text-lg font-bold text-teal-600">₹ {course.price.toLocaleString()}</span>
                       </div>
                     </CardContent>
                     <CardFooter className="bg-gray-50 border-t border-gray-200">
@@ -669,30 +669,30 @@ export default function AdvancedOrthopedicsDNB() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                 <Link href={`/blog/${post._id}`}>
-                <Card className="bg-white border-blue-200 border-2 overflow-hidden hover:shadow-lg hover:shadow-blue-100 transition-all duration-300">
-                  <div className="relative h-48">
-                    <Image
-                      src={post.image}
-                      alt={post.title}
-                      layout="fill"
-                      objectFit="cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-white to-transparent" />
-                    <div className="absolute top-4 left-4">
-                      <Badge className="bg-blue-600 text-white">{post.category}</Badge>
+                <Link href={`/blog/${post._id}`}>
+                  <Card className="bg-white border-blue-200 border-2 overflow-hidden hover:shadow-lg hover:shadow-blue-100 transition-all duration-300">
+                    <div className="relative h-48">
+                      <Image
+                        src={post.image}
+                        alt={post.title}
+                        layout="fill"
+                        objectFit="cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-white to-transparent" />
+                      <div className="absolute top-4 left-4">
+                        <Badge className="bg-blue-600 text-white">{post.category}</Badge>
+                      </div>
                     </div>
-                  </div>
-                  <CardContent className="p-4">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{post.title}</h3>
-                    <p className="text-sm text-gray-700 mb-4 line-clamp-2">{post.content}</p>
-                    <div className="flex items-center justify-between text-sm text-gray-600">
-                      <span>{post.author}</span>
-                      <span>{post.publishDate}</span>
-                    </div>
-                  </CardContent>
-                 
-                </Card>
+                    <CardContent className="p-4">
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{post.title}</h3>
+                      <p className="text-sm text-gray-700 mb-4 line-clamp-2">{post.content}</p>
+                      <div className="flex items-center justify-between text-sm text-gray-600">
+                        <span>{post.author}</span>
+                        <span>{post.publishDate}</span>
+                      </div>
+                    </CardContent>
+
+                  </Card>
                 </Link>
               </motion.div>
             ))}

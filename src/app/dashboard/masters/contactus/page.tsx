@@ -3,419 +3,271 @@
 
 'use client'
 
-import { useState, useEffect, useCallback, useRef } from 'react'
-import { useForm } from 'react-hook-form'
-import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion'
-import { Plus, Edit, Trash2, Search, ChevronDown, ChevronUp, X, LayoutGrid, LayoutList, Loader2, Filter, ArrowUpDown } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
+import React, { useState, useCallback, useMemo } from 'react'
+import { QueryClient, QueryClientProvider, useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import axios from 'axios'
+import { motion, AnimatePresence } from 'framer-motion'
+import { format, parseISO } from 'date-fns'
+import { Mail, MailOpen, Search, RefreshCw, ChevronDown, Loader2 } from 'lucide-react'
+
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import axios from 'axios'
+} from "@/components/ui/dropdown-menu"
+import axiosInstance from '@/lib/axiosInstance'
 
-interface Department {
-  id: string
+interface Query {
+  _id: string
   name: string
-  code: string
-  description: string
+  email: string
+  phone: string
+  query: string
+  createdAt: string
+  updatedAt: string
+  __v: number
 }
 
-export default function DepartmentManagement() {
-  const [departments, setDepartments] = useState<Department[]>([])
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [editingDepartment, setEditingDepartment] = useState<Department | null>(null)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [sortConfig, setSortConfig] = useState<{ key: keyof Department; direction: 'asc' | 'desc' } | null>(null)
-  const [viewMode, setViewMode] = useState<'table' | 'grid'>('table')
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
-  const [filterName, setFilterName] = useState('')
-  const [filterCode, setFilterCode] = useState('')
+interface QueryResponse {
+  queries: Query[]
+}
 
-  const { scrollYProgress } = useScroll()
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
+type FilterType = 'all' | 'read' | 'unread'
+type SortType = 'newest' | 'oldest' | 'nameAsc' | 'nameDesc'
+
+
+const fetchQueries = async (): Promise<QueryResponse> => {
+  const response = await axiosInstance.get<QueryResponse>('/contact-us')
+  return response.data
+}
+
+const QueryCard: React.FC<{ query: Query; isRead: boolean; onStatusChange: (id: string) => void }> = React.memo(
+  ({ query, isRead, onStatusChange }) => {
+    const [isExpanded, setIsExpanded] = useState(false)
+
+    return (
+      <Card className={`mb-4 ${isRead ? 'bg-gray-50' : 'bg-white'} transition-all duration-300 ease-in-out hover:shadow-md`}>
+        <CardContent className="p-4">
+          <div className="flex items-start justify-between">
+            <div>
+              <h3 className="text-lg font-semibold">{query.name}</h3>
+              <p className="text-sm text-gray-500">{query.email}</p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Badge variant={isRead ? "secondary" : "default"}>
+                {isRead ? "Read" : "Unread"}
+              </Badge>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => onStatusChange(query._id)}
+                aria-label={isRead ? 'Mark as unread' : 'Mark as read'}
+              >
+                {isRead ? <MailOpen size={20} /> : <Mail size={20} />}
+              </Button>
+            </div>
+          </div>
+          <div className="mt-4">
+            <p className={`text-gray-700 ${isExpanded ? '' : 'line-clamp-2'}`}>{query.query}</p>
+            {query.query.length > 100 && (
+              <Button variant="link" onClick={() => setIsExpanded(!isExpanded)}>
+                {isExpanded ? 'Show less' : 'Show more'}
+              </Button>
+            )}
+          </div>
+          <div className="mt-4 flex justify-between text-sm text-gray-500">
+            <span>Created: {format(parseISO(query.createdAt), 'PPp')}</span>
+            <span>Updated: {format(parseISO(query.updatedAt), 'PPp')}</span>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+)
+
+QueryCard.displayName = 'QueryCard'
+
+const QueryDashboard: React.FC = () => {
+  const [filter, setFilter] = useState<FilterType>('all')
+  const [sort, setSort] = useState<SortType>('newest')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [readQueries, setReadQueries] = useState<Set<string>>(new Set())
+
+  const queryClient = useQueryClient()
+
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ['queries'],
+    queryFn: fetchQueries,
   })
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<Department>()
-
-  const fetchDepartments = useCallback(async () => {
-    try {
-      setLoading(true)
-      const response = await axios.get('http://localhost:8585/api/V1/departments')
-      if (Array.isArray(response.data.data)) {
-        setDepartments(response.data.data)
+  const handleStatusChange = useCallback((id: string) => {
+    setReadQueries(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(id)) {
+        newSet.delete(id)
       } else {
-        throw new Error('Invalid data format received from API')
+        newSet.add(id)
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error fetching departments')
-    } finally {
-      setLoading(false)
-    }
+      return newSet
+    })
   }, [])
 
-  useEffect(() => {
-    fetchDepartments()
-  }, [fetchDepartments])
+  const filteredAndSortedQueries = useMemo(() => {
+    let result = data?.queries.filter((query) => {
+      const isRead = readQueries.has(query._id)
+      const matchesFilter =
+        filter === 'all' || (filter === 'read' && isRead) || (filter === 'unread' && !isRead)
+      const matchesSearch =
+        searchTerm === '' ||
+        query.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        query.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        query.query.toLowerCase().includes(searchTerm.toLowerCase())
+      return matchesFilter && matchesSearch
+    }) || []
 
-  const onSubmit = async (data: Department) => {
-    try {
-      setLoading(true)
-      const { id, createdAt, updatedAt, ...departmentData } = data
-
-      if (editingDepartment) {
-        const response = await axios.put(`http://localhost:8585/api/V1/departments/${editingDepartment.id}`, departmentData)
-        if (response.status === 200) {
-          setDepartments(departments.map(dept => dept.id === editingDepartment.id ? { ...dept, ...departmentData } : dept))
-          setSuccessMessage('Department updated successfully!')
-        }
-      } else {
-        const response = await axios.post('http://localhost:8585/api/V1/departments', departmentData)
-        if (response.status === 201) {
-          setDepartments([...departments, response.data])
-          setSuccessMessage('Department created successfully!')
-        }
-      }
-
-      setIsDialogOpen(false)
-      setEditingDepartment(null)
-      reset()
-    } catch (err) {
-      setError(axios.isAxiosError(err) ? err.response?.data.message || 'Error creating/updating department' : 'An unexpected error occurred')
-    } finally {
-      setLoading(false)
+    switch (sort) {
+      case 'newest':
+        return result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      case 'oldest':
+        return result.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+      case 'nameAsc':
+        return result.sort((a, b) => a.name.localeCompare(b.name))
+      case 'nameDesc':
+        return result.sort((a, b) => b.name.localeCompare(a.name))
+      default:
+        return result
     }
-  }
+  }, [data?.queries, filter, searchTerm, sort, readQueries])
 
-  const openDialog = (department?: Department) => {
-    if (department) {
-      setEditingDepartment(department)
-      reset(department)
-    } else {
-      setEditingDepartment(null)
-      reset()
-    }
-    setIsDialogOpen(true)
-  }
-
-  const deleteDepartment = async (id: string) => {
-    try {
-      setLoading(true)
-      await axios.delete(`http://localhost:8585/api/V1/departments/${id}`)
-      setDepartments(departments.filter(dept => dept.id !== id))
-      setSuccessMessage('Department deleted successfully!')
-    } catch (err) {
-      setError(axios.isAxiosError(err) ? err.response?.data.message || 'Error deleting department' : 'An unexpected error occurred')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleSort = (key: keyof Department) => {
-    let direction: 'asc' | 'desc' = 'asc'
-    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
-      direction = 'desc'
-    }
-    setSortConfig({ key, direction })
-  }
-
-  const sortedDepartments = [...departments].sort((a, b) => {
-    if (!sortConfig) return 0
-    const { key, direction } = sortConfig
-    if (a[key] < b[key]) return direction === 'asc' ? -1 : 1
-    if (a[key] > b[key]) return direction === 'asc' ? 1 : -1
-    return 0
-  })
-
-  const filteredDepartments = sortedDepartments.filter(dept =>
-    (dept.name?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false) ||
-    (dept.code?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false)
-  );
-
-  const tableHeaderVariants = {
-    hover: { backgroundColor: '#f0f9ff', transition: { duration: 0.2 } }
-  }
+  if (isLoading) return (
+    <div className="flex items-center justify-center h-screen">
+      <Loader2 className="mr-2 h-16 w-16 animate-spin" />
+    </div>
+  )
+  
+  if (error) return (
+    <div className="flex items-center justify-center h-screen">
+      <Card className="w-96">
+        <CardHeader>
+          <CardTitle className="text-red-500">Error</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>{(error as Error).message}</p>
+          <Button className="mt-4" onClick={() => refetch()}>Try Again</Button>
+        </CardContent>
+      </Card>
+    </div>
+  )
 
   return (
-    <main className="flex-1 overflow-hidden flex flex-col">
-      <div className="flex-1 overflow-auto p-4 md:p-6 space-y-6">
-        <div className="">
-          <TooltipProvider>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className=""
-            >
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                <Card>
-                  <CardContent className="p-4">
-                    <h3 className="text-lg font-semibold mb-2 text-indigo-700">Total Departments</h3>
-                    <p className="text-3xl font-bold text-indigo-600">{departments.length}</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="p-4">
-                    <h3 className="text-lg font-semibold mb-2 text-indigo-700">Active Departments</h3>
-                    <p className="text-3xl font-bold text-green-600">{departments.length}</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="p-4">
-                    <h3 className="text-lg font-semibold mb-2 text-indigo-700">Inactive Departments</h3>
-                    <p className="text-3xl font-bold text-red-600">0</p>
-                  </CardContent>
-                </Card>
-              </div>
-
-              <div className="bg-white rounded-lg shadow-xl overflow-hidden">
-               
-                <div className="p-4 sm:p-6">
-                  <div className="mb-4 flex flex-col sm:flex-row gap-4 items-center">
-                    <div className="relative w-full sm:w-64">
-                      <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
-                      <Input
-                        placeholder="Search departments"
-                        className="pl-8"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                      />
-                    </div>
-                   
-                    <div className="flex gap-2 ">
-                     
-                      <DropdownMenu>
-                        <Tooltip content="Change view">
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="secondary" size="sm" className="bg-indigo-700 text-white hover:bg-indigo-800 transition-colors duration-200">
-                              {viewMode === 'table' ? <LayoutList className="mr-2 h-4 w-4" /> : <LayoutGrid className="mr-2 h-4 w-4" />}
-                              View
-                            </Button>
-                          </DropdownMenuTrigger>
-                        </Tooltip>
-                        <DropdownMenuContent>
-                          <DropdownMenuItem onClick={() => setViewMode('table')}>Table</DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => setViewMode('grid')}>Grid</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                    <Tooltip content="Add new department">
-                        <Button onClick={() => openDialog()} size="sm" className="bg-green-500 text-white hover:bg-green-600 transition-colors duration-200 ml-auto">
-                          <Plus className="mr-2 h-4 w-4" /> New Department
-                        </Button>
-                      </Tooltip>
-                  </div>
-
-
-                  {error && (
-                    <Alert variant="destructive" className="mb-4">
-                      <AlertTitle>Error</AlertTitle>
-                      <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                  )}
-
-                  {successMessage && (
-                    <Alert variant="default" className="mb-4 bg-green-50 text-green-800 border-green-300">
-                      <AlertDescription>{successMessage}</AlertDescription>
-                    </Alert>
-                  )}
-
-                  {loading ? (
-                    <div className="flex justify-center items-center h-64">
-                      <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
-                    </div>
-                  ) : viewMode === 'table' ? (
-                    <div className="overflow-hidden rounded-md border">
-                      <div className="overflow-x-auto">
-                        <div className="inline-block min-w-full align-middle">
-                          <div className="overflow-y-auto max-h-[calc(100vh-400px)]">
-                            <Table>
-                              <TableHeader>
-                                <TableRow>
-                                  {['Name', 'Code', 'Description', 'Actions'].map((header) => (
-                                    <TableHead key={header} className="whitespace-nowrap">
-                                      <motion.div
-                                        className="flex items-center cursor-pointer"
-                                        onClick={() => handleSort(header.toLowerCase() as keyof Department)}
-                                        whileHover="hover"
-                                        variants={tableHeaderVariants}
-                                      >
-                                        {header}
-                                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                                      </motion.div>
-                                    </TableHead>
-                                  ))}
-                                </TableRow>
-                              </TableHeader>
-                              <TableBody>
-                                <AnimatePresence>
-                                  {filteredDepartments.map((department) => (
-                                    <motion.tr
-                                      key={department.id}
-                                      initial={{ opacity: 0 }}
-                                      animate={{ opacity: 1 }}
-                                      exit={{ opacity: 0 }}
-                                      transition={{ duration: 0.3 }}
-                                    >
-                                      <TableCell className="font-medium">{department.name}</TableCell>
-                                      <TableCell>{department.code}</TableCell>
-                                      <TableCell className="max-w-xs truncate">{department.description}</TableCell>
-                                      <TableCell>
-                                        <div className="flex space-x-2">
-                                          <Tooltip content="Edit department">
-                                            <Button variant="outline" size="sm" onClick={() => openDialog(department)}>
-                                              <Edit className="h-4 w-4" />
-                                            </Button>
-                                          </Tooltip>
-                                          <Tooltip content="Delete department">
-                                            <Button variant="destructive" size="sm" onClick={() => deleteDepartment(department.id)}>
-                                              <Trash2 className="h-4 w-4" />
-                                            </Button>
-                                          </Tooltip>
-                                        </div>
-                                      </TableCell>
-                                    </motion.tr>
-                                  ))}
-                                </AnimatePresence>
-                              </TableBody>
-                            </Table>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                      <AnimatePresence>
-                        {filteredDepartments.map((department) => (
-                          <motion.div
-                            key={department.id}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.9 }}
-                            transition={{ duration: 0.3 }}
-                          >
-                            <Card className="hover:shadow-lg transition-shadow duration-200 bg-gradient-to-br from-purple-50 to-indigo-50">
-                              <CardContent className="p-4">
-                                <h3 className="text-lg font-semibold mb-2 text-indigo-700">{department.name}</h3>
-                                <p className="text-sm text-indigo-500 mb-2">{department.code}</p>
-                                <p className="text-sm mb-4 text-gray-600">{department.description}</p>
-                                <div className="flex justify-end items-center space-x-2">
-                                  <Tooltip content="Edit department">
-                                    <Button variant="outline" size="sm" onClick={() => openDialog(department)}>
-                                      <Edit className="h-4 w-4" />
-                                    </Button>
-                                  </Tooltip>
-                                  <Tooltip content="Delete department">
-                                    <Button variant="destructive" size="sm" onClick={() => deleteDepartment(department.id)}>
-                                      <Trash2 className="h-4 w-4" />
-                                    </Button>
-                                  </Tooltip>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          </motion.div>
-                        ))}
-                      </AnimatePresence>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>{editingDepartment ? 'Edit Department' : 'Add New Department'}</DialogTitle>
-                  </DialogHeader>
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="grid gap-4 py-4">
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <label htmlFor="name" className="text-right">
-                          Name
-                        </label>
-                        <Input
-                          id="name"
-                          className="col-span-3"
-                          {...register('name', { required: 'Name is required' })}
-                        />
-                      </div>
-                      {errors.name && <p className="text-red-500 text-sm ml-[8.5rem]">{errors.name.message}</p>}
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <label htmlFor="code" className="text-right">
-                          Code
-                        </label>
-                        <Input
-                          id="code"
-                          className="col-span-3"
-                          {...register('code', { 
-                            required: 'Code is required',
-                            pattern: {
-                              value: /^[A-Z]{4}\d{3}$/,
-                              message: 'Code must be in the format XXXX000'
-                            }
-                          })}
-                        />
-                      </div>
-                      {errors.code && <p className="text-red-500 text-sm ml-[8.5rem]">{errors.code.message}</p>}
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <label htmlFor="description" className="text-right">
-                          Description
-                        </label>
-                        <Textarea
-                          id="description"
-                          className="col-span-3"
-                          {...register('description', { required: 'Description is required' })}
-                        />
-                      </div>
-                      {errors.description && <p className="text-red-500 text-sm ml-[8.5rem]">{errors.description.message}</p>}
-                    </div>
-                    <DialogFooter>
-                      <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700 transition-colors duration-200">
-                        {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                        Save
-                      </Button>
-                    </DialogFooter>
-                  </form>
-                </DialogContent>
-              </Dialog>
-
-              <motion.div
-                className="fixed bottom-0 left-0 right-0 h-1 bg-indigo-500"
-                style={{ scaleX }}
-              />
-            </motion.div>
-          </TooltipProvider>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-4xl font-bold mb-8 text-center bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Query Dashboard</h1>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Queries</CardTitle>
+            <Mail className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{filteredAndSortedQueries.length}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Read Queries</CardTitle>
+            <MailOpen className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{filteredAndSortedQueries.filter(q => readQueries.has(q._id)).length}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Unread Queries</CardTitle>
+            <Mail className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{filteredAndSortedQueries.filter(q => !readQueries.has(q._id)).length}</div>
+          </CardContent>
+        </Card>
+      </div>
+      <div className="mb-6 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+        <Tabs value={filter} onValueChange={(value) => setFilter(value as FilterType)}>
+          <TabsList>
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="read">Read</TabsTrigger>
+            <TabsTrigger value="unread">Unread</TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <div className="flex items-center space-x-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+            <Input
+              type="text"
+              placeholder="Search queries..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 pr-4 py-2"
+            />
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                Sort <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => setSort('newest')}>Newest</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSort('oldest')}>Oldest</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSort('nameAsc')}>Name (A-Z)</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSort('nameDesc')}>Name (Z-A)</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Button variant="outline" size="icon" onClick={() => refetch()} aria-label="Refresh queries">
+            <RefreshCw size={18} />
+          </Button>
         </div>
       </div>
-    </main>
+      <ScrollArea className="h-[600px] rounded-md border p-4">
+        <AnimatePresence>
+          {filteredAndSortedQueries.map((query) => (
+            <motion.div
+              key={query._id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <QueryCard 
+                query={query} 
+                isRead={readQueries.has(query._id)}
+                onStatusChange={handleStatusChange} 
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
+        {filteredAndSortedQueries.length === 0 && (
+          <div className="text-center py-10 text-gray-500">No queries found matching your criteria.</div>
+        )}
+      </ScrollArea>
+    </div>
   )
 }
+
+const queryClient = new QueryClient()
+
+export default function QueryDashboardPage() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <QueryDashboard />
+    </QueryClientProvider>
+  )
+}
+
