@@ -148,6 +148,7 @@ export function CarouselDemo() {
                     src={heroImages[currentHeroImage]}
                     alt={`Hospital Facility ${currentHeroImage + 1}`}
                     fill
+                    loading="lazy"
                     style={{ objectFit: "cover" }}
                     className="rounded-lg shadow-2xl"
                   />
@@ -205,6 +206,7 @@ export function CarouselDemo() {
                   alt={specialty.name}
                   width={48}
                   height={48}
+                  loading="lazy"
                   className="mb-2 transition-transform group-hover:scale-110"
                 />
                 <span className="font-medium text-gray-800 text-center text-sm md:text-base">{specialty.name}</span>

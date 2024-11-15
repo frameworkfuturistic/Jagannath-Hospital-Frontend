@@ -111,7 +111,7 @@ const Footer = () => {
 
   return (
     <footer className="relative bg-gray-50 py-12 overflow-hidden">
-      <div className="absolute inset-0 bg-pattern3 opacity-10"></div>
+      <div className="absolute inset-0 opacity-10"></div>
       <div className="absolute inset-0 bg-gradient-to-r from-gray-500/10 to-blue-500/10"></div>
       <div className="container mx-auto px-4 md:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-12">

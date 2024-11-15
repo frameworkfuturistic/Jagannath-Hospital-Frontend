@@ -10,7 +10,7 @@ import Link from "next/link";
 const Header = () => {
 
   return (
-    <section className=" bg-pattern4 bg-contain">
+    <section>
       {/* Top Bar */}
 
       <div className="hidden lg:flex justify-between items-center py-4 text-sm text-gray-100 px-8 bg-primary">

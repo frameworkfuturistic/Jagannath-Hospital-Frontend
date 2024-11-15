@@ -85,7 +85,7 @@ export default function AdvancedAboutUs() {
       {/* Hero Section */}
       <section className="relative h-[50vh] overflow-hidden">
         <Image
-          src="/bg-about.png?height=1080&width=1920"
+          src="/bg-about.webp?height=1080&width=1920"
           alt="Advanced medical equipment"
           layout="fill"
           objectFit="cover"
