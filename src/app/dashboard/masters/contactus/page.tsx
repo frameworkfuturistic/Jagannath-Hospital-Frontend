@@ -45,7 +45,7 @@ type SortType = 'newest' | 'oldest' | 'nameAsc' | 'nameDesc'
 
 const fetchQueries = async (): Promise<QueryResponse> => {
   const response = await axiosInstance.get<QueryResponse>('/contact-us')
-  return response.data
+  return response
 }
 
 const QueryCard: React.FC<{ query: Query; isRead: boolean; onStatusChange: (id: string) => void }> = React.memo(

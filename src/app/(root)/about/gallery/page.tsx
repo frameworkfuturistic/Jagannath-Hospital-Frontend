@@ -149,7 +149,7 @@ const HospitalGallery: React.FC = () => {
          <HeaderBanner
         title="Gallery"
         subtitle=""
-        bgImage="/images/hospital-banner.jpg"
+        bgImage="/medical-bg.jpg"
       />
       <div className="container mx-auto px-4 py-12">
         {error && (

@@ -37,7 +37,7 @@ export default function DepartmentsPage() {
          <HeaderBanner
         title=" Our Departments"
         subtitle=" Discover world-class healthcare across our specialized departments."
-        bgImage="/images/hospital-banner.jpg"
+        bgImage=""
       />
       <div className="container mx-auto px-4 py-16">
        

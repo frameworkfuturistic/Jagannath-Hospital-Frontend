@@ -313,7 +313,7 @@ export default function AdvancedOrthopedicsDNB() {
         const formattedBlogs = response.data.blogs.map((blog) => ({
           ...blog,
           image: blog.image
-            ? `http://localhost:5555/blogs/${blog.image
+            ? `https://test.sjhrc.in/hospital-api/blogs/${blog.image
               .toString()
               .replace(/^uploads[\\/]/, "")
               .replace(/\\/g, "/")}`
