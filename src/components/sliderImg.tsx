@@ -79,7 +79,7 @@ export function CarouselDemo() {
           {/* Left side - Information */}
           <div className="w-full lg:w-4/12 space-y-4 sm:space-y-6 p-4 sm:p-8 lg:p-8">
             <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight">
-              Shree Jagannath Hospital & Research Center
+              Shree Jagannath Hospital & Research Centre
             </h1>
             <div className="flex items-center space-x-2">
               <div className="flex">
@@ -236,7 +236,7 @@ export function CarouselDemo() {
           <span className="font-semibold text-xl md:text-2xl mb-4 md:mb-0 text-center md:text-left">Ready to Book Your Appointment?</span>
           <Button className="bg-white text-blue-900 hover:bg-blue-100 flex items-center px-6 py-3 rounded-full transition-all duration-300 shadow-md hover:shadow-xl w-full md:w-auto justify-center text-lg">
             <Phone className="mr-2 h-5 w-5" />
-            Call Us +91 92688 80303
+            Call Us +91 7677111010
           </Button>
         </div>
       </div>

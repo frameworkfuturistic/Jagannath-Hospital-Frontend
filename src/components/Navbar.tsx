@@ -247,10 +247,10 @@ export default function EnhancedHeader() {
                 />
                 <div className="flex flex-col">
                   <span className="text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-2xl font-extrabold text-primary">
-                    Shree Jagannath Hospital & Research Center
+                    Shree Jagannath Hospital & Research Centre
                   </span>
                   <span className="text-xs sm:text-sm lg:text-base text-gray-600">
-                    Multi Speciality and Trauma center
+                    Multi Speciality and Trauma centre
                   </span>
                 </div>
               </Link>

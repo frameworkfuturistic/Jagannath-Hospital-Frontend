@@ -510,10 +510,10 @@ export default function Component() {
 
       const razorpayOptions = {
         key_id:
-          process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_4clm2oRR0AjqFE",
+          process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_nvbhZP79FSJlM4",
         amount: amountPaid * 100,
         currency: "INR",
-        name: "Shree Jagannath Hospital & Research Center",
+        name: "Shree Jagannath Hospital & Research Centre",
         description: "Appointment Payment",
         order_id: order_id,
         handler: async function (response: any) {
@@ -528,8 +528,14 @@ export default function Component() {
 
             console.log("Payment Data for Callback:", callbackPaymentData);
 
+             // Step 3: Send callback data to the backend
+          // await axios.post(`${API_BASE_URL}/payments/callback`, callbackPaymentData);
+
+             // Step : Update appointment status
+
             await axios.put(`${API_BASE_URL}/appointments/${appointmentId}`, {
               Pending: 0,
+              TransactionID: response.razorpay_payment_id,
             });
 
             dispatch({ type: "SET_PAYMENT_STATUS", payload: "success" });

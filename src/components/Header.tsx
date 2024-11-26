@@ -17,7 +17,7 @@ const Header = () => {
             <div className="flex items-center space-x-4">
                 <Link href="" className="flex items-center hover:text-primary-foreground transition-colors">
                   <MapPinIcon className="h-4 w-4 mr-1" />
-                  <span className="">Mayor Road, Behind Machhli Ghar, Ranchi</span>
+                  <span className="">Mayor Road, Behind Machhli Ghar, Ranchi, Jharkhand - 834001</span>
                 </Link>
 
                 <Link href="https://wa.me/917677111010" className="flex items-center hover:text-primary-foreground transition-colors">
