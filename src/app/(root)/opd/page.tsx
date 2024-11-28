@@ -121,11 +121,11 @@ function DoctorAvailabilityContent() {
       <HeaderBanner
         title="Doctor Schedules"
         subtitle="Comprehensive care for your health and well-being"
-        bgImage="/path-to-your-bg-image.jpg" // Replace with your actual image path
+        bgImage="" // Replace with your actual image path
       />
       <div className="container mx-auto px-4 py-12">
         <motion.div
-          className="flex flex-col md:flex-row justify-evenly items-center mb-6 space-y-4 md:space-y-0 md:space-x-4 bg-rose-200 p-8 md:rounded-full rounded-xl shadow-xl"
+          className="flex flex-col md:flex-row justify-evenly items-center mb-6 space-y-4 md:space-y-0 md:space-x-4 bg-gray-50 p-8 md:rounded-full rounded-xl shadow-xl"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -178,7 +178,7 @@ function DoctorAvailabilityContent() {
               <Card className="overflow-hidden">
                 <CardContent className="p-0">
                   <Table>
-                    <TableHeader className="bg-rose-200">
+                    <TableHeader className="bg-teal-200">
                       <TableRow>
                         <TableHead className="font-bold text-primary">
                           Doctor

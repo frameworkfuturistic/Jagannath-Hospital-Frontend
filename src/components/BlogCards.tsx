@@ -90,7 +90,7 @@ const BlogCards = () => {
                             />
                           </Link>
                         </div>
-                        <Link href={`/blog/${blog.id}`}>
+                        <Link href={`/blog/${blog._id}`}>
                           <Button
                             variant="gooeyLeft"
                             className="text-sm px-3 py-1"

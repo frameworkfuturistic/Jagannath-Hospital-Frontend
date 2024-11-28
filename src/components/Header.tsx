@@ -17,12 +17,12 @@ const Header = () => {
             <div className="flex items-center space-x-4">
                 <Link href="" className="flex items-center hover:text-primary-foreground transition-colors">
                   <MapPinIcon className="h-4 w-4 mr-1" />
-                  <span className="">Mayor Road, Behind Machhli Ghar, Ranchi, Jharkhand - 834001</span>
+                  <span className="">Mayor's Road - Booty Road, Radium Rd, behind Machali Ghar (Aqua World) and Nakshatra Van, Ranchi, Jharkhand 834001</span>
                 </Link>
 
-                <Link href="https://wa.me/917677111010" className="flex items-center hover:text-primary-foreground transition-colors">
+                <Link href="https://wa.me/8987999200" className="flex items-center hover:text-primary-foreground transition-colors">
                 <Phone className="h-4 w-4 mr-1" />
-                <span>+91 7677111010</span>
+                <span>+91 89879 99200</span>
               </Link>
 
               <Link href="" className="flex items-center hover:text-sidebar-primary-foreground transition-colors">

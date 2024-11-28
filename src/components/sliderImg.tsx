@@ -236,7 +236,7 @@ export function CarouselDemo() {
           <span className="font-semibold text-xl md:text-2xl mb-4 md:mb-0 text-center md:text-left">Ready to Book Your Appointment?</span>
           <Button className="bg-white text-blue-900 hover:bg-blue-100 flex items-center px-6 py-3 rounded-full transition-all duration-300 shadow-md hover:shadow-xl w-full md:w-auto justify-center text-lg">
             <Phone className="mr-2 h-5 w-5" />
-            Call Us +91 7677111010
+            Call Us +91 8987999200
           </Button>
         </div>
       </div>

@@ -1,10 +1,10 @@
-'use client'
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
+import * as React from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,10 +13,14 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+} from "@/components/ui/navigation-menu";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Command,
   CommandEmpty,
@@ -24,7 +28,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 import {
   Search,
   FileText,
@@ -44,8 +48,8 @@ import {
   ChevronDown,
   CalendarRange,
   LayoutDashboard,
-} from "lucide-react"
-import LoadingSpinner from "@/components/widget/spinner"
+} from "lucide-react";
+import LoadingSpinner from "@/components/widget/spinner";
 
 const topNavItems = [
   { icon: User, label: "Find a Doctor", href: "/find-doctor" },
@@ -55,7 +59,7 @@ const topNavItems = [
   { icon: CalendarRange, label: "Schedules", href: "/opd" },
   { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
   { icon: PhoneCall, label: "Contact Us", href: "/contact" },
-]
+];
 
 const navigationLinks = [
   { icon: Home, title: "Home", href: "/" },
@@ -127,7 +131,8 @@ const navigationLinks = [
       {
         title: "Emergency Care",
         href: "/services",
-        description: "24/7 emergency care for critical conditions and injuries.",
+        description:
+          "24/7 emergency care for critical conditions and injuries.",
       },
       {
         title: "Diagnostics",
@@ -147,17 +152,37 @@ const navigationLinks = [
     title: "Specialties",
     href: "/speciality/ourSpeciality",
     children: [
-      { title: "General Specialty", href: "/speciality/ourSpeciality", description: "24/7 emergency medical services" },
-      { title: "Super Specialty", href: "/speciality/ourSpeciality", description: "24/7 emergency medical services" },
+      {
+        title: "General Specialty",
+        href: "/speciality/ourSpeciality",
+        description: "24/7 emergency medical services",
+      },
+      {
+        title: "Super Specialty",
+        href: "/speciality/ourSpeciality",
+        description: "24/7 emergency medical services",
+      },
     ],
   },
-  { icon: GraduationCap, title: "Academics", href: "/academics",
+  {
+    icon: GraduationCap,
+    title: "Academics",
+    href: "/academics",
     children: [
-      { title: "DNB Courses", href: "/academics/dnb-course", description: "Elevate Your Expertise with World-Class Training" },
-      { title: "Paramedical Courses", href: "/academics/paramedical-course", description: "Paramedical Course is designed to equip you with the skills and knowledge" },
+      {
+        title: "DNB Courses",
+        href: "/academics/dnb-course",
+        description: "Elevate Your Expertise with World-Class Training",
+      },
+      {
+        title: "Paramedical Courses",
+        href: "/academics/paramedical-course",
+        description:
+          "Paramedical Course is designed to equip you with the skills and knowledge",
+      },
     ],
-   },
-]
+  },
+];
 
 const searchOptions = [
   { value: "/departments/cardiology", label: "Cardiology Department" },
@@ -166,28 +191,28 @@ const searchOptions = [
   { value: "emergency", label: "Emergency Services" },
   { value: "appointments", label: "Book an Appointment" },
   { value: "doctors", label: "Find a Doctor" },
-]
+];
 
 export default function EnhancedHeader() {
-  const [isOpen, setIsOpen] = React.useState(false)
-  const [isSearchOpen, setIsSearchOpen] = React.useState(false)
-  const [isLoading, setIsLoading] = React.useState(false)
-  const pathname = usePathname()
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const pathname = usePathname();
 
   React.useEffect(() => {
-    setIsLoading(false)
-  }, [pathname])
+    setIsLoading(false);
+  }, [pathname]);
 
   const handleSearch = (value: string) => {
-    setIsSearchOpen(false)
-    setIsLoading(true)
-    window.location.href = `/search?q=${encodeURIComponent(value)}`
-  }
+    setIsSearchOpen(false);
+    setIsLoading(true);
+    window.location.href = `/search?q=${encodeURIComponent(value)}`;
+  };
 
   const handleNavigation = (href: string) => {
-    setIsLoading(true)
-    window.location.href = href
-  }
+    setIsLoading(true);
+    window.location.href = href;
+  };
 
   return (
     <>
@@ -208,7 +233,14 @@ export default function EnhancedHeader() {
             height: 100%;
             width: 100%;
             background-color: #319795;
-            clip-path: polygon(100% 0%, 100% 49%, 100% 100%, 0 100%, 1% 50%, 0 0);
+            clip-path: polygon(
+              100% 0%,
+              100% 49%,
+              100% 100%,
+              0 100%,
+              1% 50%,
+              0 0
+            );
             z-index: -1;
           }
 
@@ -224,33 +256,51 @@ export default function EnhancedHeader() {
             }
 
             .arrow-bg {
-              clip-path: polygon(100% 0%, 100% 49%, 100% 100%, 0 100%, 2% 50%, 0 0);
+              clip-path: polygon(
+                100% 0%,
+                100% 49%,
+                100% 100%,
+                0 100%,
+                2% 50%,
+                0 0
+              );
             }
           }
 
           @media (min-width: 1024px) {
             .arrow-bg {
-              clip-path: polygon(100% 0%, 100% 49%, 100% 100%, 0 100%, 4% 50%, 0 0);
+              clip-path: polygon(
+                100% 0%,
+                100% 49%,
+                100% 100%,
+                0 100%,
+                4% 50%,
+                0 0
+              );
             }
           }
         `}</style>
         <div className="w-full px-2 sm:px-2 lg:px-0">
           <div className="flex flex-col">
             <div className="flex items-center justify-between">
-              <Link href="/" className="flex items-center space-x-2" onClick={() => handleNavigation('/')}>
+              <Link
+                href="/"
+                className="flex flex-col sm:flex-row items-center sm:space-x-2 space-y-2 sm:space-y-0"
+                onClick={() => handleNavigation("/")}
+              >
                 <Image
                   src="/hospital/hospitallogo.png?height=50&width=50"
                   alt="Shree Jagannath Hospital Logo"
-                  width={60}
-                  height={60}
+                  width={50}
+                  height={50}
                   className="rounded-full"
                 />
-                <div className="flex flex-col">
-                  <span className="text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-2xl font-extrabold text-primary">
+                <div className="flex flex-col items-center sm:items-start">
+                  <span className="text-center sm:text-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-extrabold text-primary">
                     Shree Jagannath Hospital & Research Centre
                   </span>
-                  <span className="text-xs sm:text-sm lg:text-base text-gray-600">
-                    Multi Speciality and Trauma centre
+                  <span className="text-center sm:text-left text-xs sm:text-sm md:text-base text-gray-600">
+                    Multi Speciality and Trauma Centre
                   </span>
                 </div>
               </Link>
@@ -288,7 +338,14 @@ export default function EnhancedHeader() {
                               <NavigationMenuContent>
                                 <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                                   {link.children.map((child) => (
-                                    <ListItem key={child.title} title={child.title} href={child.href} onClick={() => handleNavigation(child.href)}>
+                                    <ListItem
+                                      key={child.title}
+                                      title={child.title}
+                                      href={child.href}
+                                      onClick={() =>
+                                        handleNavigation(child.href)
+                                      }
+                                    >
                                       {child.description}
                                     </ListItem>
                                   ))}
@@ -328,7 +385,10 @@ export default function EnhancedHeader() {
                           <CommandEmpty>No results found.</CommandEmpty>
                           <CommandGroup heading="Suggestions">
                             {searchOptions.map((option) => (
-                              <CommandItem key={option.value} onSelect={() => handleSearch(option.value)}>
+                              <CommandItem
+                                key={option.value}
+                                onSelect={() => handleSearch(option.value)}
+                              >
                                 {option.label}
                               </CommandItem>
                             ))}
@@ -337,7 +397,10 @@ export default function EnhancedHeader() {
                       </Command>
                     </PopoverContent>
                   </Popover>
-                  <Link href="/appointment" onClick={() => handleNavigation('/appointment')}>
+                  <Link
+                    href="/appointment"
+                    onClick={() => handleNavigation("/appointment")}
+                  >
                     <Button
                       variant="gooeyLeft"
                       className="bg-primary text-white hover:bg-primary-100 transition-colors font-semibold text-sm lg:text-base"
@@ -358,7 +421,14 @@ export default function EnhancedHeader() {
                 <SheetContent side="left" className="p-0">
                   <div className="flex flex-col h-full">
                     <div className="p-4 border-b">
-                      <Link href="/" className="flex items-center space-x-2" onClick={() => { setIsOpen(false); handleNavigation('/'); }}>
+                      <Link
+                        href="/"
+                        className="flex items-center space-x-2"
+                        onClick={() => {
+                          setIsOpen(false);
+                          handleNavigation("/");
+                        }}
+                      >
                         <Image
                           src="/hospital/hospitallogo.png?height=40&width=40"
                           alt="Shree Jagannath Hospital Logo"
@@ -367,8 +437,12 @@ export default function EnhancedHeader() {
                           className="rounded-full"
                         />
                         <div className="flex flex-col">
-                          <span className="font-bold text-sm">Shree Jagannath Hospital & Research Center</span>
-                          <span className="text-xs text-gray-600">Multi Speciality and Trauma Center</span>
+                          <span className="font-bold text-sm">
+                            Shree Jagannath Hospital & Research Center
+                          </span>
+                          <span className="text-xs text-gray-600">
+                            Multi Speciality and Trauma Center
+                          </span>
                         </div>
                       </Link>
                     </div>
@@ -393,7 +467,10 @@ export default function EnhancedHeader() {
                                       <Link
                                         href={child.href}
                                         className="block py-1 text-sm hover:text-primary"
-                                        onClick={() => { setIsOpen(false); handleNavigation(child.href); }}
+                                        onClick={() => {
+                                          setIsOpen(false);
+                                          handleNavigation(child.href);
+                                        }}
                                       >
                                         {child.title}
                                       </Link>
@@ -405,7 +482,10 @@ export default function EnhancedHeader() {
                               <Link
                                 href={link.href}
                                 className="flex items-center py-1 hover:text-primary"
-                                onClick={() => { setIsOpen(false); handleNavigation(link.href); }}
+                                onClick={() => {
+                                  setIsOpen(false);
+                                  handleNavigation(link.href);
+                                }}
                               >
                                 <link.icon className="mr-2 h-4 w-4" />
                                 {link.title}
@@ -419,8 +499,8 @@ export default function EnhancedHeader() {
                       <Button
                         className="w-full mb-2"
                         onClick={() => {
-                          setIsOpen(false)
-                          handleNavigation("/appointment")
+                          setIsOpen(false);
+                          handleNavigation("/appointment");
                         }}
                       >
                         Book Appointment
@@ -431,7 +511,10 @@ export default function EnhancedHeader() {
                             key={item.label}
                             href={item.href}
                             className="flex items-center py-2 text-sm text-gray-600 hover:text-primary transition-colors"
-                            onClick={() => { setIsOpen(false); handleNavigation(item.href); }}
+                            onClick={() => {
+                              setIsOpen(false);
+                              handleNavigation(item.href);
+                            }}
                           >
                             <item.icon className="h-4 w-4 mr-2" />
                             {item.label}
@@ -447,28 +530,31 @@ export default function EnhancedHeader() {
         </div>
       </header>
     </>
-  )
+  );
 }
 
-const ListItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWithoutRef<"a">>(
-  ({ className, title, children, ...props }, ref) => {
-    return (
-      <li>
-        <NavigationMenuLink asChild>
-          <a
-            ref={ref}
-            className={cn(
-              "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 hover:text-primary focus:bg-gray-100 focus:text-primary",
-              className
-            )}
-            {...props}
-          >
-            <div className="text-sm font-medium leading-none">{title}</div>
-            <p className="line-clamp-2 text-sm leading-snug text-gray-500">{children}</p>
-          </a>
-        </NavigationMenuLink>
-      </li>
-    )
-  }
-)
-ListItem.displayName = "ListItem"
+const ListItem = React.forwardRef<
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a">
+>(({ className, title, children, ...props }, ref) => {
+  return (
+    <li>
+      <NavigationMenuLink asChild>
+        <a
+          ref={ref}
+          className={cn(
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 hover:text-primary focus:bg-gray-100 focus:text-primary",
+            className
+          )}
+          {...props}
+        >
+          <div className="text-sm font-medium leading-none">{title}</div>
+          <p className="line-clamp-2 text-sm leading-snug text-gray-500">
+            {children}
+          </p>
+        </a>
+      </NavigationMenuLink>
+    </li>
+  );
+});
+ListItem.displayName = "ListItem";

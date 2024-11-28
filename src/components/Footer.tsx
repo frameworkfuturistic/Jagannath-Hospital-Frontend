@@ -123,7 +123,7 @@ const Footer = () => {
                     <MapPin className="h-5 w-5 text-blue-500" />
                     <div>
                       <p className="font-semibold">SHREE JAGANNATH HOSPITAL & RESEARCH CENTRE</p>
-                      <p className="text-gray-600">(Mayor Road, Behind Machhli Ghar, Ranchi, Jharkhand - 834001)</p>
+                      <p className="text-gray-600">(Mayor's Road - Booty Road, Radium Rd, behind Machali Ghar (Aqua World) and Nakshatra Van, Ranchi, Jharkhand 834001)</p>
                     </div>
                   </motion.div>
                   <motion.div whileHover={{ scale: 1.05 }} className="flex items-start space-x-2">

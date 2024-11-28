@@ -37,7 +37,7 @@ interface Doctor {
 const doctorData: Doctor[] = [
   {
     id: 1,
-    name: "Dr. Ajay Ghosh",
+    name: "Dr. Sudhir Kumar",
     title: "Chairman Cum Managing director",
     image: "/departmentHeads/sudhir.png",
     specialization: "Orthopedics ",
@@ -49,7 +49,7 @@ const doctorData: Doctor[] = [
   {
     id: 2,
     name: "Dr. Vandana Prasad",
-    title: "director",
+    title: "Director",
     image: "/departmentHeads/vandana.png",
     specialization: "Ophthalmology",
     study: "M.B.B.S (B.H.U), M.S. Ophthalmology. (B.H.U)",

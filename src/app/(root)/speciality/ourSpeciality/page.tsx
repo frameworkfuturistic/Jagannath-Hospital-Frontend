@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import HeaderBanner from "@/components/HeaderBanner"
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import HeaderBanner from "@/components/HeaderBanner";
 import {
   Dialog,
   DialogContent,
@@ -11,33 +11,33 @@ import {
   DialogTitle,
   DialogClose,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { AlertCircle } from "lucide-react"
-import Image from "next/image"
+} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { AlertCircle } from "lucide-react";
+import Image from "next/image";
 
 interface Service {
-  id: string
-  title: string
-  subtitle: string
-  image: string
-  details: string[]
+  id: string;
+  title: string;
+  subtitle: string;
+  image: string;
+  details: string[];
 }
 
 interface ServiceCategory {
-  [key: string]: Service[]
+  [key: string]: Service[];
 }
 
 interface EmergencyService {
-  id: number
-  description: string
+  id: number;
+  description: string;
 }
 
 // Define your services data structure
@@ -58,70 +58,70 @@ const services: ServiceCategory = {
       id: "gen-2",
       title: "General & Laparoscopic Surgery",
       subtitle: "Minimally invasive surgical options.",
-      image: "/images/surgery.jpg",
+      image: "/speciality/General-and-Laparoscopic.webp",
       details: ["Appendectomy", "Hernia repair", "Cholecystectomy"],
     },
     {
       id: "gen-3",
       title: "Orthopedics",
       subtitle: "Bone and joint care specialists.",
-      image: "/images/orthopedics.jpg",
+      image: "/speciality/orthope.webp",
       details: ["Fracture treatment", "Joint replacements", "Sports medicine"],
     },
     {
       id: "gen-4",
       title: "Ophthalmology",
       subtitle: "Eye care and surgeries.",
-      image: "/images/ophthalmology.jpg",
+      image: "/department/Ophthalmology-min.png",
       details: ["Cataract surgery", "Laser treatments", "Eye exams"],
     },
     {
       id: "gen-5",
       title: "Nephrology",
       subtitle: "Kidney health and disease management.",
-      image: "/images/nephrology.jpg",
+      image: "/speciality/neph.webp",
       details: ["Dialysis", "Kidney transplants", "Hypertension management"],
     },
     {
       id: "gen-6",
       title: "Neurosurgery",
       subtitle: "Surgical treatment for nervous system disorders.",
-      image: "/images/neurosurgery.jpg",
+      image: "/speciality/neuro-surgery.webp",
       details: ["Brain surgery", "Spinal surgery", "Peripheral nerve surgery"],
     },
     {
       id: "gen-7",
       title: "Cardiology",
       subtitle: "Heart health and treatments.",
-      image: "/images/cardiology.jpg",
+      image: "/department/cardiology.jpg",
       details: ["Echocardiograms", "Heart bypass surgery", "Angioplasty"],
     },
     {
       id: "gen-8",
       title: "Anaesthesia",
       subtitle: "Safe sedation during procedures.",
-      image: "/images/anaesthesia.jpg",
+      image: "/speciality/surgery-anesthesia.webp",
       details: ["General anesthesia", "Sedation techniques", "Pain management"],
     },
     {
       id: "gen-9",
       title: "Radiology",
       subtitle: "Imaging services for diagnosis.",
-      image: "/speciality/rad.png",
+      image: "/department/Radiology.webp",
       details: ["X-rays", "MRIs", "CT scans"],
     },
     {
       id: "gen-10",
       title: "Pathology",
       subtitle: "Diagnostic lab services.",
-      image: "/images/pathology.jpg",
+      image: "/department/pathology.jpg",
       details: ["Blood tests", "Tissue analysis", "Microbiology"],
     },
     {
       id: "gen-11",
       title: "Physiotherapy",
       subtitle: "Rehabilitation and physical therapy.",
-      image: "/images/physiotherapy.jpg",
+      image: "/department/physiotherapy.png",
       details: [
         "Rehabilitation after surgery",
         "Pain management",
@@ -134,35 +134,35 @@ const services: ServiceCategory = {
       id: "super-1",
       title: "Joint Replacement",
       subtitle: "Advanced orthopedic surgery.",
-      image: "/images/joint_replacement.jpg",
+      image: "/department/orthopedic-bn.jpg",
       details: ["Knee replacement", "Hip replacement"],
     },
     {
       id: "super-2",
       title: "Spine Surgery",
       subtitle: "Comprehensive spine care.",
-      image: "/images/spine_surgery.jpg",
+      image: "/speciality/spine.webp",
       details: ["Discectomy", "Spinal fusion"],
     },
     {
       id: "super-3",
       title: "Microvascular Surgery",
       subtitle: "Precision surgical procedures.",
-      image: "/images/microvascular.jpg",
+      image: "/speciality/Microvascular.webp",
       details: ["Reconstructive surgery", "Transplantation"],
     },
     {
       id: "super-4",
       title: "All Trauma Cases",
       subtitle: "Emergency trauma care.",
-      image: "/images/trauma.jpg",
+      image: "/speciality/trauma.webp",
       details: ["Fractures", "Soft tissue injuries"],
     },
     {
       id: "super-5",
       title: "Retina & Vitreous Surgery",
       subtitle: "Specialized eye treatments.",
-      image: "/images/retina_surgery.jpg",
+      image: "/speciality/retina.webp",
       details: ["Retinal detachment surgery", "Vitrectomy"],
     },
   ],
@@ -373,12 +373,12 @@ const emergencyServices: EmergencyService[] = [
 ];
 
 function OurSpecialties() {
-  const [activeTab, setActiveTab] = useState("General Speciality")
-  const [selectedService, setSelectedService] = useState<Service | null>(null)
+  const [activeTab, setActiveTab] = useState("General Speciality");
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
 
   const handleServiceClick = (service: Service) => {
-    setSelectedService(service)
-  }
+    setSelectedService(service);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 relative overflow-hidden">
@@ -441,7 +441,7 @@ function OurSpecialties() {
         />
       )}
     </div>
-  )
+  );
 }
 
 const EmergencyServicesAccordion: React.FC = () => {
@@ -474,12 +474,12 @@ const EmergencyServicesAccordion: React.FC = () => {
         </AccordionContent>
       </AccordionItem>
     </Accordion>
-  )
-}
+  );
+};
 
 interface ServiceCardProps {
-  service: Service
-  onClick: () => void
+  service: Service;
+  onClick: () => void;
 }
 
 function ServiceCard({ service, onClick }: ServiceCardProps) {
@@ -488,16 +488,15 @@ function ServiceCard({ service, onClick }: ServiceCardProps) {
       className="flex flex-row shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"
       onClick={onClick}
     >
-      <div className="w-1/3">
+      <div className="relative w-1/3">
         <Image
           src={service.image}
           alt={service.title}
-          width={500}
-          height={300}
-          layout="responsive"
+          fill
           className="object-cover rounded-l-md"
         />
       </div>
+
       <div className="flex-grow p-4">
         <CardHeader>
           <CardTitle className="text-lg font-semibold">
@@ -507,12 +506,12 @@ function ServiceCard({ service, onClick }: ServiceCardProps) {
         </CardHeader>
       </div>
     </Card>
-  )
+  );
 }
 
 interface ServiceDetailDialogProps {
-  service: Service
-  onClose: () => void
+  service: Service;
+  onClose: () => void;
 }
 
 function ServiceDetailDialog({ service, onClose }: ServiceDetailDialogProps) {
@@ -532,7 +531,7 @@ function ServiceDetailDialog({ service, onClose }: ServiceDetailDialogProps) {
               width={500}
               height={300}
               className="h-full w-auto max-w-full object-cover rounded-lg"
-              style={{ maxWidth: '100%', height: 'auto' }}
+              style={{ maxWidth: "100%", height: "auto" }}
             />
           </div>
 
@@ -561,7 +560,7 @@ function ServiceDetailDialog({ service, onClose }: ServiceDetailDialogProps) {
         </DialogClose>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
 
-export default OurSpecialties
+export default OurSpecialties;
