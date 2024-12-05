@@ -17,7 +17,7 @@ const Header = () => {
             <div className="flex items-center space-x-4">
                 <Link href="" className="flex items-center hover:text-primary-foreground transition-colors">
                   <MapPinIcon className="h-4 w-4 mr-1" />
-                  <span className="">Mayor's Road - Booty Road, Radium Rd, behind Machali Ghar (Aqua World) and Nakshatra Van, Ranchi, Jharkhand 834001</span>
+                  <span className="">Mayor's Road - Booty Road, Radium Rd, Behind Machali Ghar, Ranchi, Jharkhand 834001</span>
                 </Link>
 
                 <Link href="https://wa.me/8987999200" className="flex items-center hover:text-primary-foreground transition-colors">

@@ -78,8 +78,8 @@ export default function ParamedicalCourseIntro() {
             Visit our main website to learn more about the course, admission requirements, and to start your application process.
           </p>
           <Button size="lg" asChild>
-            <a href="https://www.sjpms.com" className="inline-flex items-center justify-center">
-              Visit SJPMS Website
+            <a href="https://jagannathparamedicals.com" className="inline-flex items-center justify-center">
+              Visit jagannathparamedicals Website
               <span className="sr-only">(opens in a new tab)</span>
             </a>
           </Button>

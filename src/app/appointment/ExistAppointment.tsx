@@ -71,7 +71,7 @@ export default function AdvancedAppointmentSearch() {
 
     setIsLoading(true);
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/v1/search", {
+      const response = await axios.post("https://appointment.sjhrc.in/backend/api/v1/search", {
         [searchType]: searchValue.trim(),
       });
 

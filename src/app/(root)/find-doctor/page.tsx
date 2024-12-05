@@ -80,7 +80,7 @@ const AdvancedMedicalExperts: React.FC = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mb-8 text-lg"
           >
-            Rani Hospital is home to 50 eminent doctors in India, most of whom are pioneers in their
+            SJHRC Hospital is home to 50 eminent doctors in India, most of whom are pioneers in their
             respective fields. Additionally, they are renowned for developing innovative and revolutionary
             clinical procedures.
           </motion.p>

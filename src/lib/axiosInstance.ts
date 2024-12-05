@@ -4,7 +4,7 @@ import API_ROUTES from '@/utils/apiConfig';
 
 
 const axiosInstance = axios.create({
-  baseURL: 'https://test.sjhrc.in/hospital-api/api' , // Replace with your Node API base URL || https://test.sjhrc.in/hospital-api/api
+  baseURL: 'https://appointment.sjhrc.in/hospital-api/api' , // Replace with your Node API base URL || https://test.sjhrc.in/hospital-api/api
 });
 
 // Add request interceptor

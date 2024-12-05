@@ -127,7 +127,7 @@ export default function AdvancedBlogManagement() {
         const formattedBlogs = response.data.blogs.map((blog) => ({
           ...blog,
           image: blog.image
-            ? `https://test.sjhrc.in/hospital-api/blogs/${blog.image
+            ? `https://appointment.sjhrc.in/hospital-api/blogs/${blog.image
                 .toString()
                 .replace(/^uploads[\\/]/, "")
                 .replace(/\\/g, "/")}`

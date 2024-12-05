@@ -50,7 +50,7 @@ const facilities: Facility[] = [
 
 const services: Service[] = [
   { name: "NABH accredited hospital offering best-in-class services", icon: "/hospital/nabhlogo.png", description: "Ensuring quality and safety in healthcare delivery" },
-  { name: "Latest high-end technology", icon: "/hospital/NABH-2.png", description: "State-of-the-art equipment for accurate diagnosis and treatment" },
+  { name: "Latest high-end technology", icon: "/hospital/eqas_logo.jpg", description: "State-of-the-art equipment for accurate diagnosis and treatment" },
   { name: "International Organization for Standardization ", icon: "/hospital/iso.png", description: "An ISO certified company meets the ISO requirements for its quality management system." },
   // { name: "Quality Council of India", icon: "/hospital/qci.webp", description: "QCI facilitates trade and business across the world" },
 ]
@@ -103,7 +103,7 @@ function HospitalHero() {
                         alt={service.name}
                         width={64}
                         height={64}
-                        className="rounded-full transition-transform duration-300 group-hover:scale-110"
+                        className=" transition-transform duration-300 group-hover:scale-110"
                       />
                       {hoveredIndex === index && (
                         <motion.div

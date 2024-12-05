@@ -7,29 +7,35 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import Image from "next/image"
 
 const services = [
-  { icon: "/speciality/icons/cardiology_icon.svg.svg", name: "Cardiology", description: "Expert care for heart health and cardiovascular diseases." },
-  { icon: "/speciality/icons/neurology.svg.svg", name: "Neurology", description: "Specialized treatment for neurological disorders and brain health." },
-  { icon: "/speciality/icons/gastroenterology.svg.svg", name: "Gastroenterology", description: "Comprehensive care for digestive system disorders." },
   { icon: "/speciality/icons/orthopaedic.svg.svg", name: "Orthopedic", description: "Advanced treatments for bone and joint conditions." },
-  { icon: "/speciality/icons/oncology_icon.svg.svg", name: "Oncology", description: "Cutting-edge cancer treatments and personalized care." },
-  { icon: "/speciality/icons/gynecology.svg.svg", name: "Gynecology", description: "Specialized care for women's reproductive health." },
-  { icon: "/speciality/icons/dermatology.svg.svg", name: "Dermatology", description: "Expert skincare and treatment for skin conditions." },
   { icon: "/speciality/icons/ophthalmology.svg.svg", name: "Ophthalmology", description: "Comprehensive eye care and vision correction services." },
-  { icon: "/speciality/icons/paediatricurology.svg.svg", name: "Pediatrics", description: "Specialized healthcare for infants, children, and adolescents." },
-  { icon: "/speciality/icons/endocrinology.svg.svg", name: "Endocrinology", description: "Treatment for hormonal imbalances and related disorders." },
+  { icon: "/speciality/icons/ent.svg.svg", name: "Medicine ", description: "Advanced diagnosis of illnesses treatments conditions." },
+  { icon: "/speciality/icons/plasticsurgery.svg.svg", name: "General & Laparoscopic", description: "Advanced surgical treatments for neurological conditions." },
   { icon: "/speciality/icons/urology.svg.svg", name: "Urology", description: "Specialized care for urinary tract and male reproductive system." },
   { icon: "/speciality/icons/nephrology.svg.svg", name: "Nephrology", description: "Expert care for kidney diseases and disorders." },
-  { icon: "/speciality/icons/pulmonology.svg.svg", name: "Pulmonology", description: "Specialized treatment for respiratory and lung conditions." },
-  { icon: "/speciality/icons/rheumatology.svg.svg", name: "Rheumatology", description: "Care for autoimmune and inflammatory disorders." },
-  { icon: "/speciality/icons/neurology.svg.svg", name: "Neurosurgery", description: "Advanced surgical treatments for neurological conditions." },
-
+  { icon: "/speciality/icons/orthopaedic.svg.svg", name: "Physiotherapy", description: "Advanced treatments for Physiotherapy." },
   { icon: "/speciality/icons/radiology.svg fill.svg", name: "Radiology", description: "Advanced surgical treatments for neurological conditions." },
-  { icon: "/speciality/icons/plasticsurgery.svg.svg", name: "Plastic surgery", description: "Advanced surgical treatments for neurological conditions." },
-  { icon: "/speciality/icons/neonatology.svg.svg", name: "Neonatology", description: "Advanced surgical treatments for neurological conditions." },
+  { icon: "/speciality/icons/gynecology.svg.svg", name: "Gynecology", description: "Specialized care for women's reproductive health." },
+  { icon: "/speciality/icons/rheumatology.svg.svg", name: "Rheumatology", description: "Care for autoimmune and inflammatory disorders." },
+  { icon: "/speciality/icons/cardiology_icon.svg.svg", name: "Non Invasive Cardiology", description: "Expert care for heart health and cardiovascular diseases." },
   { icon: "/speciality/icons/vascularsurgery.svg.svg", name: "Vascular Surgery", description: "Advanced surgical treatments for neurological conditions." },
-  { icon: "/speciality/icons/psychiatry.svg.svg", name: "Psychiatry", description: "Advanced surgical treatments for neurological conditions." },
-  { icon: "/speciality/icons/dermatology.svg.svg", name: "Dentistry", description: "Advanced surgical treatments for neurological conditions." },
-  { icon: "/speciality/icons/ent.svg.svg", name: "ENT ", description: "Advanced surgical treatments for neurological conditions." },
+ 
+
+//  { icon: "/speciality/icons/neurology.svg.svg", name: "Neurology", description: "Specialized treatment for neurological disorders and brain health." },
+//   { icon: "/speciality/icons/gastroenterology.svg.svg", name: "Gastroenterology", description: "Comprehensive care for digestive system disorders." },
+ 
+//   { icon: "/speciality/icons/oncology_icon.svg.svg", name: "Oncology", description: "Cutting-edge cancer treatments and personalized care." },
+//  { icon: "/speciality/icons/dermatology.svg.svg", name: "Dermatology", description: "Expert skincare and treatment for skin conditions." },
+//   { icon: "/speciality/icons/paediatricurology.svg.svg", name: "Pediatrics", description: "Specialized healthcare for infants, children, and adolescents." },
+//   { icon: "/speciality/icons/endocrinology.svg.svg", name: "Endocrinology", description: "Treatment for hormonal imbalances and related disorders." },
+//   { icon: "/speciality/icons/pulmonology.svg.svg", name: "Pulmonology", description: "Specialized treatment for respiratory and lung conditions." },
+//   { icon: "/speciality/icons/neurology.svg.svg", name: "Neurosurgery", description: "Advanced surgical treatments for neurological conditions." },
+
+//   { icon: "/speciality/icons/plasticsurgery.svg.svg", name: "Plastic surgery", description: "Advanced surgical treatments for neurological conditions." },
+//   { icon: "/speciality/icons/neonatology.svg.svg", name: "Neonatology", description: "Advanced surgical treatments for neurological conditions." },
+//   { icon: "/speciality/icons/psychiatry.svg.svg", name: "Psychiatry", description: "Advanced surgical treatments for neurological conditions." },
+//   { icon: "/speciality/icons/dermatology.svg.svg", name: "Dentistry", description: "Advanced surgical treatments for neurological conditions." },
+//   { icon: "/speciality/icons/ent.svg.svg", name: "ENT ", description: "Advanced surgical treatments for neurological conditions." },
 ]
 
 const PremiumServices = () => {
@@ -61,8 +67,8 @@ const PremiumServices = () => {
                 src="/speciality/speci.png"
                 alt="Doctor"
                 width={400}
-                height={600}
-                className="rounded-2xl shadow-2xl object-cover w-full h-[600px]"
+                height={500}
+                className="rounded-2xl shadow-2xl object-cover w-full h-[500px]"
               />
             </motion.div>
           </div>
