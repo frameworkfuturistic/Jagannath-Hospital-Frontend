@@ -18,6 +18,7 @@ const quickLinks = [
   { name: "Careers", href: "/career/currentOpenings" },
   { name: "Blogs", href: "/blog" },
   { name: "Find a Doctor", href: "/find-doctor" },
+  { name: "slot", href: "/slots" },
 ]
 
 const departments = [
