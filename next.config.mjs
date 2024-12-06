@@ -7,7 +7,7 @@ const nextConfig = {
       "images.pexels.com",
       "gratisography.com",
       "localhost",
-      "images.unsplash.com",, // Added the new domain here
+      "images.unsplash.com", // Added the new domain here
     ],
     remotePatterns: [
       {
