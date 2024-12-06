@@ -2,12 +2,12 @@
 const nextConfig = {
   images: {
     domains: [
+      "appointment.sjhrc.in",
       "loremflickr.com",
       "images.pexels.com",
       "gratisography.com",
       "localhost",
-      "images.unsplash.com",
-      "appointment.sjhrc.in", // Added the new domain here
+      "images.unsplash.com",, // Added the new domain here
     ],
     remotePatterns: [
       {

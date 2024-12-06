@@ -1,8 +1,6 @@
-
 "use client";
 
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {
   Card,
   CardContent,
@@ -22,18 +20,25 @@ import axiosInstance from "@/lib/axiosInstance";
 
 export default function AdvancedDoctorDashboard() {
   const [contacts, setContacts] = useState<
-    { name: string; email: string; phone: string; query: string }[]
-  >([]);
+    { name: string; email: string; phone: string; query: string }[] | null
+  >(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchContacts = async () => {
       setIsLoading(true);
       try {
-        const response = await axiosInstance.get("/contact-us"); // Ensure this is the correct endpoint
-        setContacts(response.data);
+        const response = await axiosInstance.get("/contact-us");
+        // Check if response.data is an array
+        if (Array.isArray(response.data)) {
+          setContacts(response.data);
+        } else {
+          console.error("Unexpected API response:", response.data);
+          setContacts([]);
+        }
       } catch (error) {
         console.error("Error fetching contact data:", error);
+        setContacts([]);
       } finally {
         setIsLoading(false);
       }
@@ -95,7 +100,7 @@ export default function AdvancedDoctorDashboard() {
               <div className="flex justify-center items-center py-8">
                 <Loader2 className="animate-spin w-8 h-8 text-gray-500" />
               </div>
-            ) : contacts.length > 0 ? (
+            ) : contacts && contacts.length > 0 ? (
               <Table>
                 <TableHeader>
                   <TableRow>
