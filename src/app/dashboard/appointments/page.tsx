@@ -172,6 +172,9 @@ export default function AdvancedResponsiveAppointmentsPage() {
                       <TableHead>Available Slots</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Token</TableHead>
+                      <TableHead>Patient Name</TableHead>
+                    <TableHead>Mobile No</TableHead>
+                    <TableHead>Remarks</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -187,6 +190,20 @@ export default function AdvancedResponsiveAppointmentsPage() {
                           </Badge>
                         </TableCell>
                         <TableCell>{slot.SlotToken}</TableCell>
+
+                        {slot.appointments && slot.appointments.length > 0 ? (
+                        slot.appointments.map((appointment) => (
+                          <React.Fragment key={appointment.OPDOnlineAppointmentID}>
+                            <TableCell>{appointment.PatientName}</TableCell>
+                            <TableCell>{appointment.MobileNo}</TableCell>
+                            <TableCell>{appointment.Remarks}</TableCell>
+                          </React.Fragment>
+                        ))
+                      ) : (
+                        <>
+                          <TableCell colSpan={3}>No appointments</TableCell>
+                        </>
+                      )}
                       </TableRow>
                     ))}
                   </TableBody>
