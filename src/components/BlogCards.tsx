@@ -22,7 +22,7 @@ const BlogCards = () => {
     const fetchBlogs = async () => {
       try {
         const response = await axiosInstance.get("/blogs"); // Adjust the endpoint as needed
-        console.log("hjhsabh", response.data?.blogs);
+
         const formattedBlogs = response.data.blogs.map((blog) => ({
           ...blog,
           image: blog.image
@@ -32,7 +32,7 @@ const BlogCards = () => {
                 .replace(/\\/g, "/")}`
             : undefined,
         }));
-        console.log("uy", formattedBlogs);
+     
 
         setBlogs(formattedBlogs.slice(0, 6)); // Limit to the first 6 blogs
       } catch (error) {

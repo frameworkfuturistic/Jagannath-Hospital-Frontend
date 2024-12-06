@@ -67,47 +67,41 @@ type FAQ = {
 
 const doctors: Doctor[] = [
   {
-    id: "dr-Sudhir-Kumar",
-    name: "Prof.(Dr.) Sudhir Kumar",
-    specialty: "Senior Consultant (Orthopaedics)",
-    image: "/departmentHeads/sudhir.png",
-    experience: "25+ years",
+    id: "Dr-nandkishor-tirkey",
+    name: "Dr Nandkishor tirkey",
+    specialty: "MBBS, DNB(Orthopaedics)",
+    image: "/departmentHeads/Dr nandkishor tirkey.jpg",
+    experience: "5+ years",
     rating: 4.9,
-    bio: "Dr. Sharma is a world-renowned orthopedic surgeon specializing in advanced joint replacement and arthroscopic surgeries. With over two decades of experience, he has pioneered several minimally invasive techniques that have revolutionized the field.",
+    bio: "Dr. Nandkishor is a world-renowned orthopedic surgeon specializing in advanced joint replacement and arthroscopic surgeries. With over two decades of experience, he has pioneered several minimally invasive techniques that have revolutionized the field.",
     achievements: [
-      "Professor in Orthopedics Rims",
-      "Ranchi Specialist & Incharge in Orthopedics HEC Hospital",
-      "Ranchi Reader in Orthopedics Mahatma Gandhi Institute of Medical Science",
-      "Wardha Lecturer (Jr.) Hand Reconstructive Surgery CMC Vellore, Tamil Nadu"
+      "M.B.B.S."
     ],
-    availability: ["Mon", "Wed", "Fri"]
+    availability: ["M.B.B.S."]
   },
   {
-    id: "dr-Ajay-Kumar-Verma",
-    name: "Prof. (Dr.) Ajay Kumar Verma",
-    specialty: "Senior Consultant (Orthopaedics)",
-    image: "/departmentHeads/Drverma.jpg",
-    experience: "20+ years",
+    id: "dr-danish",
+    name: "Dr. Danish Sir",
+    specialty: "MBBS, DNB(Orthopaedics)",
+    image: "/departmentHeads/Dr. Danish Sir.jpeg",
+    experience: "2+ years",
     rating: 4.8,
-    bio: "Dr. Verma is a leading pediatric orthopedic surgeon known for her groundbreaking work in treating complex congenital deformities. Her innovative approaches have improved the lives of thousands of children worldwide.",
+    bio: "Dr. Danish is a leading pediatric orthopedic surgeon known for her groundbreaking work in treating complex congenital deformities. Her innovative approaches have improved the lives of thousands of children worldwide.",
     achievements: [
-      " Medical Officer(Orthopaedics) in Bihar/Jharkhand",
-      "Registrar(RIMS)",
-      "Assistant Professor in Orthopaedics (RIMS)",
-      "Professor Orthopaedics (RIMS)"
+      "M.B.B.S. "
     ],
     availability: ["Tue", "Thu", "Sat"]
   },
   {
-    id: "dr-Nilay-Kumar",
-    name: "Dr. Nilay Kumar",
-    specialty: "Specialist & Consultant (Orthopedics)",
-    image: "/departmentHeads/Dr Nilay.jpg",
-    experience: "22+ years",
+    id: "dr-Satyam-Kumar",
+    name: "Dr. Satyam Kr Singh",
+    specialty: "MBBS, DNB(Orthopaedics)",
+    image: "/departmentHeads/Dr. Satyam Kr Singh.webp",
+    experience: "3+ years",
     rating: 4.9,
-    bio: "Dr. Nilay is a globally recognized Orthopedics specializing in complex spinal deformities and minimally invasive spine surgeries. He is a pioneer in robotic spine surgery and has trained surgeons worldwide in advanced techniques.",
+    bio: "Dr. Satyam is a globally recognized Orthopedics specializing in complex spinal deformities and minimally invasive spine surgeries. He is a pioneer in robotic spine surgery and has trained surgeons worldwide in advanced techniques.",
     achievements: [
-      "M.B.B.S.(M.U.H.S. Nashik), M.S.()"
+      "M.B.B.S."
     ],
     availability: ["Mon", "Tue", "Thu"]
   }
