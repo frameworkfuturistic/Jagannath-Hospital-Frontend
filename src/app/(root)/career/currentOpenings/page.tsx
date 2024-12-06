@@ -56,6 +56,7 @@ import {
   Loader2,
   Star,
   Users,
+  IndianRupee,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/components/ui/use-toast";
@@ -352,7 +353,7 @@ function CareerPageContent() {
                           variant="outline"
                           className="flex items-center rounded-full px-2 py-1"
                         >
-                          <DollarSign className="mr-1 h-3 w-3" />
+                          <IndianRupee className="mr-1 h-3 w-3" />
                           {job.salaryRange}
                         </Badge>
                       </div>

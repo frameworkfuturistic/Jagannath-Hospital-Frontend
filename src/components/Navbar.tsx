@@ -283,27 +283,23 @@ export default function EnhancedHeader() {
         <div className="w-full px-2 sm:px-2 lg:px-0">
           <div className="flex flex-col">
             <div className="flex items-center justify-between">
-              <Link
-                href="/"
-                className="flex flex-col sm:flex-row items-center sm:space-x-2 space-y-2 sm:space-y-0"
-                onClick={() => handleNavigation("/")}
-              >
-                <Image
-                  src="/hospital/hospitallogo.png?height=50&width=50"
-                  alt="Shree Jagannath Hospital Logo"
-                  width={50}
-                  height={50}
-                  className="rounded-full"
-                />
-                <div className="flex flex-col items-center sm:items-start">
-                  <span className="text-center sm:text-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-extrabold text-primary">
-                    Shree Jagannath Hospital & Research Centre
-                  </span>
-                  <span className="text-center sm:text-left text-xs sm:text-sm md:text-base text-gray-600">
-                    Multi Speciality and Trauma Centre
-                  </span>
-                </div>
-              </Link>
+            <Link href="/" className="flex items-center space-x-2">
+              <Image
+                src="/hospital/hospitallogo.png?height=50&width=50"
+                alt="Shree Jagannath Hospital Logo"
+                width={60}
+                height={60}
+                className="rounded-full"
+              />
+              <div className="flex flex-col">
+                <span className="text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-2xl font-extrabold text-primary">
+                  Shree Jagannath Hospital & Research Center
+                </span>
+                <span className="text-xs sm:text-sm lg:text-base text-gray-600">
+                  Multi Speciality and Trauma center
+                </span>
+              </div>
+            </Link>
 
               <div className="hidden lg:flex flex-col items-end">
                 <div className="arrow-container w-full lg:w-auto">

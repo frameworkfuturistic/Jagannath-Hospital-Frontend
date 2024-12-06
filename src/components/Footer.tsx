@@ -18,7 +18,6 @@ const quickLinks = [
   { name: "Careers", href: "/career/currentOpenings" },
   { name: "Blogs", href: "/blog" },
   { name: "Find a Doctor", href: "/find-doctor" },
-  { name: "slot", href: "/slots" },
 ]
 
 const departments = [
@@ -226,7 +225,7 @@ const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <FooterSection title="Disclaimer">
               <p className="text-sm text-gray-600">
-                The information provided on this website is for general informational purposes only. It is not intended to be a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.
+                The information provided on this website is for general informational purposes. It is intended to be a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.
               </p>
             </FooterSection>
 
@@ -235,7 +234,7 @@ const Footer = () => {
                 {["Home", "Services", "Doctors", "Appointments", "Blog", "Contact"].map((link) => (
                   <motion.div key={link} whileHover={{ x: 5 }} className="flex items-center">
                     <ArrowRight className="h-4 w-4 mr-2 text-primary" />
-                    <Link href={`/${link.toLowerCase()}`} className="hover:text-blue-500 transition-colors">
+                    <Link href={`../sitemap`} className="hover:text-blue-500 transition-colors">
                       {link}
                     </Link>
                   </motion.div>

@@ -934,7 +934,7 @@ export default function Component() {
 
     currentY += 10;
     doc.text(
-      `Total Amount Paid: ${state.selectedDoctor?.Fee}`,
+      `Total Amount Paid: ₹ ${state.selectedDoctor?.Fee}`,
       leftColumnStart,
       currentY
     );
