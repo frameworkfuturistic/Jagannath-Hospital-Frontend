@@ -24,6 +24,10 @@ const Header = () => {
                 <Phone className="h-4 w-4 mr-1" />
                 <span>+91 89879 99200</span>
               </Link>
+              <Link href="https://wa.me/9471373714" className="flex items-center hover:text-primary-foreground transition-colors">
+                <Phone className="h-4 w-4 mr-1" />
+                <span>+91 94713 73714</span>
+              </Link>
 
               <Link href="" className="flex items-center hover:text-sidebar-primary-foreground transition-colors">
                   <Clock10Icon className="h-4 w-4 mr-1" />

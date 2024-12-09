@@ -118,7 +118,7 @@ const AdvancedMedicalExperts: React.FC = () => {
         >
           <h1 className="text-5xl font-bold text-gray-800 mb-4">Our Medical Experts</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Rani Hospital is home to 50 eminent doctors in India, most of whom are pioneers in their
+          Shree Jagannath Hospital is home to 50 eminent doctors in India, most of whom are pioneers in their
             respective fields. Our experts are renowned for developing innovative and revolutionary
             clinical procedures.
           </p>

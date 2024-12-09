@@ -1,84 +1,131 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect, useRef } from 'react'
-import Image from 'next/image'
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion'
-import { ChevronDown, Star, Clock, Users, GraduationCap, Award, ArrowRight, Search, Calendar, FileText, BookOpen, Sparkles, Filter, ChevronLeft, ChevronRight, Menu } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Calendar as CalendarComponent } from "@/components/ui/calendar"
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { cn } from "@/lib/utils"
-import { format } from 'date-fns'
-import axiosInstance from '@/lib/axiosInstance'
-import Link from 'next/link'
+import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+  useSpring,
+} from "framer-motion";
+import {
+  ChevronDown,
+  Star,
+  Clock,
+  Users,
+  GraduationCap,
+  Award,
+  ArrowRight,
+  Search,
+  Calendar,
+  FileText,
+  BookOpen,
+  Sparkles,
+  Filter,
+  ChevronLeft,
+  ChevronRight,
+  Menu,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import axiosInstance from "@/lib/axiosInstance";
+import Link from "next/link";
 
 type Doctor = {
-  id: string
-  name: string
-  specialty: string
-  image: string
-  experience: string
-  rating: number
-  bio: string
-  achievements: string[]
-  availability: string[]
-}
+  id: string;
+  name: string;
+  specialty: string;
+  image: string;
+  experience: string;
+  rating: number;
+  bio: string;
+  achievements: string[];
+  availability: string[];
+};
 
 type Course = {
-  id: string
-  name: string
-  description: string
-  image: string
-  duration: string
-  enrolledStudents: number
-  rating: number
-  modules: string[]
-  features: string[]
-  price: number
-  startDate: string
-  schedule: { day: string; time: string }[]
-}
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  duration: string;
+  enrolledStudents: number;
+  rating: number;
+  modules: string[];
+  features: string[];
+  price: number;
+  startDate: string;
+  schedule: { day: string; time: string }[];
+};
 
 type BlogPost = {
-  id: string
-  title: string
-  excerpt: string
-  author: string
-  date: string
-  image: string
-  category: string
-}
+  id: string;
+  title: string;
+  excerpt: string;
+  author: string;
+  date: string;
+  image: string;
+  category: string;
+};
 
 type FAQ = {
-  question: string
-  answer: string
-}
+  question: string;
+  answer: string;
+};
 
 const doctors: Doctor[] = [
-  {
-    id: "Dr-nandkishor-tirkey",
-    name: "Dr Nandkishor tirkey",
-    specialty: "MBBS, DNB(Orthopaedics)",
-    image: "/departmentHeads/Dr nandkishor tirkey.jpg",
-    experience: "5+ years",
-    rating: 4.9,
-    bio: "Dr. Nandkishor is a world-renowned orthopedic surgeon specializing in advanced joint replacement and arthroscopic surgeries. With over two decades of experience, he has pioneered several minimally invasive techniques that have revolutionized the field.",
-    achievements: [
-      "M.B.B.S."
-    ],
-    availability: ["M.B.B.S."]
-  },
   {
     id: "dr-danish",
     name: "Dr. Danish Sir",
@@ -87,10 +134,8 @@ const doctors: Doctor[] = [
     experience: "2+ years",
     rating: 4.8,
     bio: "Dr. Danish is a leading pediatric orthopedic surgeon known for her groundbreaking work in treating complex congenital deformities. Her innovative approaches have improved the lives of thousands of children worldwide.",
-    achievements: [
-      "M.B.B.S. "
-    ],
-    availability: ["Tue", "Thu", "Sat"]
+    achievements: ["M.B.B.S. "],
+    availability: ["Tue", "Thu", "Sat"],
   },
   {
     id: "dr-Satyam-Kumar",
@@ -100,19 +145,30 @@ const doctors: Doctor[] = [
     experience: "3+ years",
     rating: 4.9,
     bio: "Dr. Satyam is a globally recognized Orthopedics specializing in complex spinal deformities and minimally invasive spine surgeries. He is a pioneer in robotic spine surgery and has trained surgeons worldwide in advanced techniques.",
-    achievements: [
-      "M.B.B.S."
-    ],
-    availability: ["Mon", "Tue", "Thu"]
-  }
-]
+    achievements: ["M.B.B.S."],
+    availability: ["Mon", "Tue", "Thu"],
+  },
+  {
+    id: "Dr-nandkishor-tirkey",
+    name: "Dr Nandkishor tirkey",
+    specialty: "Diploma, DNB(Orthopaedics)",
+    image: "/departmentHeads/Dr nandkishor tirkey.jpg",
+    experience: "5+ years",
+    rating: 4.9,
+    bio: "Dr. Nandkishor is a world-renowned orthopedic surgeon specializing in advanced joint replacement and arthroscopic surgeries. With over two decades of experience, he has pioneered several minimally invasive techniques that have revolutionized the field.",
+    achievements: ["M.B.B.S."],
+    availability: ["M.B.B.S."],
+  },
+];
 
 const courses: Course[] = [
   {
     id: "advanced-joint-replacement",
     name: "Advanced Joint Replacement Mastery Program",
-    description: "An exclusive, intensive program designed to elevate your joint replacement skills to world-class levels. Master cutting-edge techniques, including AI-assisted and robotic surgeries.",
-    image: "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop",
+    description:
+      "An exclusive, intensive program designed to elevate your joint replacement skills to world-class levels. Master cutting-edge techniques, including AI-assisted and robotic surgeries.",
+    image:
+      "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop",
     duration: "12 months",
     enrolledStudents: 25,
     rating: 4.9,
@@ -121,7 +177,7 @@ const courses: Course[] = [
     schedule: [
       { day: "Monday", time: "09:00 AM - 01:00 PM" },
       { day: "Wednesday", time: "02:00 PM - 06:00 PM" },
-      { day: "Friday", time: "10:00 AM - 02:00 PM" }
+      { day: "Friday", time: "10:00 AM - 02:00 PM" },
     ],
     modules: [
       "Advanced Preoperative Planning with AI",
@@ -130,21 +186,23 @@ const courses: Course[] = [
       "Minimally Invasive Techniques for Complex Cases",
       "Personalized Patient-Specific Implants",
       "Advanced Postoperative Care and Rehabilitation Protocols",
-      "Complication Management in High-Risk Patients"
+      "Complication Management in High-Risk Patients",
     ],
     features: [
       "One-on-one mentoring with world-renowned surgeons",
       "Access to state-of-the-art simulation labs",
       "Observership at top international orthopedic centers",
       "Exclusive industry partnerships for early access to new technologies",
-      "Publication support in high-impact journals"
-    ]
+      "Publication support in high-impact journals",
+    ],
   },
   {
     id: "pediatric-orthopedics-excellence",
     name: "Pediatric Orthopedic Surgery Excellence Program",
-    description: "A comprehensive, elite-level training program focusing on advanced pediatric orthopedic surgeries and innovative treatment approaches for complex congenital deformities.",
-    image: "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop",
+    description:
+      "A comprehensive, elite-level training program focusing on advanced pediatric orthopedic surgeries and innovative treatment approaches for complex congenital deformities.",
+    image:
+      "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop",
     duration: "18 months",
     enrolledStudents: 20,
     rating: 4.8,
@@ -153,7 +211,7 @@ const courses: Course[] = [
     schedule: [
       { day: "Tuesday", time: "08:00 AM - 12:00 PM" },
       { day: "Thursday", time: "01:00 PM - 05:00 PM" },
-      { day: "Saturday", time: "09:00 AM - 01:00 PM" }
+      { day: "Saturday", time: "09:00 AM - 01:00 PM" },
     ],
     modules: [
       "Advanced Pediatric Musculoskeletal Imaging and Analysis",
@@ -162,21 +220,23 @@ const courses: Course[] = [
       "Cutting-edge Treatments for Neuromuscular Disorders",
       "Advanced Pediatric Sports Medicine",
       "3D Printing Applications in Pediatric Orthopedics",
-      "Ethical Considerations in Pediatric Orthopedic Care"
+      "Ethical Considerations in Pediatric Orthopedic Care",
     ],
     features: [
       "Hands-on workshops with leading pediatric orthopedic surgeons",
       "Virtual reality surgical planning sessions",
       "International rotations at prestigious pediatric hospitals",
       "Collaborative research opportunities with global partners",
-      "Advanced training in patient and family-centered care"
-    ]
+      "Advanced training in patient and family-centered care",
+    ],
   },
   {
     id: "advanced-spine-surgery",
     name: "Advanced Spine Surgery Innovation Program",
-    description: "An elite program at the forefront of spine surgery, covering the most advanced techniques in minimally invasive and robotic spine surgeries, complex deformity corrections, and emerging technologies.",
-    image: "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop",
+    description:
+      "An elite program at the forefront of spine surgery, covering the most advanced techniques in minimally invasive and robotic spine surgeries, complex deformity corrections, and emerging technologies.",
+    image:
+      "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop",
     duration: "15 months",
     enrolledStudents: 15,
     rating: 4.9,
@@ -185,7 +245,7 @@ const courses: Course[] = [
     schedule: [
       { day: "Monday", time: "10:00 AM - 02:00 PM" },
       { day: "Wednesday", time: "03:00 PM - 07:00 PM" },
-      { day: "Friday", time: "08:00 AM - 12:00 PM" }
+      { day: "Friday", time: "08:00 AM - 12:00 PM" },
     ],
     modules: [
       "Advanced Spinal Biomechanics and Pathophysiology",
@@ -194,110 +254,125 @@ const courses: Course[] = [
       "Complex Spinal Deformity Correction Strategies",
       "Emerging Technologies in Spine Surgery",
       "Advanced Spinal Oncology Management",
-      "Regenerative Therapies in Spine Treatment"
+      "Regenerative Therapies in Spine Treatment",
     ],
     features: [
       "Exclusive access to next-generation spine surgery simulators",
       "Personalized mentorship by pioneering spine surgeons",
       "Participation in groundbreaking clinical trials",
       "Advanced training in AI-assisted surgical planning",
-      "Immersive AR/VR spine anatomy and surgical technique modules"
-    ]
-  }
-]
+      "Immersive AR/VR spine anatomy and surgical technique modules",
+    ],
+  },
+];
 
 const blogPosts: BlogPost[] = [
   {
     id: "ai-orthopedics",
     title: "The Future of Orthopedics: AI and Robotic Surgeries",
-    excerpt: "Explore how artificial intelligence and robotics are revolutionizing orthopedic surgeries, improving precision and patient outcomes.",
+    excerpt:
+      "Explore how artificial intelligence and robotics are revolutionizing orthopedic surgeries, improving precision and patient outcomes.",
     author: "Dr. Arun Sharma",
     date: "2024-05-15",
-    image: "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop",
-    category: "Technology"
+    image:
+      "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop",
+    category: "Technology",
   },
   {
     id: "pediatric-innovations",
     title: "Breakthrough Innovations in Pediatric Orthopedics",
-    excerpt: "Discover the latest advancements in treating complex congenital deformities and improving the quality of life for young patients.",
+    excerpt:
+      "Discover the latest advancements in treating complex congenital deformities and improving the quality of life for young patients.",
     author: "Dr. Meera Patel",
     date: "2024-06-02",
-    image: "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop",
-    category: "Pediatrics"
+    image:
+      "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop",
+    category: "Pediatrics",
   },
   {
     id: "spine-surgery-advancements",
     title: "Next-Gen Spine Surgery: Minimally Invasive Techniques",
-    excerpt: "Learn about cutting-edge minimally invasive spine surgery techniques that are transforming patient recovery and outcomes.",
+    excerpt:
+      "Learn about cutting-edge minimally invasive spine surgery techniques that are transforming patient recovery and outcomes.",
     author: "Dr. Rajiv Singh",
     date: "2024-06-20",
-    image: "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop",
-    category: "Surgical Techniques"
-  }
-]
+    image:
+      "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop",
+    category: "Surgical Techniques",
+  },
+];
 
 const faqs: FAQ[] = [
   {
-    question: "What are the admission requirements for the DNB Orthopedics program?",
-    answer: "Admission to our DNB Orthopedics program requires completion of MBBS, a valid medical license, and clearing the NEET-PG examination. International applicants may have additional requirements. Shortlisted candidates will undergo an interview process."
+    question:
+      "What are the admission requirements for the DNB Orthopedics program?",
+    answer:
+      "Admission to our DNB Orthopedics program requires completion of MBBS, a valid medical license, and clearing the NEET-PG examination. International applicants may have additional requirements. Shortlisted candidates will undergo an interview process.",
   },
   {
     question: "How long is the DNB Orthopedics course?",
-    answer: "The DNB Orthopedics course is typically a 3-year full-time program. However, some of our specialized courses, like the Advanced Spine Surgery Innovation Program, may have different durations tailored to the specific curriculum."
+    answer:
+      "The DNB Orthopedics course is typically a 3-year full-time program. However, some of our specialized courses, like the Advanced Spine Surgery Innovation Program, may have different durations tailored to the specific curriculum.",
   },
   {
-    question: "What career opportunities are available after completing the DNB Orthopedics program?",
-    answer: "Graduates of our DNB Orthopedics program have diverse career opportunities, including positions in leading hospitals, academic institutions, research centers, and private practice. Many of our alumni have gone on to become renowned surgeons, researchers, and leaders in the field of orthopedics."
+    question:
+      "What career opportunities are available after completing the DNB Orthopedics program?",
+    answer:
+      "Graduates of our DNB Orthopedics program have diverse career opportunities, including positions in leading hospitals, academic institutions, research centers, and private practice. Many of our alumni have gone on to become renowned surgeons, researchers, and leaders in the field of orthopedics.",
   },
   {
-    question: "Are there opportunities for international exposure during the program?",
-    answer: "Yes, our program offers various international exposure opportunities, including observerships at top global orthopedic centers, participation in international conferences, and collaborative research projects with international partners."
+    question:
+      "Are there opportunities for international exposure during the program?",
+    answer:
+      "Yes, our program offers various international exposure opportunities, including observerships at top global orthopedic centers, participation in international conferences, and collaborative research projects with international partners.",
   },
   {
-    question: "What kind of research opportunities are available in the program?",
-    answer: "Our program emphasizes research as a crucial component of advanced orthopedic training. Students have opportunities to engage in cutting-edge research, access state-of-the-art laboratories, and receive mentorship from leading researchers. We also provide support for publishing in high-impact journals and presenting at international conferences."
-  }
-]
+    question:
+      "What kind of research opportunities are available in the program?",
+    answer:
+      "Our program emphasizes research as a crucial component of advanced orthopedic training. Students have opportunities to engage in cutting-edge research, access state-of-the-art laboratories, and receive mentorship from leading researchers. We also provide support for publishing in high-impact journals and presenting at international conferences.",
+  },
+];
 
 export default function AdvancedOrthopedicsDNB() {
   const [blogs, setBlogs] = useState([]);
-  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null)
-  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null)
-  const [isBookingOpen, setIsBookingOpen] = useState(false)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [filterSpecialty, setFilterSpecialty] = useState("")
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
-  const { scrollYProgress } = useScroll()
+  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterSpecialty, setFilterSpecialty] = useState("");
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    new Date()
+  );
+  const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
-    restDelta: 0.001
-  })
+    restDelta: 0.001,
+  });
 
-  const heroRef = useRef<HTMLDivElement>(null)
-  const aboutRef = useRef<HTMLDivElement>(null)
-  const doctorsRef = useRef<HTMLDivElement>(null)
-  const coursesRef = useRef<HTMLDivElement>(null)
-  const faqsRef = useRef<HTMLDivElement>(null)
-  const blogRef = useRef<HTMLDivElement>(null)
+  const heroRef = useRef<HTMLDivElement>(null);
+  const aboutRef = useRef<HTMLDivElement>(null);
+  const doctorsRef = useRef<HTMLDivElement>(null);
+  const coursesRef = useRef<HTMLDivElement>(null);
+  const faqsRef = useRef<HTMLDivElement>(null);
+  const blogRef = useRef<HTMLDivElement>(null);
 
   const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
-    ref.current?.scrollIntoView({ behavior: 'smooth' })
-  }
-
-
+    ref.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
     const handleScroll = () => {
       if (heroRef.current) {
-        const scrollPosition = window.scrollY
-        heroRef.current.style.backgroundPositionY = `${scrollPosition * 0.5}px`
+        const scrollPosition = window.scrollY;
+        heroRef.current.style.backgroundPositionY = `${scrollPosition * 0.5}px`;
       }
-    }
+    };
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -308,9 +383,9 @@ export default function AdvancedOrthopedicsDNB() {
           ...blog,
           image: blog.image
             ? `https://test.sjhrc.in/hospital-api/blogs/${blog.image
-              .toString()
-              .replace(/^uploads[\\/]/, "")
-              .replace(/\\/g, "/")}`
+                .toString()
+                .replace(/^uploads[\\/]/, "")
+                .replace(/\\/g, "/")}`
             : undefined,
         }));
 
@@ -323,15 +398,17 @@ export default function AdvancedOrthopedicsDNB() {
     fetchBlogs();
   }, []);
 
-  const filteredDoctors = doctors.filter(doctor =>
-    doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    (filterSpecialty === "" || doctor.specialty === filterSpecialty)
-  )
+  const filteredDoctors = doctors.filter(
+    (doctor) =>
+      doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (filterSpecialty === "" || doctor.specialty === filterSpecialty)
+  );
 
-  const filteredCourses = courses.filter(course =>
-    course.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.description.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const filteredCourses = courses.filter(
+    (course) =>
+      course.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
@@ -339,7 +416,6 @@ export default function AdvancedOrthopedicsDNB() {
         className="fixed bottom-0 left-0 right-0 h-1 bg-primary z-50"
         style={{ scaleX }}
       />
-
 
       {/* Hero Section with Video Background */}
       <motion.div
@@ -418,12 +494,22 @@ export default function AdvancedOrthopedicsDNB() {
               transition={{ duration: 0.8 }}
             >
               <p className="text-lg mb-6 text-gray-700">
-                Our Advanced DNB Orthopedics program is designed to produce world-class orthopedic surgeons equipped with cutting-edge knowledge and skills. With a focus on innovation, research, and hands-on experience, we prepare our students for leadership roles in the rapidly evolving field of orthopedics.
+                Our Advanced DNB Orthopedics program is designed to produce
+                world-class orthopedic surgeons equipped with cutting-edge
+                knowledge and skills. With a focus on innovation, research, and
+                hands-on experience, we prepare our students for leadership
+                roles in the rapidly evolving field of orthopedics.
               </p>
               <p className="text-lg mb-6 text-gray-700">
-                Led by internationally renowned faculty and featuring state-of-the-art facilities, our program offers unparalleled opportunities for learning and growth. From advanced surgical techniques to groundbreaking research, we cover every aspect of modern orthopedic practice.
+                Led by internationally renowned faculty and featuring
+                state-of-the-art facilities, our program offers unparalleled
+                opportunities for learning and growth. From advanced surgical
+                techniques to groundbreaking research, we cover every aspect of
+                modern orthopedic practice.
               </p>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white">Learn More</Button>
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                Learn More
+              </Button>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, x: 50 }}
@@ -433,7 +519,9 @@ export default function AdvancedOrthopedicsDNB() {
             >
               <Card className="bg-white border-blue-200 border-2">
                 <CardHeader>
-                  <CardTitle className="text-2xl font-bold text-blue-600">25+</CardTitle>
+                  <CardTitle className="text-2xl font-bold text-blue-600">
+                    25+
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600">Years of Excellence</p>
@@ -441,7 +529,9 @@ export default function AdvancedOrthopedicsDNB() {
               </Card>
               <Card className="bg-white border-teal-200 border-2">
                 <CardHeader>
-                  <CardTitle className="text-2xl font-bold text-teal-600">500+</CardTitle>
+                  <CardTitle className="text-2xl font-bold text-teal-600">
+                    10+
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600">Successful Graduates</p>
@@ -449,7 +539,9 @@ export default function AdvancedOrthopedicsDNB() {
               </Card>
               <Card className="bg-white border-purple-200 border-2">
                 <CardHeader>
-                  <CardTitle className="text-2xl font-bold text-purple-600">100%</CardTitle>
+                  <CardTitle className="text-2xl font-bold text-purple-600">
+                    100%
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600">Placement Rate</p>
@@ -457,7 +549,9 @@ export default function AdvancedOrthopedicsDNB() {
               </Card>
               <Card className="bg-white border-pink-200 border-2">
                 <CardHeader>
-                  <CardTitle className="text-2xl font-bold text-pink-600">50+</CardTitle>
+                  <CardTitle className="text-2xl font-bold text-pink-600">
+                    100+
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600">Research Publications</p>
@@ -515,26 +609,39 @@ export default function AdvancedOrthopedicsDNB() {
                         src={doctor.image}
                         alt={doctor.name}
                         fill
-                        style={{ objectFit: 'cover' }}
+                        style={{ objectFit: "cover" }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-white to-transparent" />
                       <div className="absolute bottom-4 left-4 right-4">
-                        <h3 className="text-xl font-semibold text-gray-900">{doctor.name}</h3>
+                        <h3 className="text-xl font-semibold text-gray-900">
+                          {doctor.name}
+                        </h3>
                         <p className="text-blue-600">{doctor.specialty}</p>
                       </div>
                     </div>
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-gray-600">{doctor.experience} experience</span>
+                        <span className="text-sm text-gray-600">
+                          {doctor.experience} experience
+                        </span>
                         <div className="flex items-center">
                           <Star className="h-4 w-4 text-yellow-400 mr-1" />
-                          <span className="text-sm font-semibold">{doctor.rating}</span>
+                          <span className="text-sm font-semibold">
+                            {doctor.rating}
+                          </span>
                         </div>
                       </div>
-                      <p className="text-sm text-gray-700 line-clamp-3">{doctor.bio}</p>
+                      <p className="text-sm text-gray-700 line-clamp-3">
+                        {doctor.bio}
+                      </p>
                     </CardContent>
                     <CardFooter className="bg-gray-50 border-t border-gray-200">
-                      <Button onClick={() => setSelectedDoctor(doctor)} className="w-full bg-blue-600 hover:bg-blue-700 text-white">View Profile</Button>
+                      <Button
+                        onClick={() => setSelectedDoctor(doctor)}
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                      >
+                        View Profile
+                      </Button>
                     </CardFooter>
                   </Card>
                 </motion.div>
@@ -584,31 +691,44 @@ export default function AdvancedOrthopedicsDNB() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-white to-transparent" />
                       <div className="absolute bottom-4 left-4 right-4">
-                        <h3 className="text-xl font-semibold text-gray-900">{course.name}</h3>
+                        <h3 className="text-xl font-semibold text-gray-900">
+                          {course.name}
+                        </h3>
                       </div>
                     </div>
                     <CardContent className="p-4">
-                      <p className="text-sm text-gray-700 mb-4 line-clamp-2">{course.description}</p>
+                      <p className="text-sm text-gray-700 mb-4 line-clamp-2">
+                        {course.description}
+                      </p>
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center">
                           <Clock className="h-4 w-4 text-teal-600 mr-1" />
-                          <span className="text-sm text-gray-600">{course.duration}</span>
+                          <span className="text-sm text-gray-600">
+                            {course.duration}
+                          </span>
                         </div>
                         <div className="flex items-center">
                           <Users className="h-4 w-4 text-teal-600 mr-1" />
-                          <span className="text-sm text-gray-600">{course.enrolledStudents} enrolled</span>
+                          <span className="text-sm text-gray-600">
+                            {course.enrolledStudents} enrolled
+                          </span>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between">
+                      {/* <div className="flex items-center justify-between">
                         <div className="flex items-center">
                           <Star className="h-4 w-4 text-yellow-400 mr-1" />
                           <span className="text-sm font-semibold text-gray-900">{course.rating}</span>
                         </div>
                         <span className="text-lg font-bold text-teal-600">₹ {course.price.toLocaleString()}</span>
-                      </div>
+                      </div> */}
                     </CardContent>
                     <CardFooter className="bg-gray-50 border-t border-gray-200">
-                      <Button onClick={() => setSelectedCourse(course)} className="w-full bg-teal-600 hover:bg-teal-700 text-white">Course Details</Button>
+                      <Button
+                        onClick={() => setSelectedCourse(course)}
+                        className="w-full bg-teal-600 hover:bg-teal-700 text-white"
+                      >
+                        Course Details
+                      </Button>
                     </CardFooter>
                   </Card>
                 </motion.div>
@@ -674,18 +794,23 @@ export default function AdvancedOrthopedicsDNB() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-white to-transparent" />
                       <div className="absolute top-4 left-4">
-                        <Badge className="bg-blue-600 text-white">{post.category}</Badge>
+                        <Badge className="bg-blue-600 text-white">
+                          {post.category}
+                        </Badge>
                       </div>
                     </div>
                     <CardContent className="p-4">
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{post.title}</h3>
-                      <p className="text-sm text-gray-700 mb-4 line-clamp-2">{post.content}</p>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                        {post.title}
+                      </h3>
+                      <p className="text-sm text-gray-700 mb-4 line-clamp-2">
+                        {post.content}
+                      </p>
                       <div className="flex items-center justify-between text-sm text-gray-600">
                         <span>{post.author}</span>
                         <span>{post.publishDate}</span>
                       </div>
                     </CardContent>
-
                   </Card>
                 </Link>
               </motion.div>
@@ -695,13 +820,20 @@ export default function AdvancedOrthopedicsDNB() {
       </section>
 
       {/* Doctor Profile Dialog */}
-      <Dialog open={!!selectedDoctor} onOpenChange={() => setSelectedDoctor(null)}>
+      <Dialog
+        open={!!selectedDoctor}
+        onOpenChange={() => setSelectedDoctor(null)}
+      >
         <DialogContent className="bg-white text-gray-900 max-w-3xl">
           {selectedDoctor && (
             <>
               <DialogHeader>
-                <DialogTitle className="text-2xl font-bold text-blue-600">{selectedDoctor.name}</DialogTitle>
-                <DialogDescription className="text-gray-700">{selectedDoctor.specialty}</DialogDescription>
+                <DialogTitle className="text-2xl font-bold text-blue-600">
+                  {selectedDoctor.name}
+                </DialogTitle>
+                <DialogDescription className="text-gray-700">
+                  {selectedDoctor.specialty}
+                </DialogDescription>
               </DialogHeader>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
@@ -716,7 +848,9 @@ export default function AdvancedOrthopedicsDNB() {
                 <div>
                   <p className="text-gray-700 mb-4">{selectedDoctor.bio}</p>
                   <div className="mb-4">
-                    <h4 className="font-semibold text-blue-600 mb-2">Key Achievements:</h4>
+                    <h4 className="font-semibold text-blue-600 mb-2">
+                      Key Achievements:
+                    </h4>
                     <ul className="list-disc list-inside text-gray-700">
                       {selectedDoctor.achievements.map((achievement, index) => (
                         <li key={index}>{achievement}</li>
@@ -724,17 +858,24 @@ export default function AdvancedOrthopedicsDNB() {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-blue-600 mb-2">Availability:</h4>
+                    <h4 className="font-semibold text-blue-600 mb-2">
+                      Availability:
+                    </h4>
                     <div className="flex gap-2">
                       {selectedDoctor.availability.map((day) => (
-                        <Badge key={day} className="bg-blue-100 text-blue-600">{day}</Badge>
+                        <Badge key={day} className="bg-blue-100 text-blue-600">
+                          {day}
+                        </Badge>
                       ))}
                     </div>
                   </div>
                 </div>
               </div>
               <DialogFooter>
-                <Button onClick={() => setIsBookingOpen(true)} className="bg-blue-600 hover:bg-blue-700 text-white">
+                <Button
+                  onClick={() => setIsBookingOpen(true)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                >
                   Book Appointment
                 </Button>
               </DialogFooter>
@@ -744,13 +885,20 @@ export default function AdvancedOrthopedicsDNB() {
       </Dialog>
 
       {/* Course Details Dialog */}
-      <Dialog open={!!selectedCourse} onOpenChange={() => setSelectedCourse(null)}>
+      <Dialog
+        open={!!selectedCourse}
+        onOpenChange={() => setSelectedCourse(null)}
+      >
         <DialogContent className="bg-white text-gray-900 max-w-5xl">
           {selectedCourse && (
             <>
               <DialogHeader>
-                <DialogTitle className="text-2xl font-bold text-teal-600">{selectedCourse.name}</DialogTitle>
-                <DialogDescription className="text-gray-700">{selectedCourse.description}</DialogDescription>
+                <DialogTitle className="text-2xl font-bold text-teal-600">
+                  {selectedCourse.name}
+                </DialogTitle>
+                <DialogDescription className="text-gray-700">
+                  {selectedCourse.description}
+                </DialogDescription>
               </DialogHeader>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
@@ -763,14 +911,22 @@ export default function AdvancedOrthopedicsDNB() {
                   />
                   <div className="mt-4 grid grid-cols-2 gap-4">
                     <div>
-                      <h4 className="font-semibold text-teal-600 mb-2">Duration:</h4>
+                      <h4 className="font-semibold text-teal-600 mb-2">
+                        Duration:
+                      </h4>
                       <p className="text-gray-700">{selectedCourse.duration}</p>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-teal-600 mb-2">Enrolled:</h4>
-                      <p className="text-gray-700">{selectedCourse.enrolledStudents} students</p>
+                      <h4 className="font-semibold text-teal-600 mb-2">
+                        Enrolled:
+                      </h4>
+                      <p className="text-gray-700">
+                        {selectedCourse.enrolledStudents} students
+                      </p>
                     </div>
-                    <div>
+                
+
+                    {/* <div>
                       <h4 className="font-semibold text-teal-600 mb-2">Rating:</h4>
                       <div className="flex items-center">
                         <Star className="h-4 w-4 text-yellow-400 mr-1" />
@@ -780,26 +936,64 @@ export default function AdvancedOrthopedicsDNB() {
                     <div>
                       <h4 className="font-semibold text-teal-600 mb-2">Price:</h4>
                       <p className="text-gray-700">${selectedCourse.price.toLocaleString()}</p>
-                    </div>
+                    </div> */}
                   </div>
+                  <div>
+                      <h4 className="font-semibold text-teal-600 mb-2">
+                        More Details:
+                      </h4>
+                      <ul className="mt-2 space-y-1 text-gray-600">
+                        <li>
+                          <strong>Phone:</strong>{" "}
+                          <a
+                            href="tel:+8987999200"
+                            className="text-blue-600 hover:underline"
+                          >
+                            8987999200
+                          </a>{", "}
+                          <a
+                            href="tel:+9471373714"
+                            className="text-blue-600 hover:underline"
+                          > 9471373714
+                          </a>
+                        </li>
+                        <li>
+                          <strong>Email:</strong>{" "}
+                          <a
+                            href="mailto:sjhrc.ranchi@gmail.com"
+                            className="text-blue-600 hover:underline"
+                          >
+                            sjhrc.ranchi@gmail.com
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-teal-600 mb-2">Course Modules:</h4>
+                  <h4 className="font-semibold text-teal-600 mb-2">
+                    Course Modules:
+                  </h4>
                   <ul className="list-disc list-inside text-gray-700 mb-4">
                     {selectedCourse.modules.map((module, index) => (
                       <li key={index}>{module}</li>
                     ))}
                   </ul>
-                  <h4 className="font-semibold text-teal-600 mb-2">Key Features:</h4>
+                  <h4 className="font-semibold text-teal-600 mb-2">
+                    Key Features:
+                  </h4>
                   <ul className="list-disc list-inside text-gray-700 mb-4">
                     {selectedCourse.features.map((feature, index) => (
                       <li key={index}>{feature}</li>
                     ))}
                   </ul>
-                  <h4 className="font-semibold text-teal-600 mb-2">Schedule:</h4>
+                  <h4 className="font-semibold text-teal-600 mb-2">
+                    Schedule:
+                  </h4>
                   <ul className="text-gray-700">
                     {selectedCourse.schedule.map((slot, index) => (
-                      <li key={index}>{slot.day}: {slot.time}</li>
+                      <li key={index}>
+                        {slot.day}: {slot.time}
+                      </li>
                     ))}
                   </ul>
                 </div>
@@ -818,9 +1012,12 @@ export default function AdvancedOrthopedicsDNB() {
       <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
         <DialogContent className="bg-white text-gray-900">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-blue-600">Book an Appointment</DialogTitle>
+            <DialogTitle className="text-2xl font-bold text-blue-600">
+              Book an Appointment
+            </DialogTitle>
             <DialogDescription className="text-gray-700">
-              Select a date and time for your appointment with {selectedDoctor?.name}.
+              Select a date and time for your appointment with{" "}
+              {selectedDoctor?.name}.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4">
@@ -875,12 +1072,15 @@ export default function AdvancedOrthopedicsDNB() {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
+            <Button
+              type="submit"
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
               Confirm Booking
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }

@@ -81,6 +81,9 @@ export function CarouselDemo() {
             <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight">
               Shree Jagannath Hospital & Research Centre
             </h1>
+            <span className="text-xs sm:text-sm lg:text-base text-gray-300">
+                  Multi Speciality and Trauma center
+                </span>
             <div className="flex items-center space-x-2">
               <div className="flex">
                 {[1, 2, 3, 4].map((star) => (

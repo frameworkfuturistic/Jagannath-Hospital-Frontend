@@ -10,56 +10,56 @@ import Image from "next/image"
 const patientReviews = [
   {
     id: 1,
-    review: "The care I received was nothing short of exceptional. The doctors' expertise and the staff's compassion made a significant difference in my recovery journey.",
+    review: "Excellent and thoroughly professional treatment. Thanks to Dr Sudheer Kumar. Kind and courteous staff. Knee replacement operation done on my wife. She is being discharged on the 8 th day after operation.",
     image: "/people.png",
-    name: "Asish Aggarwal",
-    occupation: "Software Engineer",
+    name: "Anil.K Singh",
+    occupation: "",
     rating: 5,
-    date: "2023-10-15"
+    date: "2024-12-06"
   },
   {
     id: 2,
-    review: "State-of-the-art facilities combined with a patient-first approach. I felt valued and well-cared for throughout my treatment.",
+    review: "I'm very thankful to all doctors (Dr. SUDHIR, Dr. Satyam, Dr. Chiranjib) who operate my uncle's Ankle, and also thanks to all nursing staffs of 2nd floor which really very cooperative and helpful. All the services of this hospital is really awesome like cleaning of hospital, behaviour of all staffs, food quality, overall good experience.😊",
     image: "/people.png",
-    name: "Raghu Singhania",
-    occupation: "Business Analyst",
+    name: "Abhishek Singh",
+    occupation: "",
     rating: 5,
-    date: "2023-10-20"
+    date: "2024-11-20"
   },
   {
     id: 3,
-    review: "The clinic's commitment to using cutting-edge technology while maintaining a warm, personal touch is truly commendable.",
+    review: "All the facilities here are good and I am happy to get the treatment and hope to get well soon. Thanks to the doctor and staff here for this.🙏",
     image: "/people.png",
-    name: "Ganga Mohini",
-    occupation: "Teacher",
+    name: "Shaktiman Bhagat 110",
+    occupation: "",
     rating: 4,
-    date: "2023-10-25"
+    date: "2024-10-25"
   },
   {
     id: 4,
-    review: "From diagnosis to aftercare, every step was handled with utmost professionalism. I couldn't have asked for better medical attention.",
+    review: "Good for treatment but expensive also since in Ranchi what we can expect",
     image: "/people.png",
-    name: "Vikram Mehta",
-    occupation: "Architect",
-    rating: 5,
-    date: "2023-10-30"
+    name: "Ashish kumar",
+    occupation: "Local Guide",
+    rating: 4,
+    date: "2024-06-30"
   },
   {
     id: 5,
-    review: "The follow-up care I received was exceptional. Even after my treatment was complete, the staff checked in regularly to ensure my recovery was on track.",
+    review: "My experience at hospital is very good, all the staff, doctors and nurses behaviour is so good so supporting 🙏🙏🙏.",
     image: "/people.png",
-    name: "Priya Sharma",
+    name: "Himansu Sahu",
     occupation: "Marketing Executive",
     rating: 5,
-    date: "2023-11-05"
+    date: "2024-05-05"
   },
 ]
 
 const stats = [
-  { icon: CalendarDays, label: "Years of Experience", value: "09" },
-  { icon: Stethoscope, label: "Medical Specialists", value: "25" },
-  { icon: Hospital, label: "Advanced Treatments", value: "30" },
-  { icon: User, label: "Happy Patients", value: "150+" },
+  { icon: CalendarDays, label: "Years of Experience", value: "14" },
+  { icon: Stethoscope, label: "Medical Specialists", value: "14" },
+  { icon: Hospital, label: "Advanced Treatments", value: "50" },
+  { icon: User, label: "Happy Patients", value: "1 lakh+" },
 ]
 
 export function AdvancedPatientReview() {
@@ -222,16 +222,21 @@ export function AdvancedPatientReview() {
           </div>
         </div>
 
-        <div className="text-center mt-12">
+        <div className="flex flex-col justify-center sm:flex-row gap-4">
           <Button
             variant="outline"
             size="lg"
             className="bg-indigo-600 text-white hover:bg-indigo-700 transition-colors duration-300"
-            onClick={() => window.open('https://www.google.com/maps/place/Your+Clinic+Name', '_blank')}
+            onClick={() => window.open('https://maps.app.goo.gl/fBAoGFnkPdJojs5SA', '_blank')}
           >
             View More on Google Reviews
             <ExternalLink className="ml-2 h-4 w-4" />
           </Button>
+                <Button 
+                  onClick={() => window.open('https://g.page/r/CUO5fyObUrisEBM/review', '_blank')}
+                className="bg-indigo-600 text-white hover:bg-indigo-700 transition-colors duration-300">
+                  Leave a Review
+                </Button>
         </div>
       </div>
     </div>

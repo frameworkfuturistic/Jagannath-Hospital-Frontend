@@ -142,19 +142,14 @@ export default function ContactPage() {
                     <div className="bg-blue-100 p-3 rounded-full">
                       <MapPin className="text-blue-600 h-6 w-6" />
                     </div>
-                    <span className="text-lg">123 Hospital Street, Medical City, HC 12345</span>
+                    <span className="text-lg">Mayor's Road - Booty Road, Radium Rd, Behind Machali Ghar, Ranchi, Jharkhand 834001</span>
                   </motion.div>
-                  <motion.div className="flex items-center space-x-4" whileHover={{ x: 10 }} transition={{ type: "spring", stiffness: 400, damping: 10 }}>
-                    <div className="bg-blue-100 p-3 rounded-full">
-                      <Phone className="text-blue-600 h-6 w-6" />
-                    </div>
-                    <span className="text-lg">+1 (555) 123-4567</span>
-                  </motion.div>
+                
                   <motion.div className="flex items-center space-x-4" whileHover={{ x: 10 }} transition={{ type: "spring", stiffness: 400, damping: 10 }}>
                     <div className="bg-blue-100 p-3 rounded-full">
                       <Mail className="text-blue-600 h-6 w-6" />
                     </div>
-                    <span className="text-lg">contact@hospital.com</span>
+                    <span className="text-lg">sjhrc.ranchi@gmail.com, sjhrc.hr@gmail.com</span>
                   </motion.div>
                   <motion.div className="flex items-center space-x-4" whileHover={{ x: 10 }} transition={{ type: "spring", stiffness: 400, damping: 10 }}>
                     <div className="bg-blue-100 p-3 rounded-full">
@@ -170,8 +165,9 @@ export default function ContactPage() {
                 <div className="flex items-center space-x-4">
                   <AlertCircle className="h-8 w-8 text-red-500" />
                   <div>
-                    <p className="font-semibold text-lg text-red-700">Emergency Hotline:</p>
-                    <p className="text-2xl font-bold text-red-600">+1 (555) 911-1234</p>
+                    <p className="text-lg font-bold text-red-600">+91 89879 99200</p>
+                    <p className="text-lg font-bold text-red-600">+91 89879 99199</p>
+                    <p className="text-lg font-bold text-red-600">+91 65123 60045</p>
                   </div>
                 </div>
               </div>
