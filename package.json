@@ -45,6 +45,7 @@
     "embla-carousel-react": "^8.1.8",
     "framer-motion": "^11.3.30",
     "froala-editor": "^4.2.1",
+    "http-proxy-middleware": "^3.0.3",
     "js-cookie": "^3.0.5",
     "jspdf": "^2.5.2",
     "lucide": "^0.417.0",

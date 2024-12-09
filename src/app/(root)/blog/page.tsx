@@ -42,6 +42,8 @@ import {
 } from "lucide-react";
 import HeaderBanner from "@/components/HeaderBanner";
 import axiosInstance from "@/lib/axiosInstance";
+import { formatImageUrl } from "@/utils/formatImageUrl"; // Adjust the import path
+
 
 interface BlogPost {
   _id: string;
@@ -82,12 +84,7 @@ const fetchBlogs = async (
 
   const formattedBlogs = response.data.blogs.map((blog) => ({
     ...blog,
-    image: blog.image
-      ? `https://appointment.sjhrc.in/hospital-api/blogs/${blog.image
-          .toString()
-          .replace(/^uploads[\\/]/, "")
-          .replace(/\\/g, "/")}`
-      : undefined,
+    image: formatImageUrl(blog.image),
   }));
 
   return {
@@ -95,6 +92,8 @@ const fetchBlogs = async (
     blogs: formattedBlogs,
   };
 };
+console.log("sad", fetchBlogs);
+
 
 const queryClient = new QueryClient();
 
@@ -176,7 +175,6 @@ function BlogPageContent() {
       <HeaderBanner
         title="Health & Wellness Blog"
         subtitle="Expert Insights for Your Well-being"
-        bgImage="/images/hospital-banner.jpg"
       />
 
       <div className="container mx-auto py-12 px-4">
