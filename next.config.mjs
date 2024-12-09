@@ -7,7 +7,7 @@ const nextConfig = {
       "images.pexels.com",
       "gratisography.com",
       "localhost",
-      "images.unsplash.com", // Added the new domain here
+      "images.unsplash.com",
     ],
     remotePatterns: [
       {
@@ -20,12 +20,6 @@ const nextConfig = {
         protocol: "https",
         hostname: "appointment.sjhrc.in", // Added the new domain here
         pathname: "/hospital-api/**", // Allow paths under /hospital-api/
-      },
-      {
-        protocol: "https",
-        hostname: "**",
-        port: "",
-        pathname: "**",
       },
     ],
   },
