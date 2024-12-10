@@ -4,7 +4,7 @@ export const formatImageUrl = (imagePath?: string): string | undefined => {
   
     return (imagePath.startsWith("http://") || imagePath.startsWith("https://"))
       ? imagePath
-      : `${BACKEND_URL}/blogs/blogs/${imagePath
+      : `${BACKEND_URL}/blogs/${imagePath
           .replace(/^uploads[\\/]/, "")
           .replace(/\\/g, "/")}`;
   };

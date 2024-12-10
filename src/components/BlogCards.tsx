@@ -40,12 +40,11 @@ const BlogCards = () => {
           ...blog,
           // Construct the image URL
           image: blog.image
-            ? `https://appointment.sjhrc.in/hospital-api/blogs/${blog.image
-                .toString()
-                .replace(/^uploads[\\/]/, "")
-                .replace(/\\/g, "/")}`
-            : undefined,
+            ? `https://appointment.sjhrc.in/hospital-api/blogs/${blog.image.replace(/^uploads[\\/]/, "").replace(/\\/g, "/")}`
+            : null,
         }));
+        console.log("imageData", formattedBlogs);
+        
 
         setBlogs(formattedBlogs.slice(0, 6)); // Limit to the first 6 blogs
       } catch (error) {
