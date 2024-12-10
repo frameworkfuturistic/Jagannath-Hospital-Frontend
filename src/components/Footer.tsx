@@ -1,14 +1,27 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect } from "react"
-import { motion, AnimatePresence, useAnimation } from "framer-motion"
-import { Clock10, Mail, MapPin, Phone, ChevronDown, Facebook, Twitter, Instagram, Linkedin, ArrowRight, ChevronUp } from "lucide-react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { useForm } from "react-hook-form"
-import { useInView } from "react-intersection-observer"
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence, useAnimation } from "framer-motion";
+import {
+  Clock10,
+  Mail,
+  MapPin,
+  Phone,
+  ChevronDown,
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+  ArrowRight,
+  ChevronUp,
+  Youtube,
+} from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useForm } from "react-hook-form";
+import { useInView } from "react-intersection-observer";
 
 const quickLinks = [
   { name: "About Us", href: "/about/aboutUs" },
@@ -18,7 +31,7 @@ const quickLinks = [
   { name: "Careers", href: "/career/currentOpenings" },
   { name: "Blogs", href: "/blog" },
   { name: "Find a Doctor", href: "/find-doctor" },
-]
+];
 
 const departments = [
   { name: "Orthopedics", href: "/departments/orthopedics" },
@@ -27,13 +40,19 @@ const departments = [
   { name: "Cardiology", href: "/departments/cardiology" },
   { name: "Physiotherapy", href: "/departments/physiotherapy" },
   { name: "Emergency Services", href: "/departments" },
-]
+];
 
-const FooterSection = ({ title, children }: { title: string; children: React.ReactNode }) => {
+const FooterSection = ({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) => {
   const [isOpen, setIsOpen] = useState(true);
   const [isDesktop, setIsDesktop] = useState(false);
-  const controls = useAnimation()
-  const [ref, inView] = useInView()
+  const controls = useAnimation();
+  const [ref, inView] = useInView();
 
   useEffect(() => {
     const handleResize = () => setIsDesktop(window.innerWidth >= 768);
@@ -46,9 +65,9 @@ const FooterSection = ({ title, children }: { title: string; children: React.Rea
 
   useEffect(() => {
     if (inView) {
-      controls.start("visible")
+      controls.start("visible");
     }
-  }, [controls, inView])
+  }, [controls, inView]);
 
   return (
     <motion.div
@@ -57,7 +76,7 @@ const FooterSection = ({ title, children }: { title: string; children: React.Rea
       animate={controls}
       variants={{
         visible: { opacity: 1, y: 0 },
-        hidden: { opacity: 0, y: 50 }
+        hidden: { opacity: 0, y: 50 },
       }}
       transition={{ duration: 0.5, delay: 0.2 }}
       className="space-y-4"
@@ -67,10 +86,13 @@ const FooterSection = ({ title, children }: { title: string; children: React.Rea
         className="flex items-center justify-between w-full text-lg font-medium border-b-2 border-blue-400 pb-2 md:cursor-default"
       >
         {title}
-        <ChevronDown className="h-5 w-5 md:hidden transition-transform duration-300" style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+        <ChevronDown
+          className="h-5 w-5 md:hidden transition-transform duration-300"
+          style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
+        />
       </button>
       <AnimatePresence>
-      {(isOpen || isDesktop) && (
+        {(isOpen || isDesktop) && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
@@ -83,31 +105,31 @@ const FooterSection = ({ title, children }: { title: string; children: React.Rea
         )}
       </AnimatePresence>
     </motion.div>
-  )
-}
+  );
+};
 
 const Footer = () => {
-  const { register, handleSubmit } = useForm()
-  const [mapExpanded, setMapExpanded] = useState(false)
-  const [showScrollTop, setShowScrollTop] = useState(false)
+  const { register, handleSubmit } = useForm();
+  const [mapExpanded, setMapExpanded] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const onSubmit = (data: any) => {
-    console.log(data)
+    console.log(data);
     // Handle form submission
-  }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
-      setShowScrollTop(window.pageYOffset > 300)
-    }
+      setShowScrollTop(window.pageYOffset > 300);
+    };
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <footer className="relative bg-gray-50 py-12 overflow-hidden">
@@ -119,25 +141,45 @@ const Footer = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               <FooterSection title="Contact Us">
                 <div className="space-y-4">
-                  <motion.div whileHover={{ scale: 1.05 }} className="flex items-start space-x-2">
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    className="flex items-start space-x-2"
+                  >
                     <MapPin className="h-5 w-5 text-blue-500" />
                     <div>
-                      <p className="font-semibold">SHREE JAGANNATH HOSPITAL & RESEARCH CENTRE</p>
-                      <p className="text-gray-600">(Mayor's Road - Booty Road, Radium Rd, behind Machali Ghar (Aqua World) and Nakshatra Van, Ranchi, Jharkhand 834001)</p>
+                      <p className="font-semibold">
+                        SHREE JAGANNATH HOSPITAL & RESEARCH CENTRE
+                      </p>
+                      <p className="text-gray-600">
+                        (Mayor's Road - Booty Road, Radium Rd, behind Machali
+                        Ghar (Aqua World) and Nakshatra Van, Ranchi, Jharkhand
+                        834001)
+                      </p>
                     </div>
                   </motion.div>
-                  <motion.div whileHover={{ scale: 1.05 }} className="flex items-start space-x-2">
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    className="flex items-start space-x-2"
+                  >
                     <Phone className="h-5 w-5 text-blue-500" />
                     <div>
-                      <p className="text-gray-600">Mon to Fri : 08:30 - 18:00</p>
+                      <p className="text-gray-600">
+                        Mon to Fri : 08:30 - 18:00
+                      </p>
                       <p className="font-semibold">+91 8987999200</p>
                     </div>
                   </motion.div>
-                  <motion.div whileHover={{ scale: 1.05 }} className="flex items-start space-x-2">
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    className="flex items-start space-x-2"
+                  >
                     <Mail className="h-5 w-5 text-blue-500" />
                     <p className="text-gray-600">sjhrc.ranchi@gmail.com</p>
                   </motion.div>
-                  <motion.div whileHover={{ scale: 1.05 }} className="flex items-start space-x-2">
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    className="flex items-start space-x-2"
+                  >
                     <Clock10 className="h-5 w-5 text-blue-500" />
                     <div>
                       <p className="text-gray-600">Mon-Sat 6.00 - 22.00</p>
@@ -149,11 +191,18 @@ const Footer = () => {
 
               <FooterSection title="Quick Links">
                 <div className="grid grid-cols-1 gap-2">
-                {quickLinks.map((dept) => (
-                    <motion.div key={dept.href} whileHover={{ x: 5 }} className="flex items-center">
+                  {quickLinks.map((dept) => (
+                    <motion.div
+                      key={dept.href}
+                      whileHover={{ x: 5 }}
+                      className="flex items-center"
+                    >
                       <ArrowRight className="h-4 w-4 mr-2 text-primary" />
-                      <Link href={dept.href} className="hover:text-blue-500 transition-colors">
-                      {dept.name}
+                      <Link
+                        href={dept.href}
+                        className="hover:text-blue-500 transition-colors"
+                      >
+                        {dept.name}
                       </Link>
                     </motion.div>
                   ))}
@@ -163,9 +212,16 @@ const Footer = () => {
               <FooterSection title="Our Departments">
                 <div className="grid grid-cols-1 gap-2">
                   {departments.map((dept) => (
-                    <motion.div key={dept.href} whileHover={{ x: 5 }} className="flex items-center">
+                    <motion.div
+                      key={dept.href}
+                      whileHover={{ x: 5 }}
+                      className="flex items-center"
+                    >
                       <ArrowRight className="h-4 w-4 mr-2 text-primary" />
-                      <Link href={dept.href} className="hover:text-blue-500 transition-colors">
+                      <Link
+                        href={dept.href}
+                        className="hover:text-blue-500 transition-colors"
+                      >
                         {dept.name}
                       </Link>
                     </motion.div>
@@ -199,7 +255,9 @@ const Footer = () => {
           <div className="lg:col-span-1 xl:col-span-1">
             <FooterSection title="Our Location">
               <motion.div
-                className={`aspect-w-16 aspect-h-9 rounded-lg overflow-hidden transition-all duration-500 ease-in-out ${mapExpanded ? 'h-[60vh]' : 'h-[30vh]'}`}
+                className={`aspect-w-16 aspect-h-9 rounded-lg overflow-hidden transition-all duration-500 ease-in-out ${
+                  mapExpanded ? "h-[60vh]" : "h-[30vh]"
+                }`}
                 layout
               >
                 <iframe
@@ -225,16 +283,35 @@ const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <FooterSection title="Disclaimer">
               <p className="text-sm text-gray-600">
-                The information provided on this website is for general informational purposes. It is intended to be a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.
+                The information provided on this website is for general
+                informational purposes. It is intended to be a substitute for
+                professional medical advice, diagnosis, or treatment. Always
+                seek the advice of your physician or other qualified health
+                provider with any questions you may have regarding a medical
+                condition.
               </p>
             </FooterSection>
 
             <FooterSection title="Sitemap">
               <div className="grid grid-cols-2 gap-2">
-                {["Home", "Services", "Doctors", "Appointments", "Blog", "Contact"].map((link) => (
-                  <motion.div key={link} whileHover={{ x: 5 }} className="flex items-center">
+                {[
+                  "Home",
+                  "Services",
+                  "Doctors",
+                  "Appointments",
+                  "Blog",
+                  "Contact",
+                ].map((link) => (
+                  <motion.div
+                    key={link}
+                    whileHover={{ x: 5 }}
+                    className="flex items-center"
+                  >
                     <ArrowRight className="h-4 w-4 mr-2 text-primary" />
-                    <Link href={`../sitemap`} className="hover:text-blue-500 transition-colors">
+                    <Link
+                      href={`../sitemap`}
+                      className="hover:text-blue-500 transition-colors"
+                    >
                       {link}
                     </Link>
                   </motion.div>
@@ -246,13 +323,27 @@ const Footer = () => {
 
         <div className="mt-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <p className="text-sm text-gray-600">
-            &copy; {new Date().getFullYear()} SHREE JAGANNATH HOSPITAL & RESEARCH CENTRE. All Rights Reserved.
+            &copy; {new Date().getFullYear()} SHREE JAGANNATH HOSPITAL &
+            RESEARCH CENTRE. All Rights Reserved.
           </p>
           <div className="flex space-x-4">
-            {[Facebook, Twitter, Instagram, Linkedin].map((Icon, index) => (
+            {[
+              { Icon: Facebook, url: "https://www.facebook.com/sjhrc.in" },
+              { Icon: Twitter, url: "https://x.com/Sjhrcranchi" },
+              {
+                Icon: Instagram,
+                url: "https://www.instagram.com/shreejagannathhospital/",
+              },
+              {
+                Icon: Youtube,
+                url: "https://www.youtube.com/@sjhrcjagannath9636",
+              },
+            ].map(({ Icon, url }, index) => (
               <motion.a
                 key={index}
-                href="#"
+                href={url}
+                target="_blank" // Opens the link in a new tab
+                rel="noopener noreferrer" // For security purposes
                 className="text-gray-600 hover:text-blue-500 transition-colors"
                 whileHover={{ scale: 1.2, rotate: 5 }}
                 whileTap={{ scale: 0.9 }}
@@ -279,7 +370,7 @@ const Footer = () => {
         )}
       </AnimatePresence>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

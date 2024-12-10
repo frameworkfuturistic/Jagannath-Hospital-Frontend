@@ -11,9 +11,11 @@ interface TodaySlotModalProps {
   onClose: () => void
   onSubmit: (data: TodaySlotData) => void
   consultantId: number
+  consultantName: string
+  consultantDepartment: string
 }
 
-export function TodaySlotModal({ isOpen, onClose, onSubmit, consultantId }: TodaySlotModalProps) {
+export function TodaySlotModal({ isOpen, onClose, onSubmit, consultantId,consultantName, consultantDepartment }: TodaySlotModalProps) {
   const [formData, setFormData] = useState<TodaySlotData>({
     consultant_id: consultantId,
     shift_id: 1,
@@ -47,6 +49,11 @@ export function TodaySlotModal({ isOpen, onClose, onSubmit, consultantId }: Toda
         <DialogHeader>
           <DialogTitle>Add Today's Slots</DialogTitle>
         </DialogHeader>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold">Doctor Details</h3>
+          <p><strong>Name:</strong> {consultantName}</p>
+          <p><strong>Department:</strong> {consultantDepartment}</p>
+        </div>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">

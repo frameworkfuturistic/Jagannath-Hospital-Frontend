@@ -28,19 +28,19 @@ const AdvancedMedicalExperts: React.FC = () => {
 
   const departments = ['All', 'Cardiology', 'Neurology', 'Pediatrics', 'Orthopedics']; // Add your departments here
 
-  useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const response = await axios.get(`${API_BASE_URL}/consultants`);
-        setDoctors(response.data);
-      } catch (err) {
-        setError('Failed to fetch doctors. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchDoctors();
-  }, []);
+  // useEffect(() => {
+  //   const fetchDoctors = async () => {
+  //     try {
+  //       const response = await axios.get(`${API_BASE_URL}/consultants`);
+  //       setDoctors(response.data);
+  //     } catch (err) {
+  //       setError('Failed to fetch doctors. Please try again later.');
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchDoctors();
+  // }, []);
 
   if (loading) return <strong className="text-center justify-center">Loading...</strong>;
   if (error) return <div className="text-red-500 text-center">{error}</div>;

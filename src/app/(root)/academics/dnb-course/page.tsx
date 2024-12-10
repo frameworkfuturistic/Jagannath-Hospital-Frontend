@@ -151,7 +151,7 @@ const doctors: Doctor[] = [
   {
     id: "Dr-nandkishor-tirkey",
     name: "Dr Nandkishor tirkey",
-    specialty: "Diploma, DNB(Orthopaedics)",
+    specialty: "Post Diploma, DNB(Orthopaedics)",
     image: "/departmentHeads/Dr nandkishor tirkey.jpg",
     experience: "5+ years",
     rating: 4.9,

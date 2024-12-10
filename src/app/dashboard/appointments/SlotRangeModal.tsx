@@ -11,9 +11,11 @@ interface SlotRangeModalProps {
   onClose: () => void
   onSubmit: (data: SlotRangeData) => void
   consultantId: number
+  consultantName: string
+  consultantDepartment: string
 }
 
-export function SlotRangeModal({ isOpen, onClose, onSubmit, consultantId }: SlotRangeModalProps) {
+export function SlotRangeModal({ isOpen, onClose, onSubmit, consultantId, consultantName, consultantDepartment }: SlotRangeModalProps) {
   const [formData, setFormData] = useState<SlotRangeData>({
     consultant_id: consultantId,
     start_date: '',
@@ -64,6 +66,11 @@ export function SlotRangeModal({ isOpen, onClose, onSubmit, consultantId }: Slot
         <DialogHeader>
           <DialogTitle>Add Slot Range</DialogTitle>
         </DialogHeader>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold">Doctor Details</h3>
+          <p><strong>Name:</strong> {consultantName}</p>
+          <p><strong>Department:</strong> {consultantDepartment}</p>
+        </div>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
@@ -134,3 +141,4 @@ export function SlotRangeModal({ isOpen, onClose, onSubmit, consultantId }: Slot
     </Dialog>
   )
 }
+

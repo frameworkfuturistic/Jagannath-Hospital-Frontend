@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { MapPin, Phone, Mail, Clock, AlertCircle, Send, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react'
+import { MapPin, Phone, Mail, Clock, AlertCircle, Send, Facebook, Twitter, Instagram, Linkedin, Youtube } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -202,17 +202,17 @@ export default function ContactPage() {
           >
             <h2 className="text-3xl font-semibold mb-6 text-gray-800">Connect With Us</h2>
             <div className="flex justify-center space-x-6">
-              <motion.a href="#" whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} className="text-blue-600 hover:text-blue-700">
+              <motion.a href="https://www.facebook.com/sjhrc.in" whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} className="text-blue-600 hover:text-blue-700">
                 <Facebook className="h-8 w-8" />
               </motion.a>
-              <motion.a href="#" whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} className="text-blue-400 hover:text-blue-500">
+              <motion.a href="https://x.com/Sjhrcranchi" whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} className="text-blue-400 hover:text-blue-500">
                 <Twitter className="h-8 w-8" />
               </motion.a>
-              <motion.a href="#" whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} className="text-pink-600 hover:text-pink-700">
+              <motion.a href="https://www.instagram.com/shreejagannathhospital/" whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} className="text-pink-600 hover:text-pink-700">
                 <Instagram className="h-8 w-8" />
               </motion.a>
-              <motion.a href="#" whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} className="text-blue-700 hover:text-blue-800">
-                <Linkedin className="h-8 w-8" />
+              <motion.a href="https://www.youtube.com/@sjhrcjagannath9636" whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} className="text-blue-700 hover:text-blue-800">
+                <Youtube className="h-8 w-8" />
               </motion.a>
             </div>
           </motion.div>

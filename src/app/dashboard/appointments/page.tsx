@@ -446,16 +446,21 @@ export default function AdvancedResponsiveAppointmentsPage() {
               handleRefresh()
             }}
             consultantId={selectedConsultant.ConsultantID}
+            consultantName={selectedConsultant.ConsultantName}
+  consultantDepartment={selectedConsultant.Department}
           />
           <SlotRangeModal
             isOpen={slotRangeModalOpen}
             onClose={() => setSlotRangeModalOpen(false)}
+            
             onSubmit={(data) => {
               console.log("Slot range data:", data)
               // Here you would typically send this data to your backend
               handleRefresh()
             }}
             consultantId={selectedConsultant.ConsultantID}
+            consultantName={selectedConsultant.ConsultantName}
+  consultantDepartment={selectedConsultant.Department}
           />
         </>
       )}
