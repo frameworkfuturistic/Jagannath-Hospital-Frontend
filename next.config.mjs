@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: 'standalone',
+  output: "standalone",
   images: {
     remotePatterns: [
       // Appointment Image API
@@ -9,6 +9,26 @@ const nextConfig = {
         protocol: "https",
         hostname: "appointment.sjhrc.in",
         pathname: "/hospital-api/**", // Match all images under /hospital-api/
+      },
+      // Appointment Image API
+      {
+        protocol: "https",
+        hostname: "sjhrc.in",
+        pathname: "/hospital-api/**", // Match all images under /hospital-api/
+      },
+
+      // Appointment Image API
+      {
+        protocol: "https",
+        hostname: "sjhrc.in",
+        pathname: "/backend/**", // Match all images under /hospital-api/
+      },
+
+      // Appointment Image API
+      {
+        protocol: "https",
+        hostname: "appointment.sjhrc.in",
+        pathname: "/**", // Match all images under /hospital-api/
       },
       // LoremFlickr for random placeholder images
       {
@@ -40,22 +60,17 @@ const nextConfig = {
         hostname: "azbigmedia.com",
         pathname: "/wp-content/uploads/**", // Allow images from azbigmedia.com
       },
+      // Localhost development (HTTP allowed)
       {
-        protocol: "http",  // Localhost can be accessed using http
+        protocol: "http",
         hostname: "localhost",
-        pathname: "/**",  // Match any path under localhost
-      },
-      // Dynamic handling of other external sources (optional)
-      {
-        protocol: "https",
-        hostname: "**", // Matches any external domain
-        pathname: "/**", // Matches any image path
+        pathname: "/**", // Match any path under localhost
       },
     ],
     // Optional: Set the device sizes for responsiveness
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384], // Add additional sizes if necessary
-    formats: ['image/webp', 'image/avif'], // Optional: Fallback formats for better image compression
+    formats: ["image/webp", "image/avif"], // Optional: Fallback formats for better image compression
   },
   // Add any other production-specific configurations here
 };
