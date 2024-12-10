@@ -1,5 +1,9 @@
-export const formatImageUrl = (imagePath?: string): string | undefined => {
-    const BACKEND_URL = "https://appointment.sjhrc.in/hospital-api";
+
+  
+
+  export const formatImageUrl = (imagePath?: string): string | undefined => {
+    const BACKEND_URL = process.env.NEXT_PUBLIC_IMAGE_API_URL || "https://appointment.sjhrc.in/hospital-api";
+  
     if (!imagePath) return undefined;
   
     return (imagePath.startsWith("http://") || imagePath.startsWith("https://"))

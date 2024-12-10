@@ -1,10 +1,11 @@
 // src/lib/axiosInstance.ts
 import axios from 'axios';
-import API_ROUTES from '@/utils/apiConfig';
+
+
 
 
 const axiosInstance = axios.create({
-  baseURL: 'https://appointment.sjhrc.in/hospital-api/api' , // Replace with your Node API base URL || https://test.sjhrc.in/hospital-api/api
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL, // Use environment variable for base URL
 });
 
 
