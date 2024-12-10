@@ -15,7 +15,7 @@ interface TodaySlotModalProps {
   consultantDepartment: string
 }
 
-export function TodaySlotModal({ isOpen, onClose, onSubmit, consultantId,consultantName, consultantDepartment }: TodaySlotModalProps) {
+export function TodaySlotModal({ isOpen, onClose, onSubmit, consultantId, consultantName, consultantDepartment }: TodaySlotModalProps) {
   const [formData, setFormData] = useState<TodaySlotData>({
     consultant_id: consultantId,
     shift_id: 1,
@@ -33,8 +33,12 @@ export function TodaySlotModal({ isOpen, onClose, onSubmit, consultantId,consult
     e.preventDefault()
     setIsSubmitting(true)
     try {
-      await createTodaySlot(formData)
-      onSubmit(formData)
+      const dataToSubmit = {
+        ...formData,
+        consultant_id: consultantId
+      }
+      await createTodaySlot(dataToSubmit)
+      onSubmit(dataToSubmit)
       onClose()
     } catch (error) {
       console.error("Error creating today's slot:", error)
@@ -106,3 +110,4 @@ export function TodaySlotModal({ isOpen, onClose, onSubmit, consultantId,consult
     </Dialog>
   )
 }
+

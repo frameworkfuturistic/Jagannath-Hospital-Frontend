@@ -18,8 +18,8 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "appointment.sjhrc.in", // Added the new domain here
-        pathname: "/hospital-api/**", // Allow paths under /hospital-api/
+        hostname: "appointment.sjhrc.in",
+        pathname: "/hospital-api/**",
       },
     ],
   },

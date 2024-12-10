@@ -7,6 +7,8 @@ const axiosInstance = axios.create({
   baseURL: 'https://appointment.sjhrc.in/hospital-api/api' , // Replace with your Node API base URL || https://test.sjhrc.in/hospital-api/api
 });
 
+
+
 // Add request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {

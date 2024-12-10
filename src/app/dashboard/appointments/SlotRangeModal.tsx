@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -25,6 +25,10 @@ export function SlotRangeModal({ isOpen, onClose, onSubmit, consultantId, consul
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  // useEffect(() => {
+  //   setFormData(prev => ({ ...prev, consultant_id: consultantId }))
+  // }, [consultantId])
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: name === 'interval_minutes' ? parseInt(value) : value }))
@@ -50,8 +54,12 @@ export function SlotRangeModal({ isOpen, onClose, onSubmit, consultantId, consul
     e.preventDefault()
     setIsSubmitting(true)
     try {
-      await createSlotRange(formData)
-      onSubmit(formData)
+      const dataToSubmit = {
+        ...formData,
+        consultant_id: consultantId
+      }
+      await createSlotRange(dataToSubmit)
+      onSubmit(dataToSubmit)
       onClose()
     } catch (error) {
       console.error("Error creating slot range:", error)

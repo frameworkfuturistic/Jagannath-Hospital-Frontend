@@ -25,7 +25,7 @@ import { useInView } from "react-intersection-observer";
 
 const quickLinks = [
   { name: "About Us", href: "/about/aboutUs" },
-  { name: "Privacy Policy", href: "/about/policy" },
+  // { name: "Privacy Policy", href: "/about/policy" },
   { name: "Terms & Conditions", href: "/about/policy" },
   { name: "Contact Us", href: "/contact" },
   { name: "Careers", href: "/career/currentOpenings" },

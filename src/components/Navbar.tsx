@@ -52,7 +52,7 @@ import {
 import LoadingSpinner from "@/components/widget/spinner";
 
 const topNavItems = [
-  { icon: User, label: "Find a Doctor", href: "/find-doctor" },
+  { icon: User, label: "Find a Doctor", href: "#" },
   { icon: FileText, label: "Blogs", href: "/blog" },
   { icon: FileSpreadsheet, label: "My Appointment", href: "/appointment" },
   { icon: Briefcase, label: "Career", href: "/career/currentOpenings" },
@@ -283,36 +283,36 @@ export default function EnhancedHeader() {
         <div className="w-full px-2 sm:px-2 lg:px-0">
           <div className="flex flex-col">
             <div className="flex items-center justify-between">
-              <Link
-                href="/"
-                className="flex items-center space-x-4 lg:space-x-6"
-              >
-                {/* Hospital Logo */}
-                <Image
-                  src="/hospital/hospitallogo.png?height=50&width=50"
-                  alt="Shree Jagannath Hospital Logo"
-                  width={70}
-                  height={70}
-                  className="rounded-full shadow-lg"
-                />
-                {/* Text Section */}
-                <div className="flex flex-col text-center lg:text-left">
-                  <span className="text-lg sm:text-xl md:text-xl lg:text-2xl xl:text-4xl font-extrabold text-primary tracking-wide">
-                    SHREE JAGANNATH
-                  </span>
-                  <span className="text-xs sm:text-sm lg:text-base text-gray-600">
-                 Hospital & Research Center
-                </span>
-                </div>
-                {/* Accreditation Logo */}
-                <Image
-                  src="/hospital/NABH-2.png?height=50&width=50"
-                  alt="NABH Accreditation Logo"
-                  width={60}
-                  height={60}
-                  className="rounded-full hidden md:flex shadow-md"
-                />
-              </Link>
+            <Link
+          href="/"
+          className="flex items-center space-x-2 sm:space-x-4"
+        >
+          {/* Hospital Logo */}
+          <Image
+            src="/hospital/hospitallogo.png?height=50&width=50"
+            alt="Shree Jagannath Hospital Logo"
+            width={50}
+            height={50}
+            className="rounded-full shadow-lg w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16"
+          />
+          {/* Text Section */}
+          <div className="flex flex-col">
+            <span className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-extrabold text-primary tracking-wide leading-tight">
+              SHREE JAGANNATH
+            </span>
+            <span className="text-xs sm:text-sm md:text-base text-gray-600 leading-tight">
+              Hospital & Research Center
+            </span>
+          </div>
+          {/* Accreditation Logo */}
+          <Image
+            src="/hospital/NABH-2.png?height=50&width=50"
+            alt="NABH Accreditation Logo"
+            width={40}
+            height={40}
+            className="rounded-full hidden sm:block w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 shadow-md ml-auto"
+          />
+        </Link>
 
               <div className="hidden lg:flex flex-col items-end">
                 <div className="arrow-container w-full lg:w-auto">

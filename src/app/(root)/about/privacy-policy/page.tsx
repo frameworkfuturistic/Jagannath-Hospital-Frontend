@@ -78,7 +78,7 @@ const policySections: PolicySection[] = [
 function HospitalPolicies() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-         <HeaderBanner
+      <HeaderBanner
         title="Policy and Privacy"
         subtitle="At Shree Jagannath Hospital, we are committed to protecting your
           privacy and ensuring the security of your personal information. This
@@ -86,12 +86,10 @@ function HospitalPolicies() {
         bgImage="/pattern-5.png"
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      
-
         <div className="space-y-16">
           {policySections.map((section, index) => (
             <motion.div
-            key={`section-${index}`}
+              key={`${section.title}-${index}`}
               className="bg-white/10 backdrop-blur-md rounded-3xl overflow-hidden shadow-lg"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
@@ -106,13 +104,13 @@ function HospitalPolicies() {
                 </div>
                 <div className="space-y-6">
                   {section.content.map((contentItem, contentIndex) => (
-                    <div key={contentIndex}>
+                    <div key={`${section.title}-content-${contentIndex}`}>
                       {contentItem.subtitle && (
                         <h3 className="text-xl font-semibold mb-3 text-primary">{contentItem.subtitle}</h3>
                       )}
                       <ul className="list-disc list-inside space-y-2">
                         {contentItem.text.map((paragraph, paraIndex) => (
-                          <li key={paraIndex} className="text-sm sm:text-base leading-relaxed">
+                          <li key={`${section.title}-para-${contentIndex}-${paraIndex}`} className="text-sm sm:text-base leading-relaxed">
                             {paragraph}
                           </li>
                         ))}
@@ -146,21 +144,10 @@ function HospitalPolicies() {
             </Button>
           </Link>
         </motion.div>
-
-        {/* <motion.footer 
-          className="mt-24 text-center text-sm sm:text-base"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 1 }}
-        >
-          <p>&copy; 2024 Shree Jagannath Hospital. All rights reserved.</p>
-          <p className="mt-2">
-            These policies were last updated on {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}.
-          </p>
-        </motion.footer> */}
       </div>
     </div>
   )
 }
 
 export default HospitalPolicies
+
