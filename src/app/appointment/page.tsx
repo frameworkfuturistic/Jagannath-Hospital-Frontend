@@ -492,7 +492,7 @@ export default function Component() {
       const paymentData = {
         OPDOnlineAppointmentID: appointmentId,
         AmountPaid: amountPaid,
-        PaymentMode: "Razorpay",
+        PaymentMode: "Online",
       };
 
       console.log("Payment Request Data:", paymentData);
@@ -510,7 +510,7 @@ export default function Component() {
 
       const razorpayOptions = {
         key_id:
-          process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_nvbhZP79FSJlM4",
+          process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_live_xzfSy8Kb40GCP9",
         amount: amountPaid * 100,
         currency: "INR",
         name: "Shree Jagannath Hospital & Research Centre",
@@ -934,7 +934,7 @@ export default function Component() {
 
     currentY += 10;
     doc.text(
-      `Total Amount Paid: ₹ ${state.selectedDoctor?.Fee}`,
+      `Total Amount Paid: RS  ${state.selectedDoctor?.Fee}`,
       leftColumnStart,
       currentY
     );
