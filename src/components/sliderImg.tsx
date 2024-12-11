@@ -109,7 +109,7 @@ export function CarouselDemo() {
                   Appointment
                 </Button>
               </Link>
-              <Link href="/find-doctor" className="block w-full sm:w-auto">
+              <Link href="/comingsoon" className="block w-full sm:w-auto">
                 <Button className="bg-white text-blue-900 hover:bg-blue-100 px-4 sm:px-8 py-2 sm:py-3 text-sm sm:text-base md:text-lg rounded-full transition-all duration-300 shadow-lg hover:shadow-xl w-full">
                   Find a Doctor
                 </Button>

@@ -52,7 +52,7 @@ import {
 import LoadingSpinner from "@/components/widget/spinner";
 
 const topNavItems = [
-  { icon: User, label: "Find a Doctor", href: "#" },
+  { icon: User, label: "Find a Doctor", href: "/comingsoon" },
   { icon: FileText, label: "Blogs", href: "/blog" },
   { icon: FileSpreadsheet, label: "My Appointment", href: "/appointment" },
   { icon: Briefcase, label: "Career", href: "/career/currentOpenings" },
