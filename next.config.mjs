@@ -4,75 +4,69 @@ const nextConfig = {
   output: "standalone",
   images: {
     remotePatterns: [
-      // Appointment Image API
+      // Main domains for Appointment API
       {
         protocol: "https",
         hostname: "appointment.sjhrc.in",
-        pathname: "/hospital-api/**", // Match all images under /hospital-api/
+        pathname: "/**", // Allow all paths
       },
-      // Appointment Image API
       {
         protocol: "https",
         hostname: "sjhrc.in",
-        pathname: "/hospital-api/**", // Match all images under /hospital-api/
+        pathname: "/**", // Allow all paths
       },
 
-      // Appointment Image API
-      {
-        protocol: "https",
-        hostname: "sjhrc.in",
-        pathname: "/backend/**", // Match all images under /hospital-api/
-      },
-
-      // Appointment Image API
-      {
-        protocol: "https",
-        hostname: "appointment.sjhrc.in",
-        pathname: "/**", // Match all images under /hospital-api/
-      },
-      // LoremFlickr for random placeholder images
+      // Placeholder and stock image sources
       {
         protocol: "https",
         hostname: "loremflickr.com",
-        pathname: "/640/**", // Match all images with 640px width
+        pathname: "/640/**", // Placeholder images with 640px width
       },
-      // Pexels for free stock photos
       {
         protocol: "https",
         hostname: "images.pexels.com",
-        pathname: "/photos/**", // Match all photos on Pexels
+        pathname: "/photos/**", // Pexels photos
       },
-      // Gratisography for free high-resolution photos
       {
         protocol: "https",
         hostname: "gratisography.com",
-        pathname: "/wp-content/uploads/**", // Match all images under wp-content/uploads
+        pathname: "/wp-content/uploads/**", // Gratisography images
       },
-      // Unsplash for free high-quality images
       {
         protocol: "https",
         hostname: "images.unsplash.com",
-        pathname: "/photo/**", // Match all image paths in Unsplash
+        pathname: "/photo/**", // Unsplash photos
       },
-      // External domain (azbigmedia.com example)
+
+      // External example domain
       {
         protocol: "https",
         hostname: "azbigmedia.com",
-        pathname: "/wp-content/uploads/**", // Allow images from azbigmedia.com
+        pathname: "/wp-content/uploads/**", // Example external domain
       },
-      // Localhost development (HTTP allowed)
+
+      // Local development environment
       {
         protocol: "http",
         hostname: "localhost",
-        pathname: "/**", // Match any path under localhost
+        pathname: "/**", // Allow all paths during local development
+      },
+      {
+        protocol: "https",
+        hostname: "**",
+        pathname: "/**", // Allow all paths during local development
       },
     ],
-    // Optional: Set the device sizes for responsiveness
+
+    // Device sizes for responsive images
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384], // Add additional sizes if necessary
-    formats: ["image/webp", "image/avif"], // Optional: Fallback formats for better image compression
+
+    // Additional image sizes for custom use cases
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+
+    // Supported formats for optimized images
+    formats: ["image/webp", "image/avif"],
   },
-  // Add any other production-specific configurations here
 };
 
 export default nextConfig;
