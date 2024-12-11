@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Consultant, TodaySlotData, SlotRangeData, AppointmentsByDate } from './types';
 
-const API_BASE_URL = 'https://appointment.sjhrc.in/backend/api/v1';
+const API_BASE_URL = 'https://sjhrc.in/backend/api/v1';
 
 const api = axios.create({
   baseURL: API_BASE_URL,

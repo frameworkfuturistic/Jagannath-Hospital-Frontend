@@ -38,7 +38,7 @@ interface BlogPost {
 
 const formatImageUrl = (imageUrl: string | null): string => {
   if (!imageUrl) return "/images/default-blog-image.jpg"
-  return `https://appointment.sjhrc.in/hospital-api/blogs/${imageUrl
+  return `https://sjhrc.in/hospital-api/blogs/${imageUrl
     .toString()
     .replace(/^uploads[\\/]/, "")
     .replace(/\\/g, "/")}`

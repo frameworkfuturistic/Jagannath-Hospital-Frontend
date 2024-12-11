@@ -40,7 +40,7 @@ const BlogCards = () => {
           ...blog,
           // Construct the image URL
           image: blog.image
-            ? `https://appointment.sjhrc.in/hospital-api/blogs/${blog.image.replace(/^uploads[\\/]/, "").replace(/\\/g, "/")}`
+            ? `https://sjhrc.in/hospital-api/blogs/${blog.image.replace(/^uploads[\\/]/, "").replace(/\\/g, "/")}`
             : null,
         }));
         console.log("imageData", formattedBlogs);
