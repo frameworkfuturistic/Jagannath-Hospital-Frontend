@@ -1,6 +1,5 @@
 // eslint-disable-next-line
 // @ts-nocheck
-
 'use client'
 
 import * as React from "react"
@@ -158,13 +157,12 @@ export function NoticeSlider() {
                     <Card className="shadow-xl overflow-hidden">
                       <CardContent className="p-0 relative">
                         {announcement.thumbnailImage ? (
-                          <Image
-                            src={announcement.thumbnailImage}
-                            alt={announcement.title}
-                            width={600}
-                            height={400}
-                            className="w-full h-[400px] object-cover transition-transform duration-500 hover:scale-105"
-                          />
+                        <img
+                        src={announcement.thumbnailImage}
+                        alt={announcement.title}
+                        className="w-full h-[400px] object-cover transition-transform duration-500 hover:scale-105"
+                      />
+                      
                         ) : (
                           <div className="w-full h-[400px] bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center">
                             <span className="text-white text-2xl font-semibold">No Image Available</span>

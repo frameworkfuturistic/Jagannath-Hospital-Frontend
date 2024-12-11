@@ -211,48 +211,49 @@ const HospitalGallery: React.FC = () => {
           </div>
         )}
 
-        <Dialog open={!!selectedImage} onOpenChange={closeModal}>
-          <DialogContent className="sm:max-w-[800px]">
-            <DialogHeader>
-              <DialogTitle>{selectedImage?.title}</DialogTitle>
-              <DialogDescription>{selectedImage?.description}</DialogDescription>
-            </DialogHeader>
-            {selectedImage && (
-              <div className="mt-4 relative">
-                <Image
-                  src={selectedImage.imageUrl}
-                  alt={selectedImage.title}
-                  width={800}
-                  height={600}
-                  className="w-full h-auto object-cover rounded-lg"
-                />
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="absolute top-1/2 left-4 transform -translate-y-1/2"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    navigateImage('prev')
-                  }}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="absolute top-1/2 right-4 transform -translate-y-1/2"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    navigateImage('next')
-                  }}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-            )}
-            <Button onClick={closeModal} className="mt-4">Close</Button>
-          </DialogContent>
-        </Dialog>
+<Dialog open={!!selectedImage} onOpenChange={closeModal}>
+  <DialogContent className="sm:max-w-[800px] sm:max-h-[90vh] overflow-hidden">
+    <DialogHeader>
+      <DialogTitle>{selectedImage?.title}</DialogTitle>
+      <DialogDescription>{selectedImage?.description}</DialogDescription>
+    </DialogHeader>
+    {selectedImage && (
+      <div className="mt-4 relative">
+        <Image
+          src={selectedImage.imageUrl}
+          alt={selectedImage.title}
+          width={800}
+          height={600}
+          className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
+        />
+        <Button
+          variant="outline"
+          size="icon"
+          className="absolute top-1/2 left-4 transform -translate-y-1/2"
+          onClick={(e) => {
+            e.stopPropagation();
+            navigateImage('prev');
+          }}
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="outline"
+          size="icon"
+          className="absolute top-1/2 right-4 transform -translate-y-1/2"
+          onClick={(e) => {
+            e.stopPropagation();
+            navigateImage('next');
+          }}
+        >
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      </div>
+    )}
+    <Button onClick={closeModal} className="mt-4">Close</Button>
+  </DialogContent>
+</Dialog>
+
       </div>
     </div>
   )
