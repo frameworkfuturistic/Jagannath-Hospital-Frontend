@@ -16,6 +16,18 @@ const nextConfig = {
         pathname: "/**", // Allow all paths
       },
 
+      {
+        protocol: "http",
+        hostname: "sjhrc.in",
+        pathname: "/hospital-api/blogs/**", // Allow all paths
+      },
+      {
+        protocol: "http",
+        hostname: "sjhrc.in",
+        pathname: "/hospital-api/gallery/**", // Allow all paths
+      },
+
+
       // Placeholder and stock image sources
       {
         protocol: "https",
