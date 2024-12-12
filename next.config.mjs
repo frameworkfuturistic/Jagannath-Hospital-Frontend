@@ -12,14 +12,9 @@ const nextConfig = {
       },
       
       {
-        protocol: "http",
+        protocol: "https",
         hostname: "sjhrc.in",
-        pathname: "/hospital-api/blogs/**", // Allow all paths
-      },
-      {
-        protocol: "http",
-        hostname: "sjhrc.in",
-        pathname: "/hospital-api/gallery/**", // Allow all paths
+        pathname: "/uploads/**",
       },
 
 
