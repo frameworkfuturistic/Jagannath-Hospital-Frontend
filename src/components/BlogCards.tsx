@@ -69,7 +69,7 @@ const BlogCards = () => {
                   <Card className="flex flex-col h-full justify-between transition-transform duration-300 transform hover:-translate-y-2 hover:scale-105 hover:shadow-lg hover:border-b-8 hover:border-b-rose-200">
                     <div className="relative w-full h-48 sm:h-56 md:h-64 lg:h-72">
                       <Image
-                        src={blog.image}
+                        src="https://sjhrc.in/hospital-api/uploads/blogs/1734004901888-561269817.webp"
                         alt={blog.title}
                         fill
                         className="rounded-t-lg object-cover"
