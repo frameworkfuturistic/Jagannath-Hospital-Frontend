@@ -42,8 +42,6 @@ import {
 } from "lucide-react";
 import HeaderBanner from "@/components/HeaderBanner";
 import axiosInstance from "@/lib/axiosInstance";
-import { formatImageUrl } from "@/utils/formatImageUrl"; // Adjust the import path
-
 
 interface BlogPost {
   _id: string;
@@ -82,14 +80,13 @@ const fetchBlogs = async (
     params: { page, limit, category, search: searchTerm, sortBy },
   });
 
-  const formattedBlogs = response.data.blogs.map((blog) => ({
-    ...blog,
-    image: formatImageUrl(blog.image),
-  }));
+  // const formattedBlogs = response.data.blogs.map((blog) => ({
+  //   ...blog,
+  //   image: formatImageUrl(blog.image),
+  // }));
 
   return {
     ...response.data,
-    blogs: formattedBlogs,
   };
 };
 console.log("sad", fetchBlogs);

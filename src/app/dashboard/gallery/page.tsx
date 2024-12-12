@@ -64,7 +64,6 @@ export default function GalleryDashboard() {
       // Transform the image URLs to the desired format
       const formattedImages = response.data.images.map((image) => ({
         ...image,
-        imageUrl: `https://sjhrc.in/hospital-api/gallery/${image.imageUrl.replace(/^uploads[\\/]/, '').replace(/\\/g, '/')}` // Remove 'uploads/' or 'uploads\' at the beginning
       }));
 
       setImages(formattedImages);

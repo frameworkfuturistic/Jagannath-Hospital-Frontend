@@ -61,7 +61,6 @@ const HospitalGallery: React.FC = () => {
       // Transform the image URLs to the desired format
       const formattedImages = data.images.map((image: Image) => ({
         ...image,
-        imageUrl: `https://sjhrc.in/hospital-api/gallery/${image.imageUrl.replace(/^uploads[\\/]/, '').replace(/\\/g, '/')}`
       }))
 
       setImages(formattedImages)

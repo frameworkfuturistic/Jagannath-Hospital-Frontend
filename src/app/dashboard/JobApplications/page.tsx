@@ -626,8 +626,6 @@ function ApplicationDialog({
 }) {
   if (!application) return null
 
-  const resumeUrl = `https://sjhrc.in/hospital-api/resume/${application.resume.replace(/^uploads[\\/]/, '').replace(/\\/g, '/')}`
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[625px]">
@@ -673,7 +671,7 @@ function ApplicationDialog({
             <Label className="text-right font-bold">Resume</Label>
             <div className="col-span-3">
               <Button asChild>
-                <a href={resumeUrl} target="_blank" rel="noopener noreferrer">
+                <a href={application.resume} target="_blank" rel="noopener noreferrer">
                   <FileText className="mr-2 h-4 w-4" />
                   View Resume
                 </a>

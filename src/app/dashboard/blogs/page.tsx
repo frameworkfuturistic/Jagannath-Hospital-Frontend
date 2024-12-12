@@ -126,12 +126,6 @@ export default function AdvancedBlogManagement() {
       if (response.data?.blogs.length) {
         const formattedBlogs = response.data.blogs.map((blog) => ({
           ...blog,
-          image: blog.image
-            ? `https://sjhrc.in/hospital-api/blogs/${blog.image
-                .toString()
-                .replace(/^uploads[\\/]/, "")
-                .replace(/\\/g, "/")}`
-            : undefined,
         }));
         console.log("sjkdbh", formattedBlogs);
 

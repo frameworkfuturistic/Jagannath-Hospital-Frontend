@@ -38,10 +38,6 @@ const BlogCards = () => {
         // Format the blogs data
         const formattedBlogs = response.data.blogs.map((blog: Blog) => ({
           ...blog,
-          // Construct the image URL
-          image: blog.image
-            ? `https://sjhrc.in/hospital-api/blogs/${blog.image.replace(/^uploads[\\/]/, "").replace(/\\/g, "/")}`
-            : null,
         }));
         console.log("imageData", formattedBlogs);
         

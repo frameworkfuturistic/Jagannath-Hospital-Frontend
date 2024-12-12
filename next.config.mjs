@@ -7,15 +7,10 @@ const nextConfig = {
       // Main domains for Appointment API
       {
         protocol: "https",
-        hostname: "appointment.sjhrc.in",
-        pathname: "/**", // Allow all paths
-      },
-      {
-        protocol: "https",
         hostname: "sjhrc.in",
         pathname: "/**", // Allow all paths
       },
-
+      
       {
         protocol: "http",
         hostname: "sjhrc.in",

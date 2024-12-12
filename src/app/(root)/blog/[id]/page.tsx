@@ -36,19 +36,12 @@ interface BlogPost {
   slug: string
 }
 
-const formatImageUrl = (imageUrl: string | null): string => {
-  if (!imageUrl) return "/images/default-blog-image.jpg"
-  return `https://sjhrc.in/hospital-api/blogs/${imageUrl
-    .toString()
-    .replace(/^uploads[\\/]/, "")
-    .replace(/\\/g, "/")}`
-}
+
 
 const fetchBlogPost = async (id: string): Promise<BlogPost> => {
   const response = await axiosInstance.get(`/blogs/${id}`)
   return {
     ...response.data,
-    image: formatImageUrl(response.data.image)
   }
 }
 
@@ -60,7 +53,6 @@ const fetchRelatedPosts = async (category: string, currentId: string): Promise<B
     .filter((blog: BlogPost) => blog._id !== currentId)
     .map((blog: BlogPost) => ({
       ...blog,
-      image: formatImageUrl(blog.image)
     }))
 }
 
@@ -275,7 +267,7 @@ function RelatedBlogCard({ blog }: { blog: BlogPost }) {
         <div className="flex justify-between items-center">
           <span className="text-sm text-gray-500">{format(new Date(blog.publishDate), "MMM d, yyyy")}</span>
           <Button variant="link" asChild>
-            <Link href={`/blog/${blog.slug}`}>Read More</Link>
+            <Link href={`/blog/${blog._id}`}>Read More</Link>
           </Button>
         </div>
       </CardContent>
