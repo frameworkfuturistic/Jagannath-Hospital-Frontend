@@ -6,6 +6,7 @@ import { CalendarDays, Hospital, Stethoscope, User, ChevronLeft, ChevronRight, S
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Image from "next/image"
+import Title from "./Title"
 
 const patientReviews = [
   {
@@ -113,7 +114,7 @@ export function AdvancedPatientReview() {
           className="text-center mb-16"
           style={{ y: textY }}
         >
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">Transforming Lives</h1>
+          <Title title="Transforming Lives"  />
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Experience world-class healthcare backed by years of expertise and thousands of satisfied patients.
           </p>
@@ -150,7 +151,7 @@ export function AdvancedPatientReview() {
         </div>
 
         <div className="mb-8">
-          <h2 className="text-4xl font-bold text-center mb-2 text-gray-900">Patient Stories</h2>
+        <Title title="Patient Stories"  />
           <p className="text-xl text-center mb-12 text-gray-600">Hear from those we've had the privilege to serve</p>
           <div className="relative">
             <Button

@@ -45,7 +45,7 @@ const PremiumServices = () => {
     <section className="py-20 bg-gradient-to-b from-white to-blue-50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl sm:text-xl md:text-5xl font-bold text-gray-900 mb-4">
             Explore our Centre of Clinical Excellence
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">

@@ -21,6 +21,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import Title from './Title'
 
 interface Doctor {
   id: number
@@ -116,7 +117,8 @@ const AdvancedMedicalExperts: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <h1 className="text-5xl font-bold text-gray-800 mb-4">Our Medical Experts</h1>
+          <Title title="Our Medical Experts"  />
+        
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
           Shree Jagannath Hospital is home to 50 eminent doctors in India, most of whom are pioneers in their
             respective fields. Our experts are renowned for developing innovative and revolutionary

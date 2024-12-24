@@ -9,7 +9,7 @@ const Title = ({title}) => {
     transition={{ duration: 0.8 }}
     className="text-center mb-16"
   >
-    <h1 className="text-5xl font-bold text-gray-900 mb-4">{title}</h1>
+    <h1 className="text-3xl sm:text-xl md:text-5xl font-bold text-gray-900 mb-4">{title}</h1>
    
   </motion.div>
   )

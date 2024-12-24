@@ -128,7 +128,7 @@ export default function DepartmentDetail({ params }: { params: { id: string } })
           >
             {department.description}
           </motion.p>
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
@@ -142,7 +142,7 @@ export default function DepartmentDetail({ params }: { params: { id: string } })
               Learn More
               <ChevronRight className="ml-2 h-4 w-4" />
             </Button>
-          </motion.div>
+          </motion.div> */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
             {[
               { icon: Users, label: "Specialists", value: "20+" },

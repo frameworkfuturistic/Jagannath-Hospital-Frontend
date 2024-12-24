@@ -133,9 +133,9 @@ const doctors: Doctor[] = [
     image: "/departmentHeads/Dr. Danish Sir.jpeg",
     experience: "2+ years",
     rating: 4.8,
-    bio: "Dr. Danish is a leading pediatric orthopedic surgeon known for her groundbreaking work in treating complex congenital deformities. Her innovative approaches have improved the lives of thousands of children worldwide.",
-    achievements: ["M.B.B.S. "],
-    availability: ["Tue", "Thu", "Sat"],
+    bio: "Dr. Danish is a leading non orthopedic surgeon known for her groundbreaking work in treating complex congenital deformities. Her innovative approaches have improved the lives of thousands of children worldwide.",
+    achievements: ["DNB, Resident(Ortho)"],
+    availability: ["All Day"],
   },
   {
     id: "dr-Satyam-Kumar",
@@ -145,8 +145,8 @@ const doctors: Doctor[] = [
     experience: "3+ years",
     rating: 4.9,
     bio: "Dr. Satyam is a globally recognized Orthopedics specializing in complex spinal deformities and minimally invasive spine surgeries. He is a pioneer in robotic spine surgery and has trained surgeons worldwide in advanced techniques.",
-    achievements: ["M.B.B.S."],
-    availability: ["Mon", "Tue", "Thu"],
+    achievements: ["DNB Resident(Ortho)"],
+    availability: ["All Day"],
   },
   {
     id: "Dr-nandkishor-tirkey",
@@ -156,8 +156,8 @@ const doctors: Doctor[] = [
     experience: "5+ years",
     rating: 4.9,
     bio: "Dr. Nandkishor is a world-renowned orthopedic surgeon specializing in advanced joint replacement and arthroscopic surgeries. With over two decades of experience, he has pioneered several minimally invasive techniques that have revolutionized the field.",
-    achievements: ["M.B.B.S."],
-    availability: ["M.B.B.S."],
+    achievements: ["Post Diploma, DNB(Ortho)"],
+    availability: ["All Day"],
   },
 ];
 

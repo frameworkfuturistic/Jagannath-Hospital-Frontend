@@ -168,7 +168,7 @@ export const departmentDetails: { [key: string]: DepartmentDetail } = {
       phone: "+91 8987999200",
       email: "sjhrc.ranchi@gmail.com",
       location: "(Mayor Road, Behind Machhli Ghar, Ranchi, Jharkhand - 834001)",
-      hours: "Mon-Sat: Sunday CLOSED"
+      hours: "24X7 Emergency Services Available"
     },
     doctors: [
       {
@@ -357,8 +357,8 @@ export const departmentDetails: { [key: string]: DepartmentDetail } = {
         ]
       },
       {
-        id: "dr-bk",
-        name: "Dr. B.K. Sinha",
+        id: "dr-chiranjib",
+        name: "Dr. Chiranjib Mishra",
         title: "Senior Medical Officer (Orhtopedics)",
         image: "/departmentHeads/bksingh.jpg?height=400&width=400",
         specialization: "Orthopedic Surgery",
@@ -691,7 +691,7 @@ export const departmentDetails: { [key: string]: DepartmentDetail } = {
       {
         id: "dr-dp-singh",
         name: "Dr. D.P. Singh",
-        title: "enior Medical Officer",
+        title: "Senior Medical Officer",
         image: "/departmentHeads/dpsingh.jpg?height=400&width=400",
         specialization: "Medical Officer",
         experience: "18+ years",
