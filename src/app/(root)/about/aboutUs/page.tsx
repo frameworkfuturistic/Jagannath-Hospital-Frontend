@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import { motion, useAnimation } from "framer-motion";
-import { useInView } from "react-intersection-observer";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { motion, useAnimation } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   ChevronDown,
   Award,
@@ -13,7 +13,7 @@ import {
   Brain,
   Users,
   ArrowRight,
-} from "lucide-react";
+} from 'lucide-react';
 
 const FadeInSection = ({ children }: { children: any }) => {
   const controls = useAnimation();
@@ -21,7 +21,7 @@ const FadeInSection = ({ children }: { children: any }) => {
 
   useEffect(() => {
     if (inView) {
-      controls.start("visible");
+      controls.start('visible');
     }
   }, [controls, inView]);
 
@@ -46,28 +46,28 @@ const DualImageCube = () => {
     <div className="relative w-full h-96 md:h-[500px]">
       <div className="absolute top-0 left-0 w-3/4 h-3/4 z-10">
         <Image
-          src="/sliderPic/sjhrchos1.png?height=600&width=800"
+          src="/hospital/bi.webp"
           alt="Hospital exterior"
           layout="fill"
           objectFit="cover"
           className="rounded-lg shadow-xl"
         />
       </div>
-      <div className="absolute bottom-0 right-0 w-3/4 h-3/4 z-20">
+      {/* <div className="absolute bottom-0 right-0 w-3/4 h-3/4 z-20">
         <Image
-          src="/departmentHeads/vandana.png?height=600&width=800"
+          src="/hospital/bi.webp?height=600&width=800"
           alt="Medical team in action"
           layout="fill"
           objectFit="cover"
           className="rounded-lg shadow-xl"
         />
-      </div>
+      </div> */}
     </div>
   );
 };
 
 export default function AdvancedAboutUs() {
-  const [activeTab, setActiveTab] = useState("history");
+  const [activeTab, setActiveTab] = useState('history');
 
   return (
     <div className="min-h-screen bg-gray-50 relative overflow-hidden">
@@ -76,8 +76,8 @@ export default function AdvancedAboutUs() {
         className="absolute inset-0 bg-repeat "
         style={{
           backgroundImage:
-            "radial-gradient(circle, #e5e7eb 1px, transparent 1px)",
-          backgroundSize: "20px 20px",
+            'radial-gradient(circle, #e5e7eb 1px, transparent 1px)',
+          backgroundSize: '20px 20px',
         }}
         aria-hidden="true"
       ></div>
@@ -85,7 +85,7 @@ export default function AdvancedAboutUs() {
       {/* Hero Section */}
       <section className="relative h-[50vh] overflow-hidden">
         <Image
-          src="/bg-about.webp?height=1080&width=1920"
+          src="/hospital/cover.webp?height=1080&width=1920"
           alt="Advanced medical equipment"
           layout="fill"
           objectFit="cover"
@@ -99,7 +99,7 @@ export default function AdvancedAboutUs() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            Pioneering Healthcare Excellence
+            About Us
           </motion.h1>
           <motion.p
             className="text-md md:text-xl lg:text-2xl text-center px-4 max-w-4xl"
@@ -107,7 +107,7 @@ export default function AdvancedAboutUs() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-           ISO 9001 : 2015 Certified Hospital
+            ISO 9001 : 2015 Certified Hospital
           </motion.p>
         </div>
       </section>
@@ -117,33 +117,37 @@ export default function AdvancedAboutUs() {
         <div className="container mx-auto px-4 py-16 md:py-32 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
-              <h2 className="text-2xl md:text-4xl font-bold text-gray-800 leading-tight">
-                Providing Exceptional Care Since 1950
+              <h2 className="text-2xl md:text-2xl font-bold text-gray-800 leading-tight">
+                NABH accredited multispecialty hospital offering advanced
+                healthcare in Ranchi, Jharkhand.
               </h2>
               <p className="text-md text-gray-600">
                 <strong>Shree Jagannath Hospital & Research Centre</strong> is
-                known for state of the art medical specialities.Using latest
-                technologies both in IT and Healthcare, we have developed an
-                advance system of treatment in diagnostic and therapeutic
-                services.{" "}
+                known for state of the art medical specialities.we have
+                developed an advance system of treatment in diagnostic and
+                therapeutic services.{' '}
               </p>
               <p className="text-md text-gray-600">
-                Shree Jagannath Hospital & Research Centre is a 100 bedded
-                multispecialty hospital offering advanced healthcare services
-                with special emphasis on, orthopedic surgery, Traumatology,
-                ophthalmology and advanced clinical research. We offer
-                comprehensive inpatient and outpatient services to patients.34
-                physicians in all medical specialties cover all areas of care
-                including orthopedics, physiotherapy, ophthalmology, noninvasive
-                cardiology, general medicine, general surgery, gynecology,
-                nephrology, day care, dietetics, general and laparoscopic
-                surgery, geriatric medicine, operation theatre, ICU etc.
+                Welcome to our hospital, where the vision is to Create a Chain
+                of hospital & Diagnostic centers for delivery of healthcare for
+                the satisfaction of the users and stake-holders. Founded by Dr.
+                Sudhir Kumar and Dr. Vandana Prasad, both accomplished
+                Orthopedics and Ophthalmic Surgeons, the hospital's journey
+                began with 5 IPD beds and 1 OT in East Jail Road, Tharpakhna,
+                Ranchi, under Jagannath Life Care Pvt. Ltd.
               </p>
               <p className="text-md text-gray-600">
-              We have 12-hour OPD facilities of all major disciplines and also round-the-clock facilities for emergency & investigation, which includes Pathology and Imaging.
+                Driven by a commitment to patient well-being, our hospital
+                expanded in 2010 to include other Specialties besides
+                Orthopedics and Ophthalmology departments. Over time, we
+                embraced growth, adding various departments to render better
+                service for our community's diverse healthcare needs.
               </p>
               <p className="text-md text-gray-600">
-              The hospital has an excellent infrastructure, which includes five OTs with 100% fresh laminar air flow facilities, well-equipped intensive care units.
+                Our dedication to medical education led us to establish a
+                Paramedical Institute, and DNB course in Orthopedics, reflecting
+                our ongoing commitment to excellence in healthcare and
+                education. Join us on our journey towards a healthier future.
               </p>
             </div>
             <DualImageCube />
@@ -159,15 +163,23 @@ export default function AdvancedAboutUs() {
               Our Mission
             </h2>
             <div className="max-w-4xl mx-auto text-center">
-              <p className="text-2xl text-gray-700 leading-relaxed">
-                To revolutionize healthcare through innovation, compassion, and
-                excellence. We are committed to improving lives, advancing
-                medical science, and fostering a healthier community for
-                generations to come.
+              <p className="text-md text-gray-700 leading-relaxed">
+                To Create a Chain of hospital & Diagnostic centers for delivery
+                of healthcare for the satisfaction of the users and
+                stake-holders. Company Mission To establish a premier hospital
+                with cutting edge super specialty departments such as Retina
+                Surgery, Urology, and Obstetrics & Gynecology, while pioneering
+                DNB courses in Orthopedics. We are committed to expanding
+                paramedical education with increase in
               </p>
               <p className=" text-center py-4 font-bold text-lg">***</p>
-              <p className="text-2xl text-gray-700 leading-relaxed">
-              To create a chain of hospitals, specialized clinics and diagnostic centers for health care delivery to the fullest satisfaction of the users and stake-holders.
+              <p className="text-md text-gray-700 leading-relaxed">
+                To establish a premier hospital with cutting edge super
+                specialty departments such as Retina Surgery, Urology, and
+                Obstetrics & Gynecology, while pioneering DNB courses in
+                Orthopedics. We are committed to expanding paramedical education
+                with increase in types of courses and seats, ensuring the
+                highest level of satisfaction for our users and stakeholders.
               </p>
             </div>
           </div>
@@ -185,27 +197,27 @@ export default function AdvancedAboutUs() {
               {[
                 {
                   icon: Award,
-                  title: "Excellence",
+                  title: 'Excellence',
                   description:
-                    "Striving for the highest standards in medical care and service.",
+                    'Striving for the highest standards in medical care and service.',
                 },
                 {
                   icon: Heart,
-                  title: "Compassion",
+                  title: 'Compassion',
                   description:
-                    "Treating every patient with kindness, empathy, and respect.",
+                    'Treating every patient with kindness, empathy, and respect.',
                 },
                 {
                   icon: Brain,
-                  title: "Innovation",
+                  title: 'Innovation',
                   description:
-                    "Embracing new technologies and methods to improve patient outcomes.",
+                    'Embracing new technologies and methods to improve patient outcomes.',
                 },
                 {
                   icon: Users,
-                  title: "Collaboration",
+                  title: 'Collaboration',
                   description:
-                    "Working together to achieve the best results for our patients and community.",
+                    'Working together to achieve the best results for our patients and community.',
                 },
               ].map((value, index) => (
                 <Card
@@ -225,8 +237,6 @@ export default function AdvancedAboutUs() {
           </div>
         </section>
       </FadeInSection>
-
-    
 
       {/* Call to Action */}
       {/* <FadeInSection>

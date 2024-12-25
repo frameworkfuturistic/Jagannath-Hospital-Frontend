@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { Card } from "./ui/card";
-import { Button } from "./ui/button";
+import React, { useEffect, useState } from 'react';
+import { Card } from './ui/card';
+import { Button } from './ui/button';
 import { Heart, MessageCircle } from 'lucide-react';
-import Link from "next/link";
-import { Toggle } from "./ui/toggle";
+import Link from 'next/link';
+import { Toggle } from './ui/toggle';
+import DOMPurify from 'dompurify';
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "./ui/carousel";
-import Title from "./Title";
-import Image from "next/image";
-import axiosInstance from "@/lib/axiosInstance";
+} from './ui/carousel';
+import Title from './Title';
+import Image from 'next/image';
+import axiosInstance from '@/lib/axiosInstance';
 
 // Define a type for the blog object
 type Blog = {
@@ -21,7 +22,7 @@ type Blog = {
   title: string;
   content: string;
   category: string;
-  image: string;
+  blogImageUrl: string;
   author: string;
   publishDate: string;
 };
@@ -33,18 +34,16 @@ const BlogCards = () => {
     const fetchBlogs = async () => {
       try {
         // Use the axiosInstance to fetch blogs
-        const response = await axiosInstance.get("/blogs");
+        const response = await axiosInstance.get('/blogs');
 
         // Format the blogs data
         const formattedBlogs = response.data.blogs.map((blog: Blog) => ({
           ...blog,
         }));
-        console.log("imageData", formattedBlogs);
-        
 
         setBlogs(formattedBlogs.slice(0, 6)); // Limit to the first 6 blogs
       } catch (error) {
-        console.error("Error fetching blogs:", error);
+        console.error('Error fetching blogs:', error);
       }
     };
 
@@ -56,10 +55,10 @@ const BlogCards = () => {
       <div className="min-h-fit">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-col items-center text-center gap-2 mb-6">
-            <Title title={"LATEST BLOGS"} />
+            <Title title={'LATEST BLOGS'} />
           </div>
 
-          <Carousel opts={{ align: "start" }} className="w-full">
+          <Carousel opts={{ align: 'start' }} className="w-full">
             <CarouselContent className="flex">
               {blogs.map((blog) => (
                 <CarouselItem
@@ -69,7 +68,7 @@ const BlogCards = () => {
                   <Card className="flex flex-col h-full justify-between transition-transform duration-300 transform hover:-translate-y-2 hover:scale-105 hover:shadow-lg hover:border-b-8 hover:border-b-rose-200">
                     <div className="relative w-full h-48 sm:h-56 md:h-64 lg:h-72">
                       <Image
-                        src="https://sjhrc.in/hospital-api/uploads/blogs/1734004901888-561269817.webp"
+                        src={blog.blogImageUrl}
                         alt={blog.title}
                         fill
                         className="rounded-t-lg object-cover"
@@ -82,13 +81,15 @@ const BlogCards = () => {
                     <div className="flex-grow p-4 md:p-6">
                       <h1 className="text-lg font-semibold">{blog.title}</h1>
                       <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        By {blog.author} | {new Date(blog.publishDate).toLocaleDateString()}
+                        By {blog.author} |{' '}
+                        {new Date(blog.publishDate).toLocaleDateString()}
                       </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-3">
-                        {blog.content.length > 200
-                          ? `${blog.content.slice(0, 200)}...`
-                          : blog.content}
-                      </p>
+                      <div
+                        className="text-gray-600 line-clamp-3 text-xs"
+                        dangerouslySetInnerHTML={{
+                          __html: DOMPurify.sanitize(blog.content),
+                        }}
+                      />
                       <div className="flex justify-between items-center mt-4">
                         <div className="flex gap-2">
                           <Link href="">
@@ -137,4 +138,3 @@ const BlogCards = () => {
 };
 
 export default BlogCards;
-

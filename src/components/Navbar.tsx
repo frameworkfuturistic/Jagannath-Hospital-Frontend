@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+import * as React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,14 +13,14 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+} from '@/components/ui/navigation-menu';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from '@/components/ui/popover';
 import {
   Command,
   CommandEmpty,
@@ -28,7 +28,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
+} from '@/components/ui/command';
 import {
   Search,
   FileText,
@@ -48,149 +48,149 @@ import {
   ChevronDown,
   CalendarRange,
   LayoutDashboard,
-} from "lucide-react";
-import LoadingSpinner from "@/components/widget/spinner";
+} from 'lucide-react';
+import LoadingSpinner from '@/components/widget/spinner';
 
 const topNavItems = [
-  { icon: User, label: "Find a Doctor", href: "/comingsoon" },
-  { icon: FileText, label: "Blogs", href: "/blog" },
-  { icon: FileSpreadsheet, label: "My Appointment", href: "/appointment" },
-  { icon: Briefcase, label: "Career", href: "/career/currentOpenings" },
-  { icon: CalendarRange, label: "Schedules", href: "/opd" },
-  { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
-  { icon: PhoneCall, label: "Contact Us", href: "/contact" },
+  { icon: User, label: 'Find a Doctor', href: '/comingsoon' },
+  { icon: FileText, label: 'Blogs', href: '/blog' },
+  { icon: FileSpreadsheet, label: 'My Appointment', href: '/appointment' },
+  { icon: Briefcase, label: 'Career', href: '/career/currentOpenings' },
+  { icon: CalendarRange, label: 'Schedules', href: '/opd' },
+  { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard' },
+  { icon: PhoneCall, label: 'Contact Us', href: '/contact' },
 ];
 
 const navigationLinks = [
-  { icon: Home, title: "Home", href: "/" },
+  { icon: Home, title: 'Home', href: '/' },
   {
     icon: Stethoscope,
-    title: "About Us",
-    href: "/about/aboutUs",
+    title: 'About Us',
+    href: '/about/aboutUs',
     children: [
       {
-        title: "About",
-        href: "/about/aboutUs",
-        description: "Learn about our commitment to healthcare excellence",
+        title: 'About',
+        href: '/about/aboutUs',
+        description: 'Learn about our commitment to healthcare excellence',
       },
       {
-        title: "Gallery",
-        href: "/about/gallery",
-        description: "Explore our all excellent events or news",
+        title: 'Gallery',
+        href: '/about/gallery',
+        description: 'Explore our all excellent events or news',
       },
       {
-        title: "Our Policy",
-        href: "/about/privacy-policy",
-        description: "Our initiatives to improve community health Policy",
+        title: 'Our Policy',
+        href: '/about/privacy-policy',
+        description: 'Our initiatives to improve community health Policy',
       },
     ],
   },
   {
     icon: Stethoscope,
-    title: "Departments",
-    href: "/departments",
+    title: 'Departments',
+    href: '/departments',
     children: [
       {
-        title: "Cardiology",
-        href: "/departments/cardiology",
-        description: "Heart and cardiovascular care",
+        title: 'Cardiology',
+        href: '/departments/cardiology',
+        description: 'Heart and cardiovascular care',
       },
       {
-        title: "Orthopaedics",
-        href: "/departments/orthopedics",
+        title: 'Orthopaedics',
+        href: '/departments/orthopedics',
         description:
-          "Treatment of the musculoskeletal system, includes the bones, joints, ligaments, tendons, and muscles.",
+          'Treatment of the musculoskeletal system, includes the bones, joints, ligaments, tendons, and muscles.',
       },
       {
-        title: "Medicine",
-        href: "/departments/generalmedicine",
-        description: "All infections related specialists",
+        title: 'Medicine',
+        href: '/departments/generalmedicine',
+        description: 'All infections related specialists',
       },
       {
-        title: "General Surgery",
-        href: "/departments/laproscopic",
-        description: "All infections related specialists",
+        title: 'General Surgery',
+        href: '/departments/laproscopic',
+        description: 'All infections related specialists',
       },
       {
-        title: "Neuro Surgery",
-        href: "/departments/neurology",
-        description: "Treatment of diseases related with nerves",
+        title: 'Neuro Surgery',
+        href: '/departments/neurology',
+        description: 'Treatment of diseases related with nerves',
       },
       {
-        title: "More..",
-        href: "/departments",
-        description: "View all Departments",
+        title: 'More..',
+        href: '/departments',
+        description: 'View all Departments',
       },
     ],
   },
   {
     icon: Stethoscope,
-    title: "Services",
-    href: "/services",
+    title: 'Services',
+    href: '/services',
     children: [
       {
-        title: "Emergency Care",
-        href: "/services",
+        title: 'Emergency Care',
+        href: '/services',
         description:
-          "24/7 emergency care for critical conditions and injuries.",
+          '24/7 emergency care for critical conditions and injuries.',
       },
       {
-        title: "Diagnostics",
-        href: "/services",
+        title: 'Diagnostics',
+        href: '/services',
         description:
-          "Our diagnostic services utilize cutting-edge technology, aiding in precise diagnosis and treatment planning.",
+          'Our diagnostic services utilize cutting-edge technology, aiding in precise diagnosis and treatment planning.',
       },
       {
-        title: "More..",
-        href: "/services",
-        description: "View all Services",
+        title: 'More..',
+        href: '/services',
+        description: 'View all Services',
       },
     ],
   },
   {
     icon: Stethoscope,
-    title: "Specialties",
-    href: "/speciality/ourSpeciality",
+    title: 'Specialties',
+    href: '/speciality/ourSpeciality',
     children: [
       {
-        title: "General Specialty",
-        href: "/speciality/ourSpeciality",
-        description: "24/7 emergency medical services",
+        title: 'General Specialty',
+        href: '/speciality/ourSpeciality',
+        description: '24/7 emergency medical services',
       },
       {
-        title: "Super Specialty",
-        href: "/speciality/ourSpeciality",
-        description: "24/7 emergency medical services",
+        title: 'Super Specialty',
+        href: '/speciality/ourSpeciality',
+        description: '24/7 emergency medical services',
       },
     ],
   },
   {
     icon: GraduationCap,
-    title: "Academics",
-    href: "/academics",
+    title: 'Academics',
+    href: '/academics',
     children: [
       {
-        title: "DNB Courses",
-        href: "/academics/dnb-course",
-        description: "Elevate Your Expertise with World-Class Training",
+        title: 'DNB Courses',
+        href: '/academics/dnb-course',
+        description: 'Elevate Your Expertise with World-Class Training',
       },
       {
-        title: "Paramedical Courses",
-        href: "/academics/paramedical-course",
+        title: 'Paramedical Courses',
+        href: '/academics/paramedical-course',
         description:
-          "Paramedical Course is designed to equip you with the skills and knowledge",
+          'Paramedical Course is designed to equip you with the skills and knowledge',
       },
     ],
   },
 ];
 
 const searchOptions = [
-  { value: "/departments/cardiology", label: "Cardiology Department" },
-  { value: "neurology", label: "Neurology Department" },
-  { value: "orthopedics", label: "Orthopedics Department" },
-  { value: "emergency", label: "Emergency Services" },
-  { value: "appointments", label: "Book an Appointment" },
-  { value: "doctors", label: "Find a Doctor" },
+  { value: '/departments/cardiology', label: 'Cardiology Department' },
+  { value: 'neurology', label: 'Neurology Department' },
+  { value: 'orthopedics', label: 'Orthopedics Department' },
+  { value: 'emergency', label: 'Emergency Services' },
+  { value: 'appointments', label: 'Book an Appointment' },
+  { value: 'doctors', label: 'Find a Doctor' },
 ];
 
 export default function EnhancedHeader() {
@@ -283,36 +283,36 @@ export default function EnhancedHeader() {
         <div className="w-full px-2 sm:px-2 lg:px-0">
           <div className="flex flex-col">
             <div className="flex items-center justify-between">
-            <Link
-          href="/"
-          className="flex items-center space-x-2 sm:space-x-4"
-        >
-          {/* Hospital Logo */}
-          <Image
-            src="/hospital/hospitallogo.png?height=50&width=50"
-            alt="Shree Jagannath Hospital Logo"
-            width={50}
-            height={50}
-            className="rounded-full shadow-lg w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16"
-          />
-          {/* Text Section */}
-          <div className="flex flex-col">
-            <span className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-extrabold text-primary tracking-wide leading-tight">
-              SHREE JAGANNATH
-            </span>
-            <span className="text-xs sm:text-sm md:text-base text-gray-600 leading-tight">
-              Hospital & Research Center
-            </span>
-          </div>
-          {/* Accreditation Logo */}
-          <Image
-            src="/hospital/NABH-2.png?height=50&width=50"
-            alt="NABH Accreditation Logo"
-            width={40}
-            height={40}
-            className="rounded-full hidden sm:block w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 shadow-md ml-auto"
-          />
-        </Link>
+              <Link
+                href="/"
+                className="flex items-center space-x-2 sm:space-x-4"
+              >
+                {/* Hospital Logo */}
+                <Image
+                  src="/hospital/hospitallogo.png?height=50&width=50"
+                  alt="Shree Jagannath Hospital Logo"
+                  width={50}
+                  height={50}
+                  className="rounded-full shadow-lg w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16"
+                />
+                {/* Text Section */}
+                <div className="flex flex-col">
+                  <span className="text-sm sm:text-sm md:text-lg  font-extrabold text-primary tracking-wide leading-tight">
+                    SHREE JAGANNATH
+                  </span>
+                  <span className="text-xs sm:text-sm md:text-sm text-gray-600 leading-tight">
+                    Hospital & Research Center
+                  </span>
+                </div>
+                {/* Accreditation Logo */}
+                <Image
+                  src="/hospital/NABH-2.png?height=50&width=50"
+                  alt="NABH Accreditation Logo"
+                  width={40}
+                  height={40}
+                  className="rounded-full hidden sm:block w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 shadow-md ml-auto"
+                />
+              </Link>
 
               <div className="hidden lg:flex flex-col items-end">
                 <div className="arrow-container w-full lg:w-auto">
@@ -323,7 +323,7 @@ export default function EnhancedHeader() {
                         <Link
                           key={item.label}
                           href={item.href}
-                          className="flex items-center hover:text-primary transition-colors"
+                          className="flex items-center text-[13px] hover:text-primary transition-colors"
                           onClick={() => handleNavigation(item.href)}
                         >
                           <item.icon className="h-3 w-3 lg:h-4 lg:w-4 mr-1" />
@@ -408,7 +408,7 @@ export default function EnhancedHeader() {
                   </Popover>
                   <Link
                     href="/appointment"
-                    onClick={() => handleNavigation("/appointment")}
+                    onClick={() => handleNavigation('/appointment')}
                   >
                     <Button
                       variant="gooeyLeft"
@@ -435,7 +435,7 @@ export default function EnhancedHeader() {
                         className="flex items-center space-x-2"
                         onClick={() => {
                           setIsOpen(false);
-                          handleNavigation("/");
+                          handleNavigation('/');
                         }}
                       >
                         <Image
@@ -509,7 +509,7 @@ export default function EnhancedHeader() {
                         className="w-full mb-2"
                         onClick={() => {
                           setIsOpen(false);
-                          handleNavigation("/appointment");
+                          handleNavigation('/appointment');
                         }}
                       >
                         Book Appointment
@@ -543,8 +543,8 @@ export default function EnhancedHeader() {
 }
 
 const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
+  React.ElementRef<'a'>,
+  React.ComponentPropsWithoutRef<'a'>
 >(({ className, title, children, ...props }, ref) => {
   return (
     <li>
@@ -552,7 +552,7 @@ const ListItem = React.forwardRef<
         <a
           ref={ref}
           className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 hover:text-primary focus:bg-gray-100 focus:text-primary",
+            'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 hover:text-primary focus:bg-gray-100 focus:text-primary',
             className
           )}
           {...props}
@@ -566,4 +566,4 @@ const ListItem = React.forwardRef<
     </li>
   );
 });
-ListItem.displayName = "ListItem";
+ListItem.displayName = 'ListItem';

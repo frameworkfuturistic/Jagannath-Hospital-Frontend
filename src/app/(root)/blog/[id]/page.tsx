@@ -1,62 +1,85 @@
 // eslint-disable-next-line
 // @ts-nocheck
-'use client'
+'use client';
 
-import React, { useState } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { useParams, useRouter } from "next/navigation"
-import { format } from "date-fns"
-import { motion, AnimatePresence } from "framer-motion"
-import { useQuery, QueryClient, QueryClientProvider, useMutation } from "@tanstack/react-query"
-import { TracingBeam } from "@/components/ui/tracing-beam"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
-import { Toast, ToastProvider } from "@/components/ui/toast"
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
-import { Heart, Calendar, Clock, User, Share2, Bookmark, ThumbsUp, ThumbsDown, ArrowRight, ZoomIn } from "lucide-react"
-import axiosInstance from "@/lib/axiosInstance"
+import React, { useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
+import { format } from 'date-fns';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  useQuery,
+  QueryClient,
+  QueryClientProvider,
+  useMutation,
+} from '@tanstack/react-query';
+import { TracingBeam } from '@/components/ui/tracing-beam';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
+import { Toast, ToastProvider } from '@/components/ui/toast';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import {
+  Heart,
+  Calendar,
+  Clock,
+  User,
+  Share2,
+  Bookmark,
+  ThumbsUp,
+  ThumbsDown,
+  ArrowRight,
+  ZoomIn,
+} from 'lucide-react';
+import axiosInstance from '@/lib/axiosInstance';
 
 interface BlogPost {
-  _id: string
-  title: string
-  content: string
-  author: string
-  category: string
-  tags: string[]
-  image: string | null
-  readTime: number
-  publishDate: string
-  likes: number
-  dislikes: number
-  slug: string
+  _id: string;
+  title: string;
+  content: string;
+  author: string;
+  category: string;
+  tags: string[];
+  blogImageUrl: string | null;
+  readTime: number;
+  publishDate: string;
+  likes: number;
+  dislikes: number;
+  slug: string;
 }
-
-
 
 const fetchBlogPost = async (id: string): Promise<BlogPost> => {
-  const response = await axiosInstance.get(`/blogs/${id}`)
+  const response = await axiosInstance.get(`/blogs/${id}`);
   return {
     ...response.data,
-  }
-}
+  };
+};
 
-const fetchRelatedPosts = async (category: string, currentId: string): Promise<BlogPost[]> => {
-  const response = await axiosInstance.get("/blogs", {
+const fetchRelatedPosts = async (
+  category: string,
+  currentId: string
+): Promise<BlogPost[]> => {
+  const response = await axiosInstance.get('/blogs', {
     params: { category, limit: 9 },
-  })
+  });
   return response.data.blogs
     .filter((blog: BlogPost) => blog._id !== currentId)
     .map((blog: BlogPost) => ({
       ...blog,
-    }))
-}
+    }));
+};
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 export default function EnhancedBlogDetailPage() {
   return (
@@ -65,55 +88,62 @@ export default function EnhancedBlogDetailPage() {
         <BlogContent />
       </ToastProvider>
     </QueryClientProvider>
-  )
+  );
 }
 
 function BlogContent() {
-  const params = useParams()
-  const router = useRouter()
-  const id = params?.id as string
-  const [toastMessage, setToastMessage] = useState("")
-  const [isImageModalOpen, setIsImageModalOpen] = useState(false)
+  const params = useParams();
+  const router = useRouter();
+  const id = params?.id as string;
+  const [toastMessage, setToastMessage] = useState('');
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
-  const { data: blog, isLoading, isError } = useQuery<BlogPost>({
-    queryKey: ["blog", id],
+  const {
+    data: blog,
+    isLoading,
+    isError,
+  } = useQuery<BlogPost>({
+    queryKey: ['blog', id],
     queryFn: () => fetchBlogPost(id),
-  })
+  });
 
   const { data: relatedPosts } = useQuery<BlogPost[]>({
-    queryKey: ["relatedPosts", blog?.category, id],
-    queryFn: () => fetchRelatedPosts(blog?.category || "", id),
+    queryKey: ['relatedPosts', blog?.category, id],
+    queryFn: () => fetchRelatedPosts(blog?.category || '', id),
     enabled: !!blog,
-  })
+  });
 
   const likeMutation = useMutation({
     mutationFn: (blogId: string) => axiosInstance.post(`/blogs/${blogId}/like`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["blog", id] });
-      setToastMessage("Blog post liked!")
+      queryClient.invalidateQueries({ queryKey: ['blog', id] });
+      setToastMessage('Blog post liked!');
     },
-  })
+  });
 
   const dislikeMutation = useMutation({
-    mutationFn: (blogId: string) => axiosInstance.post(`/blogs/${blogId}/dislike`),
+    mutationFn: (blogId: string) =>
+      axiosInstance.post(`/blogs/${blogId}/dislike`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["blog", id] });
+      queryClient.invalidateQueries({ queryKey: ['blog', id] });
 
-      setToastMessage("Blog post disliked!")
+      setToastMessage('Blog post disliked!');
     },
-  })
+  });
 
-  const handleLike = () => likeMutation.mutate(id)
-  const handleDislike = () => dislikeMutation.mutate(id)
+  const handleLike = () => likeMutation.mutate(id);
+  const handleDislike = () => dislikeMutation.mutate(id);
 
   const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href)
-    setToastMessage("Link copied to clipboard!")
-  }
+    navigator.clipboard.writeText(window.location.href);
+    setToastMessage('Link copied to clipboard!');
+  };
 
-  if (isLoading) return <BlogSkeleton />
-  if (isError) return <div className="text-center py-12">Error loading blog post</div>
-  if (!blog) return <div className="text-center py-12">Blog post not found</div>
+  if (isLoading) return <BlogSkeleton />;
+  if (isError)
+    return <div className="text-center py-12">Error loading blog post</div>;
+  if (!blog)
+    return <div className="text-center py-12">Blog post not found</div>;
 
   return (
     <section className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
@@ -127,21 +157,28 @@ function BlogContent() {
           <div className="mb-12 lg:grid lg:grid-cols-4 lg:gap-8">
             <div className="lg:col-span-3">
               <div className="prose prose-lg dark:prose-invert max-w-none">
-                <h1 className="text-4xl font-bold font-serif mb-4 text-gray-800">{blog.title}</h1>
+                <h1 className="text-4xl font-bold font-serif mb-4 text-gray-800">
+                  {blog.title}
+                </h1>
                 <div className="flex flex-wrap items-center text-sm text-gray-600 mb-6">
                   <User className="mr-2 h-4 w-4" />
                   <span className="mr-4">{blog.author}</span>
                   <Calendar className="mr-2 h-4 w-4" />
-                  <span className="mr-4">{format(new Date(blog.publishDate), "MMM d, yyyy")}</span>
+                  <span className="mr-4">
+                    {format(new Date(blog.publishDate), 'MMM d, yyyy')}
+                  </span>
                   <Clock className="mr-2 h-4 w-4" />
                   <span>{blog.readTime} min read</span>
                 </div>
 
-                <Dialog open={isImageModalOpen} onOpenChange={setIsImageModalOpen}>
+                <Dialog
+                  open={isImageModalOpen}
+                  onOpenChange={setIsImageModalOpen}
+                >
                   <DialogTrigger asChild>
                     <div className="relative cursor-pointer">
                       <Image
-                        src={blog.image}
+                        src={blog.blogImageUrl}
                         alt={blog.title}
                         width={800}
                         height={500}
@@ -154,7 +191,7 @@ function BlogContent() {
                   </DialogTrigger>
                   <DialogContent className="max-w-4xl">
                     <Image
-                      src={blog.image}
+                      src={blog.blogImageUrl}
                       alt={blog.title}
                       width={1200}
                       height={800}
@@ -163,16 +200,32 @@ function BlogContent() {
                   </DialogContent>
                 </Dialog>
 
-                <div className="text-gray-700 leading-relaxed mb-8" dangerouslySetInnerHTML={{ __html: blog.content }} />
+                <div
+                  className="text-gray-700 leading-relaxed mb-8"
+                  dangerouslySetInnerHTML={{ __html: blog.content }}
+                />
 
                 <div className="flex flex-wrap items-center space-x-4 mb-8">
-                  <Button variant="outline" className="flex items-center" onClick={handleLike}>
+                  <Button
+                    variant="outline"
+                    className="flex items-center"
+                    onClick={handleLike}
+                  >
                     <ThumbsUp className="mr-2 h-4 w-4" /> {blog.likes} Likes
                   </Button>
-                  <Button variant="outline" className="flex items-center" onClick={handleDislike}>
-                    <ThumbsDown className="mr-2 h-4 w-4" /> {blog.dislikes} Dislikes
+                  <Button
+                    variant="outline"
+                    className="flex items-center"
+                    onClick={handleDislike}
+                  >
+                    <ThumbsDown className="mr-2 h-4 w-4" /> {blog.dislikes}{' '}
+                    Dislikes
                   </Button>
-                  <Button variant="outline" className="flex items-center" onClick={handleShare}>
+                  <Button
+                    variant="outline"
+                    className="flex items-center"
+                    onClick={handleShare}
+                  >
                     <Share2 className="mr-2 h-4 w-4" /> Share
                   </Button>
                   <Button variant="outline" className="flex items-center">
@@ -196,21 +249,87 @@ function BlogContent() {
                 </div>
 
                 <h2 className="text-xl font-semibold mb-4">Newsletter</h2>
-                <form className="mb-6" onSubmit={(e) => { e.preventDefault(); setToastMessage("Subscribed to newsletter!"); }}>
-                  <Input type="email" placeholder="Your email" className="mb-2" required />
-                  <Button className="w-full" type="submit">Subscribe</Button>
+                <form
+                  className="mb-6"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    setToastMessage('Subscribed to newsletter!');
+                  }}
+                >
+                  <Input
+                    type="email"
+                    placeholder="Your email"
+                    className="mb-2"
+                    required
+                  />
+                  <Button className="w-full" type="submit">
+                    Subscribe
+                  </Button>
                 </form>
 
                 <h2 className="text-xl font-semibold mb-4">Share</h2>
                 <div className="flex space-x-2">
-                  <Button variant="outline" size="icon" onClick={() => setToastMessage("Shared on Facebook!")}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setToastMessage('Shared on Facebook!')}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="lucide lucide-facebook"
+                    >
+                      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                    </svg>
                   </Button>
-                  <Button variant="outline" size="icon" onClick={() => setToastMessage("Shared on Twitter!")}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-twitter"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setToastMessage('Shared on Twitter!')}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="lucide lucide-twitter"
+                    >
+                      <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
+                    </svg>
                   </Button>
-                  <Button variant="outline" size="icon" onClick={() => setToastMessage("Shared on LinkedIn!")}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-linkedin"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setToastMessage('Shared on LinkedIn!')}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="lucide lucide-linkedin"
+                    >
+                      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                      <rect width="4" height="12" x="2" y="9" />
+                      <circle cx="4" cy="4" r="2" />
+                    </svg>
                   </Button>
                 </div>
               </Card>
@@ -229,7 +348,11 @@ function BlogContent() {
           </div>
           {relatedPosts.length > 6 && (
             <div className="text-center mt-8">
-              <Button variant="outline" className="text-blue-600 hover:text-blue-800" onClick={() => router.push(`/category/${blog.category}`)}>
+              <Button
+                variant="outline"
+                className="text-blue-600 hover:text-blue-800"
+                onClick={() => router.push(`/category/${blog.category}`)}
+              >
                 View More Related Posts <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
@@ -240,10 +363,12 @@ function BlogContent() {
       <Toast
         variant="default"
         title={toastMessage}
-        className={`fixed bottom-4 right-4 z-50 ${toastMessage ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+        className={`fixed bottom-4 right-4 z-50 ${
+          toastMessage ? 'opacity-100' : 'opacity-0'
+        } transition-opacity duration-300`}
       />
     </section>
-  )
+  );
 }
 
 function RelatedBlogCard({ blog }: { blog: BlogPost }) {
@@ -251,7 +376,7 @@ function RelatedBlogCard({ blog }: { blog: BlogPost }) {
     <Card className="h-full flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg">
       <div className="relative">
         <Image
-          src={blog.image}
+          src={blog.blogImageUrl}
           alt={blog.title}
           width={400}
           height={200}
@@ -262,17 +387,23 @@ function RelatedBlogCard({ blog }: { blog: BlogPost }) {
         </Badge>
       </div>
       <CardContent className="flex-grow p-4">
-        <h3 className="text-lg font-semibold mb-2 line-clamp-2">{blog.title}</h3>
-        <p className="text-sm text-gray-600 mb-4 line-clamp-3">{blog.content}</p>
+        <h3 className="text-lg font-semibold mb-2 line-clamp-2">
+          {blog.title}
+        </h3>
+        <p className="text-sm text-gray-600 mb-4 line-clamp-3">
+          {blog.content}
+        </p>
         <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-500">{format(new Date(blog.publishDate), "MMM d, yyyy")}</span>
+          <span className="text-sm text-gray-500">
+            {format(new Date(blog.publishDate), 'MMM d, yyyy')}
+          </span>
           <Button variant="link" asChild>
             <Link href={`/blog/${blog._id}`}>Read More</Link>
           </Button>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 function BlogSkeleton() {
@@ -306,5 +437,5 @@ function BlogSkeleton() {
         </div>
       </div>
     </div>
-  )
+  );
 }

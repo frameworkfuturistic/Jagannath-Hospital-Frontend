@@ -1,19 +1,19 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
-import Image from 'next/image'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useInView } from 'react-intersection-observer'
-import axios from 'axios'
-import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react'
-import { Button } from "@/components/ui/button"
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import axios from 'axios';
+import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from '@/components/ui/dialog';
 import {
   Pagination,
   PaginationContent,
@@ -22,83 +22,83 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"
-import axiosInstance from '@/lib/axiosInstance'
-import HeaderBanner from '@/components/HeaderBanner'
+} from '@/components/ui/pagination';
+import axiosInstance from '@/lib/axiosInstance';
+import HeaderBanner from '@/components/HeaderBanner';
 
 interface Image {
-  id: string
-  imageUrl: string
-  title: string
-  description: string
+  id: string;
+  GalleryImageUrl: string;
+  title: string;
+  description: string;
 }
 
 interface PaginationData {
-  images: Image[]
-  total: number
-  page: number
-  pages: number
+  images: Image[];
+  total: number;
+  page: number;
+  pages: number;
 }
 
-
-
 const HospitalGallery: React.FC = () => {
-  const [images, setImages] = useState<Image[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [selectedImage, setSelectedImage] = useState<Image | null>(null)
-  const [paginationData, setPaginationData] = useState<PaginationData | null>(null)
-  const [currentPage, setCurrentPage] = useState(1)
+  const [images, setImages] = useState<Image[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<Image | null>(null);
+  const [paginationData, setPaginationData] = useState<PaginationData | null>(
+    null
+  );
+  const [currentPage, setCurrentPage] = useState(1);
 
   const fetchImages = useCallback(async (page: number) => {
-    setLoading(true)
+    setLoading(true);
     try {
       const response = await axiosInstance.get('/gallery', {
         params: { page, limit: 12 },
-      })
-      const data = response.data
+      });
+      const data = response.data;
 
       // Transform the image URLs to the desired format
       const formattedImages = data.images.map((image: Image) => ({
         ...image,
-      }))
+      }));
 
-      setImages(formattedImages)
+      setImages(formattedImages);
       setPaginationData({
         images: formattedImages,
         total: data.total,
         page: data.page,
         pages: data.pages,
-      })
+      });
     } catch (err) {
-      setError('Failed to fetch images')
-      console.error(err)
+      setError('Failed to fetch images');
+      console.error(err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    fetchImages(currentPage)
-  }, [currentPage, fetchImages])
+    fetchImages(currentPage);
+  }, [currentPage, fetchImages]);
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-  }
+    setCurrentPage(page);
+  };
 
   const openModal = (image: Image) => {
-    setSelectedImage(image)
-  }
+    setSelectedImage(image);
+  };
 
   const closeModal = () => {
-    setSelectedImage(null)
-  }
+    setSelectedImage(null);
+  };
 
   const ImageCard: React.FC<{ image: Image }> = ({ image }) => {
     const [ref, inView] = useInView({
       triggerOnce: true,
       rootMargin: '200px 0px',
-    })
+    });
 
     return (
       <motion.div
@@ -111,7 +111,7 @@ const HospitalGallery: React.FC = () => {
       >
         {inView && (
           <Image
-            src={image.imageUrl}
+            src={image.GalleryImageUrl}
             alt={image.title}
             width={500}
             height={300}
@@ -128,32 +128,26 @@ const HospitalGallery: React.FC = () => {
           </div>
         </div>
       </motion.div>
-    )
-  }
+    );
+  };
 
-  const memoizedImages = useMemo(() => images, [images])
+  const memoizedImages = useMemo(() => images, [images]);
 
   const navigateImage = (direction: 'prev' | 'next') => {
-    if (!selectedImage) return
-    const currentIndex = images.findIndex(img => img.id === selectedImage.id)
+    if (!selectedImage) return;
+    const currentIndex = images.findIndex((img) => img.id === selectedImage.id);
     if (direction === 'prev' && currentIndex > 0) {
-      setSelectedImage(images[currentIndex - 1])
+      setSelectedImage(images[currentIndex - 1]);
     } else if (direction === 'next' && currentIndex < images.length - 1) {
-      setSelectedImage(images[currentIndex + 1])
+      setSelectedImage(images[currentIndex + 1]);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white ">
-         <HeaderBanner
-        title="Gallery"
-        subtitle=""
-        bgImage="/medical-bg.jpg"
-      />
+      <HeaderBanner title="Gallery" subtitle="" bgImage="/medical-bg.jpg" />
       <div className="container mx-auto px-4 py-12">
-        {error && (
-          <div className="text-red-500 text-center mb-4">{error}</div>
-        )}
+        {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
         <AnimatePresence>
           {loading ? (
@@ -186,7 +180,9 @@ const HospitalGallery: React.FC = () => {
                 <PaginationItem>
                   <PaginationPrevious
                     onClick={() => handlePageChange(currentPage - 1)}
-                    className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+                    className={
+                      currentPage === 1 ? 'pointer-events-none opacity-50' : ''
+                    }
                   />
                 </PaginationItem>
                 {[...Array(paginationData.pages)].map((_, index) => (
@@ -202,7 +198,11 @@ const HospitalGallery: React.FC = () => {
                 <PaginationItem>
                   <PaginationNext
                     onClick={() => handlePageChange(currentPage + 1)}
-                    className={currentPage === paginationData.pages ? 'pointer-events-none opacity-50' : ''}
+                    className={
+                      currentPage === paginationData.pages
+                        ? 'pointer-events-none opacity-50'
+                        : ''
+                    }
                   />
                 </PaginationItem>
               </PaginationContent>
@@ -210,52 +210,55 @@ const HospitalGallery: React.FC = () => {
           </div>
         )}
 
-<Dialog open={!!selectedImage} onOpenChange={closeModal}>
-  <DialogContent className="sm:max-w-[800px] sm:max-h-[90vh] overflow-hidden">
-    <DialogHeader>
-      <DialogTitle>{selectedImage?.title}</DialogTitle>
-      <DialogDescription>{selectedImage?.description}</DialogDescription>
-    </DialogHeader>
-    {selectedImage && (
-      <div className="mt-4 relative">
-        <Image
-          src={selectedImage.imageUrl}
-          alt={selectedImage.title}
-          width={800}
-          height={600}
-          className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
-        />
-        <Button
-          variant="outline"
-          size="icon"
-          className="absolute top-1/2 left-4 transform -translate-y-1/2"
-          onClick={(e) => {
-            e.stopPropagation();
-            navigateImage('prev');
-          }}
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          className="absolute top-1/2 right-4 transform -translate-y-1/2"
-          onClick={(e) => {
-            e.stopPropagation();
-            navigateImage('next');
-          }}
-        >
-          <ChevronRight className="h-4 w-4" />
-        </Button>
-      </div>
-    )}
-    <Button onClick={closeModal} className="mt-4">Close</Button>
-  </DialogContent>
-</Dialog>
-
+        <Dialog open={!!selectedImage} onOpenChange={closeModal}>
+          <DialogContent className="sm:max-w-[800px] sm:max-h-[90vh] overflow-hidden">
+            <DialogHeader>
+              <DialogTitle>{selectedImage?.title}</DialogTitle>
+              <DialogDescription>
+                {selectedImage?.description}
+              </DialogDescription>
+            </DialogHeader>
+            {selectedImage && (
+              <div className="mt-4 relative">
+                <Image
+                  src={selectedImage.GalleryImageUrl}
+                  alt={selectedImage.title}
+                  width={800}
+                  height={600}
+                  className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
+                />
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="absolute top-1/2 left-4 transform -translate-y-1/2"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigateImage('prev');
+                  }}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="absolute top-1/2 right-4 transform -translate-y-1/2"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigateImage('next');
+                  }}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+            <Button onClick={closeModal} className="mt-4">
+              Close
+            </Button>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default HospitalGallery
+export default HospitalGallery;

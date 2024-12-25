@@ -25,7 +25,7 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 221 83% 53%; /* Updated to match primary color */
     --radius: 0.5rem;
-    
+
     /* Chart colors */
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
@@ -63,7 +63,7 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 217 91% 60%; /* Updated to match primary color */
-    
+
     /* Dark mode chart colors */
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
@@ -90,11 +90,18 @@
   }
 }
 
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/InterVariable.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
 /* Custom styles */
 html {
   scroll-behavior: smooth;
 }
-
 
 .section {
   margin-bottom: 2rem;
@@ -117,7 +124,14 @@ html {
   width: 100%; /* Full width */
   background-color: #319795; /* Arrow background color */
   /* Adjusted clip-path for a left-positioned right-facing cut */
-  clip-path: polygon(100% 0%, 100% 49%, 100% 100%, 0 100%, 4% 50%, 0 0);/* Cut shape opening to the left */
+  clip-path: polygon(
+    100% 0%,
+    100% 49%,
+    100% 100%,
+    0 100%,
+    4% 50%,
+    0 0
+  ); /* Cut shape opening to the left */
   z-index: -1; /* Keep it behind the content */
 }
 
@@ -125,4 +139,32 @@ html {
   position: relative;
   z-index: 1; /* Ensure content is above the background */
   color: #ffffff; /* Text color */
+}
+
+.blog-card {
+  @apply transition-all duration-300 ease-in-out hover:transform hover:scale-105;
+}
+
+.blog-title {
+  @apply text-xl font-bold text-gray-900 dark:text-gray-100 mb-2;
+}
+
+.blog-author {
+  @apply text-sm text-gray-600 dark:text-gray-400 mb-1;
+}
+
+.blog-content {
+  @apply text-sm text-gray-700 dark:text-gray-300 line-clamp-2;
+}
+
+.blog-meta {
+  @apply flex items-center space-x-2 text-xs text-gray-500 dark:text-gray-400 mt-2;
+}
+
+.action-button {
+  @apply transition-colors duration-200 ease-in-out;
+}
+
+.action-button:hover {
+  @apply bg-gray-100 dark:bg-gray-700;
 }

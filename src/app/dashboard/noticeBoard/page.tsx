@@ -1,10 +1,11 @@
 // @ts-nocheck
 
-'use client'
+'use client';
 
-import { useState, useEffect, useCallback } from "react"
-import { useForm, Controller } from "react-hook-form"
-import { motion, AnimatePresence } from "framer-motion"
+import { useState, useEffect, useCallback } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useDropzone } from 'react-dropzone';
 import {
   Plus,
   Edit,
@@ -13,18 +14,18 @@ import {
   Loader2,
   ArrowUpDown,
   AlertCircle,
-  CheckCircle2
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+  CheckCircle2,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog"
+} from '@/components/ui/dialog';
 import {
   Table,
   TableBody,
@@ -32,49 +33,54 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Card, CardContent } from "@/components/ui/card"
+} from '@/components/ui/table';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { Alert, AlertDescription } from "@/components/ui/alert"
+} from '@/components/ui/tooltip';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import axios from "axios"
-import axiosInstance from "@/lib/axiosInstance"
+} from '@/components/ui/select';
+import axios from 'axios';
+import axiosInstance from '@/lib/axiosInstance';
 
 interface Announcement {
-  _id: string
-  title: string
-  description: string
-  type: "Notice" | "News" | "Event"
-  priority: "Low" | "Medium" | "High"
-  startDate: string
-  status: "Draft" | "Published" | "Archived" | "Upcoming" | "Ongoing" | "Past"
-  author: string
-  ImpLink?: string
-  thumbnailImage?: string
-  attachment?: string
+  _id: string;
+  title: string;
+  description: string;
+  type: 'Notice' | 'News' | 'Event';
+  priority: 'Low' | 'Medium' | 'High';
+  startDate: string;
+  status: 'Draft' | 'Published' | 'Archived' | 'Upcoming' | 'Ongoing' | 'Past';
+  author: string;
+  ImpLink?: string;
+  thumbnailImage?: string;
+  attachment?: string;
 }
 
 export default function AnnouncementManagement() {
-  const [announcements, setAnnouncements] = useState<Announcement[]>([])
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null>(null)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [sortConfig, setSortConfig] = useState<{ key: keyof Announcement; direction: "asc" | "desc" } | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
-  const [view, setView] = useState<"grid" | "list">("list")
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingAnnouncement, setEditingAnnouncement] =
+    useState<Announcement | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortConfig, setSortConfig] = useState<{
+    key: keyof Announcement;
+    direction: 'asc' | 'desc';
+  } | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [view, setView] = useState<'grid' | 'list'>('list');
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const {
     control,
@@ -82,114 +88,161 @@ export default function AnnouncementManagement() {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<Announcement>()
+  } = useForm<Announcement>();
 
   const fetchAnnouncements = useCallback(async () => {
     try {
-      setLoading(true)
-      const response = await axiosInstance.get("/announcement")
+      setLoading(true);
+      const response = await axiosInstance.get('/announcement');
       if (Array.isArray(response.data.announcements)) {
-        setAnnouncements(response.data.announcements)
+        setAnnouncements(response.data.announcements);
       } else {
-        throw new Error("Invalid data format received from API")
+        throw new Error('Invalid data format received from API');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error fetching announcements")
+      setError(
+        err instanceof Error ? err.message : 'Error fetching announcements'
+      );
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    fetchAnnouncements()
-  }, [fetchAnnouncements])
+    fetchAnnouncements();
+  }, [fetchAnnouncements]);
 
   const onSubmit = async (data: Announcement) => {
     try {
-      setLoading(true)
+      setLoading(true);
+
+      const formData = new FormData();
+
+      formData.append('title', data.title);
+      formData.append('description', data.description);
+      formData.append('type', data.type);
+      formData.append('priority', data.priority);
+      formData.append('startDate', data.startDate);
+      formData.append('status', data.status);
+      formData.append('author', data.author);
+      if (data.ImpLink) formData.append('ImpLink', data.ImpLink);
+      if (data.attachment) formData.append('attachment', data.attachment);
+
+      if (imageFile) {
+        formData.append('image', imageFile); // Append the image file
+      }
+
       if (editingAnnouncement) {
-        const response = await axiosInstance.put(`/announcement/${editingAnnouncement._id}`, data)
+        const response = await axiosInstance.put(
+          `/announcement/${editingAnnouncement._id}`,
+          formData,
+          {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          }
+        );
         if (response.status === 200) {
-          setAnnouncements(announcements.map((ann) => (ann.id === editingAnnouncement._id ? { ...ann, ...data } : ann)))
-          setSuccessMessage("Announcement updated successfully!")
+          setAnnouncements(
+            announcements.map((ann) =>
+              ann.id === editingAnnouncement._id ? { ...ann, ...data } : ann
+            )
+          );
+          setSuccessMessage('Announcement updated successfully!');
         }
       } else {
-        const response = await axiosInstance.post("/announcement", data)
+        const response = await axiosInstance.post('/announcement', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
         if (response.status === 201) {
-          setAnnouncements([...announcements, response.data])
-          setSuccessMessage("Announcement created successfully!")
+          setAnnouncements([...announcements, response.data]);
+          setSuccessMessage('Announcement created successfully!');
         }
       }
-      setIsDialogOpen(false)
-      setEditingAnnouncement(null)
-      reset()
-      fetchAnnouncements()
+      setIsDialogOpen(false);
+      setEditingAnnouncement(null);
+      reset();
+      setImageFile(null);
+      fetchAnnouncements();
     } catch (err) {
       setError(
-        axios.isAxiosError(err) ? err.response?.data.message || "Error creating/updating announcement" : "An unexpected error occurred"
-      )
+        axios.isAxiosError(err)
+          ? err.response?.data.message || 'Error creating/updating announcement'
+          : 'An unexpected error occurred'
+      );
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const openDialog = (announcement?: Announcement) => {
     if (announcement) {
-      setEditingAnnouncement(announcement)
-      reset(announcement)
+      setEditingAnnouncement(announcement);
+      reset(announcement);
     } else {
-      setEditingAnnouncement(null)
-      reset()
+      setEditingAnnouncement(null);
+      reset();
     }
-    setIsDialogOpen(true)
-  }
+    setIsDialogOpen(true);
+  };
 
   const deleteAnnouncement = async (id: string) => {
     try {
-      setLoading(true)
-      await axiosInstance.delete(`/announcement/${id}`)
-      setAnnouncements(announcements.filter((ann) => ann._id !== id))
-      setSuccessMessage("Announcement deleted successfully!")
-      fetchAnnouncements()
+      setLoading(true);
+      await axiosInstance.delete(`/announcement/${id}`);
+      setAnnouncements(announcements.filter((ann) => ann._id !== id));
+      setSuccessMessage('Announcement deleted successfully!');
+      fetchAnnouncements();
     } catch (err) {
       setError(
-        axios.isAxiosError(err) ? err.response?.data.message || "Error deleting announcement" : "An unexpected error occurred"
-      )
+        axios.isAxiosError(err)
+          ? err.response?.data.message || 'Error deleting announcement'
+          : 'An unexpected error occurred'
+      );
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleSort = (key: keyof Announcement) => {
-    let direction: "asc" | "desc" = "asc"
-    if (sortConfig && sortConfig.key === key && sortConfig.direction === "asc") {
-      direction = "desc"
+    let direction: 'asc' | 'desc' = 'asc';
+    if (
+      sortConfig &&
+      sortConfig.key === key &&
+      sortConfig.direction === 'asc'
+    ) {
+      direction = 'desc';
     }
-    setSortConfig({ key, direction })
-  }
+    setSortConfig({ key, direction });
+  };
 
   const sortedAnnouncements = [...announcements].sort((a, b) => {
-    if (!sortConfig) return 0
-    const { key, direction } = sortConfig
-    if (a[key] < b[key]) return direction === "asc" ? -1 : 1
-    if (a[key] > b[key]) return direction === "asc" ? 1 : -1
-    return 0
-  })
+    if (!sortConfig) return 0;
+    const { key, direction } = sortConfig;
+    if (a[key] < b[key]) return direction === 'asc' ? -1 : 1;
+    if (a[key] > b[key]) return direction === 'asc' ? 1 : -1;
+    return 0;
+  });
 
   const filteredAnnouncements = sortedAnnouncements.filter(
     (ann) =>
       ann.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       ann.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       ann.type.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  );
 
   const announcementCounts = announcements.reduce(
     (acc, ann) => {
-      acc[ann.type]++
-      return acc
+      acc[ann.type]++;
+      return acc;
     },
     { Notice: 0, News: 0, Event: 0 }
-  )
+  );
+
+  const onDrop = (acceptedFiles: File[]) => {
+    // Only allow one file
+    setImageFile(acceptedFiles[0]);
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (
     <main className="flex-1 overflow-hidden flex flex-col">
@@ -203,7 +256,9 @@ export default function AnnouncementManagement() {
             {Object.entries(announcementCounts).map(([type, count]) => (
               <Card key={type}>
                 <CardContent className="p-4">
-                  <h3 className="text-lg font-semibold mb-2 text-primary">{type}</h3>
+                  <h3 className="text-lg font-semibold mb-2 text-primary">
+                    {type}
+                  </h3>
                   <p className="text-3xl font-bold text-primary">{count}</p>
                 </CardContent>
               </Card>
@@ -223,7 +278,11 @@ export default function AnnouncementManagement() {
                   />
                 </div>
                 <div className="flex gap-2 ml-auto">
-                  <Button variant="outline" size="icon" onClick={() => setView("grid")}>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setView('grid')}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -243,7 +302,11 @@ export default function AnnouncementManagement() {
                     </svg>
                     <span className="sr-only">Grid view</span>
                   </Button>
-                  <Button variant="outline" size="icon" onClick={() => setView("list")}>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setView('list')}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -279,7 +342,10 @@ export default function AnnouncementManagement() {
               )}
 
               {successMessage && (
-                <Alert variant="default" className="mb-4 bg-green-50 text-green-800 border-green-300">
+                <Alert
+                  variant="default"
+                  className="mb-4 bg-green-50 text-green-800 border-green-300"
+                >
                   <CheckCircle2 className="h-4 w-4" />
                   <AlertDescription>{successMessage}</AlertDescription>
                 </Alert>
@@ -289,17 +355,31 @@ export default function AnnouncementManagement() {
                 <div className="flex justify-center items-center h-64">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 </div>
-              ) : view === "list" ? (
+              ) : view === 'list' ? (
                 <div className="overflow-x-auto">
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        {["Title", "Type", "Priority", "Start Date", "Status", "Actions"].map((header) => (
+                        {[
+                          'Title',
+                          'Type',
+                          'Priority',
+                          'Start Date',
+                          'Status',
+                          'Actions',
+                        ].map((header) => (
                           <TableHead key={header} className="whitespace-nowrap">
                             <motion.div
                               className="flex items-center cursor-pointer"
-                              onClick={() => handleSort(header.toLowerCase() as keyof Announcement)}
-                              whileHover={{ backgroundColor: "#f0f9ff", transition: { duration: 0.2 } }}
+                              onClick={() =>
+                                handleSort(
+                                  header.toLowerCase() as keyof Announcement
+                                )
+                              }
+                              whileHover={{
+                                backgroundColor: '#f0f9ff',
+                                transition: { duration: 0.2 },
+                              }}
                             >
                               {header}
                               <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -318,31 +398,53 @@ export default function AnnouncementManagement() {
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.3 }}
                           >
-                            <TableCell className="font-medium">{announcement.title}</TableCell>
+                            <TableCell className="font-medium">
+                              {announcement.title}
+                            </TableCell>
                             <TableCell>{announcement.type}</TableCell>
                             <TableCell>{announcement.priority}</TableCell>
-                            <TableCell>{new Date(announcement.startDate).toLocaleDateString()}</TableCell>
+                            <TableCell>
+                              {new Date(
+                                announcement.startDate
+                              ).toLocaleDateString()}
+                            </TableCell>
                             <TableCell>{announcement.status}</TableCell>
                             <TableCell>
                               <div className="flex space-x-2">
                                 <TooltipProvider>
                                   <Tooltip>
                                     <TooltipTrigger asChild>
-                                      <Button variant="outline" size="sm" onClick={() => openDialog(announcement)}>
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => openDialog(announcement)}
+                                      >
                                         <Edit className="h-4 w-4" />
                                       </Button>
                                     </TooltipTrigger>
-                                    <TooltipContent>Edit announcement</TooltipContent>
+                                    <TooltipContent>
+                                      Edit announcement
+                                    </TooltipContent>
                                   </Tooltip>
                                 </TooltipProvider>
                                 <TooltipProvider>
                                   <Tooltip>
                                     <TooltipTrigger asChild>
-                                      <Button variant="destructive" size="sm" onClick={() => deleteAnnouncement(announcement._id || announcement.id)}>
+                                      <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={() =>
+                                          deleteAnnouncement(
+                                            announcement._id || announcement.id
+                                          )
+                                        }
+                                      >
                                         <Trash2 className="h-4 w-4" />
                                       </Button>
                                     </TooltipTrigger>
-                                    <TooltipContent>Delete announcement</TooltipContent>
+                                    <TooltipContent>
+                                      Delete announcement
+                                    </TooltipContent>
                                   </Tooltip>
                                 </TooltipProvider>
                               </div>
@@ -359,7 +461,6 @@ export default function AnnouncementManagement() {
                     {filteredAnnouncements.map((announcement) => (
                       <motion.div
                         key={announcement.id}
-                
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.9 }}
@@ -367,33 +468,57 @@ export default function AnnouncementManagement() {
                       >
                         <Card>
                           <CardContent className="p-4">
-                            <h3 className="text-lg font-semibold mb-2">{announcement.title}</h3>
-                            <p className="text-sm text-muted-foreground mb-2">{announcement.description}</p>
+                            <h3 className="text-lg font-semibold mb-2">
+                              {announcement.title}
+                            </h3>
+                            <p className="text-sm text-muted-foreground mb-2">
+                              {announcement.description}
+                            </p>
                             <div className="flex justify-between items-center text-sm text-muted-foreground">
                               <span>{announcement.type}</span>
                               <span>{announcement.priority}</span>
                             </div>
                             <div className="mt-4 flex justify-between items-center">
-                              <span className="text-sm">{new Date(announcement.startDate).toLocaleDateString()}</span>
+                              <span className="text-sm">
+                                {new Date(
+                                  announcement.startDate
+                                ).toLocaleDateString()}
+                              </span>
                               <div className="flex space-x-2">
                                 <TooltipProvider>
                                   <Tooltip>
                                     <TooltipTrigger asChild>
-                                      <Button variant="outline" size="sm" onClick={() => openDialog(announcement)}>
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => openDialog(announcement)}
+                                      >
                                         <Edit className="h-4 w-4" />
                                       </Button>
                                     </TooltipTrigger>
-                                    <TooltipContent>Edit announcement</TooltipContent>
+                                    <TooltipContent>
+                                      Edit announcement
+                                    </TooltipContent>
                                   </Tooltip>
                                 </TooltipProvider>
                                 <TooltipProvider>
                                   <Tooltip>
                                     <TooltipTrigger asChild>
-                                      <Button variant="destructive" size="sm" onClick={() => deleteAnnouncement(announcement._id || announcement.id)}>
+                                      <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={() =>
+                                          deleteAnnouncement(
+                                            announcement._id || announcement.id
+                                          )
+                                        }
+                                      >
                                         <Trash2 className="h-4 w-4" />
                                       </Button>
                                     </TooltipTrigger>
-                                    <TooltipContent>Delete announcement</TooltipContent>
+                                    <TooltipContent>
+                                      Delete announcement
+                                    </TooltipContent>
                                   </Tooltip>
                                 </TooltipProvider>
                               </div>
@@ -411,7 +536,11 @@ export default function AnnouncementManagement() {
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent className="sm:max-w-[70vw] h-[95vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>{editingAnnouncement ? "Edit Announcement" : "Add New Announcement"}</DialogTitle>
+                <DialogTitle>
+                  {editingAnnouncement
+                    ? 'Edit Announcement'
+                    : 'Add New Announcement'}
+                </DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="grid gap-4 py-4">
@@ -419,9 +548,17 @@ export default function AnnouncementManagement() {
                     <label htmlFor="title" className="text-right">
                       Title
                     </label>
-                    <Input id="title" className="col-span-3" {...register("title", { required: "Title is required" })} />
+                    <Input
+                      id="title"
+                      className="col-span-3"
+                      {...register('title', { required: 'Title is required' })}
+                    />
                   </div>
-                  {errors.title && <p className="text-red-500 text-sm ml-[8.5rem]">{errors.title.message}</p>}
+                  {errors.title && (
+                    <p className="text-red-500 text-sm ml-[8.5rem]">
+                      {errors.title.message}
+                    </p>
+                  )}
 
                   <div className="grid grid-cols-4 items-center gap-4">
                     <label htmlFor="description" className="text-right">
@@ -430,10 +567,16 @@ export default function AnnouncementManagement() {
                     <Textarea
                       id="description"
                       className="col-span-3"
-                      {...register("description", { required: "Description is required" })}
+                      {...register('description', {
+                        required: 'Description is required',
+                      })}
                     />
                   </div>
-                  {errors.description && <p className="text-red-500 text-sm ml-[8.5rem]">{errors.description.message}</p>}
+                  {errors.description && (
+                    <p className="text-red-500 text-sm ml-[8.5rem]">
+                      {errors.description.message}
+                    </p>
+                  )}
 
                   <div className="grid grid-cols-4 items-center gap-4">
                     <label htmlFor="type" className="text-right">
@@ -442,9 +585,12 @@ export default function AnnouncementManagement() {
                     <Controller
                       name="type"
                       control={control}
-                      rules={{ required: "Type is required" }}
+                      rules={{ required: 'Type is required' }}
                       render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
                           <SelectTrigger className="w-full col-span-3">
                             <SelectValue placeholder="Select Type" />
                           </SelectTrigger>
@@ -457,7 +603,11 @@ export default function AnnouncementManagement() {
                       )}
                     />
                   </div>
-                  {errors.type && <p className="text-red-500 text-sm ml-[8.5rem]">{errors.type.message}</p>}
+                  {errors.type && (
+                    <p className="text-red-500 text-sm ml-[8.5rem]">
+                      {errors.type.message}
+                    </p>
+                  )}
 
                   <div className="grid grid-cols-4 items-center gap-4">
                     <label htmlFor="priority" className="text-right">
@@ -466,9 +616,12 @@ export default function AnnouncementManagement() {
                     <Controller
                       name="priority"
                       control={control}
-                      rules={{ required: "Priority is required" }}
+                      rules={{ required: 'Priority is required' }}
                       render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
                           <SelectTrigger className="w-full col-span-3">
                             <SelectValue placeholder="Select Priority" />
                           </SelectTrigger>
@@ -481,7 +634,11 @@ export default function AnnouncementManagement() {
                       )}
                     />
                   </div>
-                  {errors.priority && <p className="text-red-500 text-sm ml-[8.5rem]">{errors.priority.message}</p>}
+                  {errors.priority && (
+                    <p className="text-red-500 text-sm ml-[8.5rem]">
+                      {errors.priority.message}
+                    </p>
+                  )}
 
                   <div className="grid grid-cols-4 items-center gap-4">
                     <label htmlFor="startDate" className="text-right">
@@ -491,10 +648,16 @@ export default function AnnouncementManagement() {
                       id="startDate"
                       type="date"
                       className="col-span-3"
-                      {...register("startDate", { required: "Start Date is required" })}
+                      {...register('startDate', {
+                        required: 'Start Date is required',
+                      })}
                     />
                   </div>
-                  {errors.startDate && <p className="text-red-500 text-sm ml-[8.5rem]">{errors.startDate.message}</p>}
+                  {errors.startDate && (
+                    <p className="text-red-500 text-sm ml-[8.5rem]">
+                      {errors.startDate.message}
+                    </p>
+                  )}
 
                   <div className="grid grid-cols-4 items-center gap-4">
                     <label htmlFor="status" className="text-right">
@@ -503,9 +666,12 @@ export default function AnnouncementManagement() {
                     <Controller
                       name="status"
                       control={control}
-                      rules={{ required: "Status is required" }}
+                      rules={{ required: 'Status is required' }}
                       render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
                           <SelectTrigger className="w-full col-span-3">
                             <SelectValue placeholder="Select Status" />
                           </SelectTrigger>
@@ -521,40 +687,85 @@ export default function AnnouncementManagement() {
                       )}
                     />
                   </div>
-                  {errors.status && <p className="text-red-500 text-sm ml-[8.5rem]">{errors.status.message}</p>}
+                  {errors.status && (
+                    <p className="text-red-500 text-sm ml-[8.5rem]">
+                      {errors.status.message}
+                    </p>
+                  )}
 
                   <div className="grid grid-cols-4 items-center gap-4">
                     <label htmlFor="author" className="text-right">
                       Author
                     </label>
-                    <Input id="author" className="col-span-3" {...register("author", { required: "Author is required" })} />
+                    <Input
+                      id="author"
+                      className="col-span-3"
+                      {...register('author', {
+                        required: 'Author is required',
+                      })}
+                    />
                   </div>
-                  {errors.author && <p className="text-red-500 text-sm ml-[8.5rem]">{errors.author.message}</p>}
+                  {errors.author && (
+                    <p className="text-red-500 text-sm ml-[8.5rem]">
+                      {errors.author.message}
+                    </p>
+                  )}
 
                   <div className="grid grid-cols-4 items-center gap-4">
                     <label htmlFor="ImpLink" className="text-right">
                       Important Link
                     </label>
-                    <Input id="ImpLink" className="col-span-3" {...register("ImpLink")} />
+                    <Input
+                      id="ImpLink"
+                      className="col-span-3"
+                      {...register('ImpLink')}
+                    />
                   </div>
 
                   <div className="grid grid-cols-4 items-center gap-4">
                     <label htmlFor="thumbnailImage" className="text-right">
                       Thumbnail Image
                     </label>
-                    <Input id="thumbnailImage" className="col-span-3" {...register("thumbnailImage")} />
+                    <div className="col-span-3">
+                      <div
+                        {...getRootProps()}
+                        className="border-2 border-dashed border-gray-300 p-4 rounded-md"
+                      >
+                        <input {...getInputProps()} />
+                        <p className="text-center text-gray-500">
+                          {imageFile
+                            ? imageFile.name
+                            : "Drag 'n' drop some files here, or click to select files"}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* <Input
+                      id="thumbnailImage"
+                      className="col-span-3"
+                      {...register('thumbnailImage')}
+                    /> */}
                   </div>
 
                   <div className="grid grid-cols-4 items-center gap-4">
                     <label htmlFor="attachment" className="text-right">
                       Attachment
                     </label>
-                    <Input id="attachment" className="col-span-3" {...register("attachment")} />
+                    <Input
+                      id="attachment"
+                      className="col-span-3"
+                      {...register('attachment')}
+                    />
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button type="submit" className="bg-primary text-primary-foreground hover:bg-primary/90">
-                    {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                  <Button
+                    type="submit"
+                    className="bg-primary text-primary-foreground hover:bg-primary/90"
+                  >
+                    {loading ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : null}
                     Save
                   </Button>
                 </DialogFooter>
@@ -564,5 +775,5 @@ export default function AnnouncementManagement() {
         </motion.div>
       </div>
     </main>
-  )
+  );
 }

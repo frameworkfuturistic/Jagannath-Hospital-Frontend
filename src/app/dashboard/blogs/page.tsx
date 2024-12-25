@@ -1,8 +1,12 @@
-"use client";
-
-import React, { useState, useEffect, useCallback, useTransition } from "react";
-import { motion, AnimatePresence, Reorder } from "framer-motion";
-import { format } from "date-fns";
+// eslint-disable-next-line
+// @ts-nocheck
+'use client';
+import dynamic from 'next/dynamic';
+import React, { useState, useEffect, useCallback, useTransition } from 'react';
+import { motion, AnimatePresence, Reorder } from 'framer-motion';
+import { format } from 'date-fns';
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+import 'react-quill/dist/quill.snow.css'; // Import styles
 import {
   AlertCircle,
   Calendar,
@@ -21,8 +25,8 @@ import {
   Search,
   MoreVertical,
   X,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -30,7 +34,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -38,35 +42,35 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
-import { Toaster } from "@/components/ui/toaster";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import Image from "next/image";
-import axios from "axios";
-import axiosInstance from "@/lib/axiosInstance";
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/components/ui/use-toast';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
+import { Toaster } from '@/components/ui/toaster';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import Image from 'next/image';
+import axios from 'axios';
+import axiosInstance from '@/lib/axiosInstance';
 
 const categories = [
-  "wellness",
-  "nutrition",
-  "fitness",
-  "mental-health",
-  "medical-research",
-  "healthcare-technology",
+  'wellness',
+  'nutrition',
+  'fitness',
+  'mental-health',
+  'medical-research',
+  'healthcare-technology',
 ];
 
 interface Blog {
@@ -76,8 +80,8 @@ interface Blog {
   author: string;
   category: string;
   tags: string[];
-  status: "draft" | "published";
-  image?: string | File;
+  status: 'draft' | 'published';
+  blogImageUrl?: string | File;
   readTime?: number;
   publishDate: string;
   createdAt?: string;
@@ -92,10 +96,10 @@ interface ApiResponse<T> {
   message?: string;
 }
 
-const CustomBadge: React.FC<{ status: "draft" | "published" }> = ({
+const CustomBadge: React.FC<{ status: 'draft' | 'published' }> = ({
   status,
 }) => {
-  const variant = status === "published" ? "default" : "secondary";
+  const variant = status === 'published' ? 'default' : 'secondary';
   return <Badge variant={variant}>{status}</Badge>;
 };
 
@@ -108,12 +112,12 @@ export default function AdvancedBlogManagement() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sortConfig, setSortConfig] = useState({
-    key: "publishDate",
-    direction: "desc",
+    key: 'publishDate',
+    direction: 'desc',
   });
   const [isPending, startTransition] = useTransition();
-  const [currentTab, setCurrentTab] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [currentTab, setCurrentTab] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
   const { toast } = useToast();
 
   const fetchBlogs = useCallback(async () => {
@@ -121,28 +125,27 @@ export default function AdvancedBlogManagement() {
     setError(null);
 
     try {
-      const response = await axiosInstance.get<ApiResponse<Blog[]>>("/blogs");
+      const response = await axiosInstance.get<ApiResponse<Blog[]>>('/blogs');
 
-      if (response.data?.blogs.length) {
+      if (response.data?.blogs?.length > 0) {
         const formattedBlogs = response.data.blogs.map((blog) => ({
           ...blog,
         }));
-        console.log("sjkdbh", formattedBlogs);
 
         setBlogs(formattedBlogs);
       } else {
-        throw new Error("No blogs found");
+        throw new Error('No blogs found');
       }
     } catch (error: any) {
       console.error(
-        "Error fetching blogs:",
+        'Error fetching blogs:',
         error.response?.data || error.message
       );
-      setError("Failed to fetch blogs. Please try again.");
+      setError('Failed to fetch blogs. Please try again.');
       toast({
-        title: "Error",
-        description: "Failed to fetch blogs. Please try again.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to fetch blogs. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -154,14 +157,14 @@ export default function AdvancedBlogManagement() {
   }, [fetchBlogs]);
 
   const handleCreateBlog = async (
-    newBlog: Omit<Blog, "_id" | "createdAt" | "updatedAt" | "slug">
+    newBlog: Omit<Blog, '_id' | 'createdAt' | 'updatedAt' | 'slug'>
   ) => {
     try {
       const formData = new FormData();
       Object.entries(newBlog).forEach(([key, value]) => {
-        if (key === "tags") {
+        if (key === 'tags') {
           formData.append(key, JSON.stringify(value));
-        } else if (key === "image" && value instanceof File) {
+        } else if (key === 'image' && value instanceof File) {
           formData.append(key, value);
         } else {
           formData.append(key, String(value));
@@ -169,40 +172,34 @@ export default function AdvancedBlogManagement() {
       });
 
       const response = await axiosInstance.post<ApiResponse<Blog>>(
-        "/blogs",
+        '/blogs',
         formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: { 'Content-Type': 'multipart/form-data' },
         }
       );
-      if (response.data && response.data.success && response.data.data) {
+      if (response.data?.success && response.data?.data) {
         const newBlogWithFormattedImage = {
           ...response.data.data,
-          image: response.data.data.image
-            ? `${
-                axiosInstance.defaults.baseURL
-              }/blogs/${response.data.data.image
-                .toString()
-                .replace(/^uploads[\\/]/, "")
-                .replace(/\\/g, "/")}`
-            : undefined,
+          image: response.data.data.blogImageUrl,
         };
         setBlogs((prevBlogs) => [...prevBlogs, newBlogWithFormattedImage]);
         setIsCreateDialogOpen(false);
         toast({
-          title: "Success",
-          description: "Your new blog post has been created successfully.",
+          title: 'Success',
+          description: 'Your new blog post has been created successfully.',
         });
       } else {
-        throw new Error(response.data?.message || "Failed to create blog");
+        throw new Error(response.data?.message || 'Failed to create blog');
       }
     } catch (error: any) {
-      console.error("Error creating blog:", error);
+      console.error('Error creating blog:', error);
+      setError('Failed to create blog post.');
       toast({
-        title: "Error",
+        title: 'Error',
         description:
-          error.message || "Failed to create blog post. Please try again.",
-        variant: "destructive",
+          error.message || 'Failed to create blog post. Please try again.',
+        variant: 'destructive',
       });
     }
   };
@@ -211,13 +208,13 @@ export default function AdvancedBlogManagement() {
     try {
       const formData = new FormData();
       Object.entries(updatedBlog).forEach(([key, value]) => {
-        if (key === "tags") {
+        if (key === 'tags') {
           formData.append(key, JSON.stringify(value));
-        } else if (key === "image") {
+        } else if (key === 'image') {
           if (value instanceof File) {
             formData.append(key, value);
-          } else if (typeof value === "string" && value.startsWith("http")) {
-            // If it's a URL, don't append it to formData
+          } else if (typeof value === 'string' && value.startsWith('http')) {
+            // Skip adding URL-based image
           } else {
             formData.append(key, String(value));
           }
@@ -230,20 +227,13 @@ export default function AdvancedBlogManagement() {
         `/blogs/${updatedBlog._id}`,
         formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: { 'Content-Type': 'multipart/form-data' },
         }
       );
-      if (response.data && response.data.success && response.data.data) {
+      if (response.data?.success && response.data?.data) {
         const updatedBlogWithFormattedImage = {
           ...response.data.data,
-          image: response.data.data.image
-            ? `${
-                axiosInstance.defaults.baseURL
-              }/blogs/${response.data.data.image
-                .toString()
-                .replace(/^uploads[\\/]/, "")
-                .replace(/\\/g, "/")}`
-            : undefined,
+          image: response.data.data.blogImageUrl,
         };
         setBlogs((prevBlogs) =>
           prevBlogs.map((blog) =>
@@ -252,19 +242,20 @@ export default function AdvancedBlogManagement() {
         );
         setIsEditDialogOpen(false);
         toast({
-          title: "Success",
-          description: "Your blog post has been updated successfully.",
+          title: 'Success',
+          description: 'Your blog post has been updated successfully.',
         });
       } else {
-        throw new Error(response.data?.message || "Failed to update blog");
+        throw new Error(response.data?.message || 'Failed to update blog');
       }
     } catch (error: any) {
-      console.error("Error updating blog:", error);
+      console.error('Error updating blog:', error);
+      setError('Failed to update blog post.');
       toast({
-        title: "Error",
+        title: 'Error',
         description:
-          error.message || "Failed to update blog post. Please try again.",
-        variant: "destructive",
+          error.message || 'Failed to update blog post. Please try again.',
+        variant: 'destructive',
       });
     }
   };
@@ -279,18 +270,19 @@ export default function AdvancedBlogManagement() {
           prevBlogs.filter((blog) => blog._id !== blogId)
         );
         toast({
-          title: "Success",
-          description: "Your blog post has been deleted successfully.",
+          title: 'Success',
+          description: 'Your blog post has been deleted successfully.',
         });
       } else {
-        throw new Error("Failed to delete blog");
+        throw new Error('Failed to delete blog');
       }
-    } catch (error) {
-      console.error("Error deleting blog:", error);
+    } catch (error: any) {
+      console.error('Error deleting blog:', error);
+      setError('Failed to delete blog post.');
       toast({
-        title: "Error",
-        description: "Failed to delete blog post. Please try again.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to delete blog post. Please try again.',
+        variant: 'destructive',
       });
     }
   };
@@ -299,9 +291,9 @@ export default function AdvancedBlogManagement() {
     setSortConfig((prevConfig) => ({
       key,
       direction:
-        prevConfig.key === key && prevConfig.direction === "asc"
-          ? "desc"
-          : "asc",
+        prevConfig.key === key && prevConfig.direction === 'asc'
+          ? 'desc'
+          : 'asc',
     }));
   };
 
@@ -315,9 +307,9 @@ export default function AdvancedBlogManagement() {
       )
       .sort((a, b) => {
         if (a[sortConfig.key as keyof Blog] < b[sortConfig.key as keyof Blog])
-          return sortConfig.direction === "asc" ? -1 : 1;
+          return sortConfig.direction === 'asc' ? -1 : 1;
         if (a[sortConfig.key as keyof Blog] > b[sortConfig.key as keyof Blog])
-          return sortConfig.direction === "asc" ? 1 : -1;
+          return sortConfig.direction === 'asc' ? 1 : -1;
         return 0;
       });
   }, [blogs, searchTerm, sortConfig]);
@@ -331,17 +323,17 @@ export default function AdvancedBlogManagement() {
     isOpen: boolean;
     onClose: () => void;
     blog: Blog | null;
-    mode: "view" | "edit" | "create";
+    mode: 'view' | 'edit' | 'create';
   }) => {
     const [formData, setFormData] = useState<Partial<Blog>>(
       blog || {
-        title: "",
-        content: "",
-        author: "",
-        category: "",
+        title: '',
+        content: '',
+        author: '',
+        category: '',
         tags: [],
-        status: "draft",
-        image: "",
+        status: 'draft',
+        blogImageUrl: '',
         publishDate: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"),
       }
     );
@@ -357,7 +349,7 @@ export default function AdvancedBlogManagement() {
     };
 
     const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const tags = e.target.value.split(",").map((tag) => tag.trim());
+      const tags = e.target.value.split(',').map((tag) => tag.trim());
       setFormData((prev) => ({ ...prev, tags }));
     };
 
@@ -371,16 +363,16 @@ export default function AdvancedBlogManagement() {
       e.preventDefault();
       setIsLoading(true);
       try {
-        if (mode === "create") {
+        if (mode === 'create') {
           await handleCreateBlog(
-            formData as Omit<Blog, "_id" | "createdAt" | "updatedAt" | "slug">
+            formData as Omit<Blog, '_id' | 'createdAt' | 'updatedAt' | 'slug'>
           );
-        } else if (mode === "edit" && blog) {
+        } else if (mode === 'edit' && blog) {
           await handleUpdateBlog({ ...blog, ...formData } as Blog);
         }
         onClose();
       } catch (error) {
-        console.error("Error submitting form:", error);
+        console.error('Error submitting form:', error);
       } finally {
         setIsLoading(false);
       }
@@ -391,14 +383,18 @@ export default function AdvancedBlogManagement() {
         <DialogContent className="sm:max-w-[625px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {mode === "view" ? "View Blog" : mode === "edit" ? "Edit Blog" : "Create New Blog"}
+              {mode === 'view'
+                ? 'View Blog'
+                : mode === 'edit'
+                ? 'Edit Blog'
+                : 'Create New Blog'}
             </DialogTitle>
             <DialogDescription>
-              {mode === "view"
-                ? "View the details of this blog post."
-                : mode === "edit"
-                  ? "Make changes to your blog post here."
-                  : "Fill in the details for your new blog post."}
+              {mode === 'view'
+                ? 'View the details of this blog post.'
+                : mode === 'edit'
+                ? 'Make changes to your blog post here.'
+                : 'Fill in the details for your new blog post.'}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -413,20 +409,22 @@ export default function AdvancedBlogManagement() {
                   value={formData.title}
                   onChange={handleChange}
                   className="col-span-3"
-                  disabled={mode === "view"}
+                  disabled={mode === 'view'}
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="content" className="text-right">
                   Content
                 </Label>
-                <Textarea
+                <ReactQuill
                   id="content"
-                  name="content"
                   value={formData.content}
-                  onChange={handleChange}
+                  onChange={(value) =>
+                    setFormData({ ...formData, content: value })
+                  }
                   className="col-span-3"
-                  disabled={mode === "view"}
+                  readOnly={mode === 'view'}
+                  theme="snow" // 'snow' is the default theme
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
@@ -439,7 +437,7 @@ export default function AdvancedBlogManagement() {
                   value={formData.author}
                   onChange={handleChange}
                   className="col-span-3"
-                  disabled={mode === "view"}
+                  disabled={mode === 'view'}
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
@@ -449,8 +447,10 @@ export default function AdvancedBlogManagement() {
                 <Select
                   name="category"
                   value={formData.category}
-                  onValueChange={(value) => setFormData(prev => ({ ...prev, category: value}))}
-                  disabled={mode === "view"}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({ ...prev, category: value }))
+                  }
+                  disabled={mode === 'view'}
                 >
                   <SelectTrigger className="col-span-3">
                     <SelectValue placeholder="Select a category" />
@@ -474,7 +474,7 @@ export default function AdvancedBlogManagement() {
                   value={formData.tags?.join(', ')}
                   onChange={handleTagsChange}
                   className="col-span-3"
-                  disabled={mode === "view"}
+                  disabled={mode === 'view'}
                   placeholder="Comma-separated tags"
                 />
               </div>
@@ -485,10 +485,10 @@ export default function AdvancedBlogManagement() {
                 <Select
                   name="status"
                   value={formData.status}
-                  onValueChange={(value: "draft" | "published") =>
-                    setFormData(prev => ({ ...prev, status: value }))
+                  onValueChange={(value: 'draft' | 'published') =>
+                    setFormData((prev) => ({ ...prev, status: value }))
                   }
-                  disabled={mode === "view"}
+                  disabled={mode === 'view'}
                 >
                   <SelectTrigger className="col-span-3">
                     <SelectValue placeholder="Select a status" />
@@ -504,7 +504,7 @@ export default function AdvancedBlogManagement() {
                   Image
                 </Label>
                 <div className="col-span-3">
-                  {mode !== "view" ? (
+                  {mode !== 'view' ? (
                     <Input
                       id="image"
                       name="image"
@@ -513,9 +513,9 @@ export default function AdvancedBlogManagement() {
                       accept="image/*"
                     />
                   ) : (
-                    formData.image && (
+                    formData.blogImageUrl && (
                       <Image
-                        src={formData.image as string}
+                        src={formData.blogImageUrl as string}
                         alt="Blog post image"
                         width={500}
                         height={300}
@@ -523,17 +523,18 @@ export default function AdvancedBlogManagement() {
                       />
                     )
                   )}
-                  {mode === "edit" && typeof formData.image === 'string' && (
-                    <div className="mt-2">
-                      <Image
-                        src={formData.image}
-                        alt="Current blog image"
-                        width={200}
-                        height={120}
-                        className="rounded-md"
-                      />
-                    </div>
-                  )}
+                  {mode === 'edit' &&
+                    typeof formData.blogImageUrl === 'string' && (
+                      <div className="mt-2">
+                        <Image
+                          src={formData.blogImageUrl}
+                          alt="Current blog image"
+                          width={200}
+                          height={120}
+                          className="rounded-md"
+                        />
+                      </div>
+                    )}
                 </div>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
@@ -544,23 +545,30 @@ export default function AdvancedBlogManagement() {
                   id="publishDate"
                   name="publishDate"
                   type="datetime-local"
-                  value={formData.publishDate ? format(new Date(formData.publishDate), "yyyy-MM-dd'T'HH:mm") : ''}
+                  value={
+                    formData.publishDate
+                      ? format(
+                          new Date(formData.publishDate),
+                          "yyyy-MM-dd'T'HH:mm"
+                        )
+                      : ''
+                  }
                   onChange={handleChange}
                   className="col-span-3"
-                  disabled={mode === "view"}
+                  disabled={mode === 'view'}
                 />
               </div>
             </div>
             <DialogFooter>
-              {mode !== "view" && (
+              {mode !== 'view' && (
                 <Button type="submit" disabled={isLoading}>
                   {isLoading ? (
                     <>
                       <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                      {mode === "edit" ? "Updating..." : "Creating..."}
+                      {mode === 'edit' ? 'Updating...' : 'Creating...'}
                     </>
                   ) : (
-                    <>{mode === "edit" ? "Update Blog" : "Create Blog"}</>
+                    <>{mode === 'edit' ? 'Update Blog' : 'Create Blog'}</>
                   )}
                 </Button>
               )}
@@ -609,13 +617,13 @@ export default function AdvancedBlogManagement() {
                     </p>
                     <p className="text-3xl font-bold mt-2 text-green-700 dark:text-green-200">
                       {
-                        blogs.filter((blog) => blog.status === "published")
+                        blogs.filter((blog) => blog.status === 'published')
                           .length
                       }
                     </p>
                     <Progress
                       value={
-                        (blogs.filter((blog) => blog.status === "published")
+                        (blogs.filter((blog) => blog.status === 'published')
                           .length /
                           blogs.length) *
                         100
@@ -628,11 +636,11 @@ export default function AdvancedBlogManagement() {
                       Draft Blogs
                     </p>
                     <p className="text-3xl font-bold mt-2 text-yellow-700 dark:text-yellow-200">
-                      {blogs.filter((blog) => blog.status === "draft").length}
+                      {blogs.filter((blog) => blog.status === 'draft').length}
                     </p>
                     <Progress
                       value={
-                        (blogs.filter((blog) => blog.status === "draft")
+                        (blogs.filter((blog) => blog.status === 'draft')
                           .length /
                           blogs.length) *
                         100
@@ -660,7 +668,7 @@ export default function AdvancedBlogManagement() {
                     >
                       <RefreshCw
                         className={`mr-2 h-4 w-4 ${
-                          isPending ? "animate-spin" : ""
+                          isPending ? 'animate-spin' : ''
                         }`}
                       />
                       Refresh
@@ -699,14 +707,14 @@ export default function AdvancedBlogManagement() {
                   <TabsContent value="published">
                     {renderBlogList(
                       filteredAndSortedBlogs.filter(
-                        (blog) => blog.status === "published"
+                        (blog) => blog.status === 'published'
                       )
                     )}
                   </TabsContent>
                   <TabsContent value="draft">
                     {renderBlogList(
                       filteredAndSortedBlogs.filter(
-                        (blog) => blog.status === "draft"
+                        (blog) => blog.status === 'draft'
                       )
                     )}
                   </TabsContent>
@@ -757,9 +765,9 @@ export default function AdvancedBlogManagement() {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0 sm:space-x-4">
                   {/* Blog Information */}
                   <div className="flex items-start space-x-4 w-full sm:w-auto">
-                    {blog.image ? (
+                    {blog.blogImageUrl ? (
                       <Image
-                        src={blog.image as string}
+                        src={blog.blogImageUrl as string}
                         alt={blog.title}
                         width={80}
                         height={80}
@@ -777,11 +785,6 @@ export default function AdvancedBlogManagement() {
                       <p className="text-sm text-gray-600 dark:text-gray-400">
                         {blog.author}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {blog.content.length > 50
-                          ? `${blog.content.slice(0, 50)}...`
-                          : blog.content}
-                      </p>
                     </div>
                   </div>
 
@@ -790,7 +793,7 @@ export default function AdvancedBlogManagement() {
                     <div className="flex items-center space-x-2 w-full sm:w-auto">
                       <CustomBadge status={blog.status} />
                       <span className="text-sm text-gray-500 dark:text-gray-400">
-                        {format(new Date(blog.publishDate), "MMM dd, yyyy")}
+                        {format(new Date(blog.publishDate), 'MMM dd, yyyy')}
                       </span>
                     </div>
 

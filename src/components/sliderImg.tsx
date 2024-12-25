@@ -1,61 +1,71 @@
-'use client'
+'use client';
 
-import { useState, useEffect, useCallback } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { ChevronRight, ChevronLeft, Star, Clock, MapPin, Phone, Menu } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import Image from "next/image"
+import { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  ChevronRight,
+  ChevronLeft,
+  Star,
+  Clock,
+  MapPin,
+  Phone,
+  Menu,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import Image from 'next/image';
 
 const heroImages = [
-  "/sliderPic/min.png",
-  "/sliderPic/newreception.png",
-  "/sliderPic/sjhrchos1.png",
-]
+  '/sliderPic/min.png',
+  '/sliderPic/newreception.png',
+  '/sliderPic/sjhrchos1.png',
+];
 
 const specialties = [
-  { name: "Cardiac Care", icon: "/speciality/SVG.svg" },
-  { name: "Renal Care", icon: "/speciality/SVG (1).svg" },
-  { name: "Neurosciences", icon: "/speciality/SVG (2).svg" },
-  { name: "Gastrosciences", icon: "/speciality/SVG (3).svg" },
-  { name: "Orthopaedics", icon: "/speciality/SVG (4).svg" },
-]
+  { name: 'Cardiac Care', icon: '/speciality/SVG.svg' },
+  { name: 'Renal Care', icon: '/speciality/SVG (1).svg' },
+  { name: 'Neurosciences', icon: '/speciality/SVG (2).svg' },
+  { name: 'Gastrosciences', icon: '/speciality/SVG (3).svg' },
+  { name: 'Orthopaedics', icon: '/speciality/SVG (4).svg' },
+];
 
 export function CarouselDemo() {
-  const [currentHeroImage, setCurrentHeroImage] = useState(0)
-  const [isPlaying, setIsPlaying] = useState(true)
-  const [isMobile, setIsMobile] = useState(true)
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [currentHeroImage, setCurrentHeroImage] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isMobile, setIsMobile] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const nextSlide = useCallback(() => {
-    setCurrentHeroImage((prev) => (prev + 1) % heroImages.length)
-  }, [])
+    setCurrentHeroImage((prev) => (prev + 1) % heroImages.length);
+  }, []);
 
   const prevSlide = useCallback(() => {
-    setCurrentHeroImage((prev) => (prev - 1 + heroImages.length) % heroImages.length)
-  }, [])
+    setCurrentHeroImage(
+      (prev) => (prev - 1 + heroImages.length) % heroImages.length
+    );
+  }, []);
 
   useEffect(() => {
-    let interval
+    let interval;
     if (isPlaying) {
-      interval = setInterval(nextSlide, 5000)
+      interval = setInterval(nextSlide, 5000);
     }
-    return () => clearInterval(interval)
-  }, [isPlaying, nextSlide])
+    return () => clearInterval(interval);
+  }, [isPlaying, nextSlide]);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 1024)
-    }
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+      setIsMobile(window.innerWidth < 1024);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleDotClick = (index: number) => {
-    setCurrentHeroImage(index)
-    setIsPlaying(false)
-  }
+    setCurrentHeroImage(index);
+    setIsPlaying(false);
+  };
 
   const slideVariants = {
     enter: (direction: number) => ({
@@ -70,7 +80,7 @@ export function CarouselDemo() {
       x: direction < 0 ? '100%' : '-100%',
       opacity: 0,
     }),
-  }
+  };
 
   return (
     <div className="text-white bg-gradient-to-br from-blue-900 to-indigo-900 ">
@@ -82,12 +92,15 @@ export function CarouselDemo() {
               Shree Jagannath Hospital & Research Centre
             </h1>
             <span className="text-xs sm:text-sm lg:text-base text-gray-300">
-                  Multi Speciality and Trauma center
-                </span>
+              Multi Speciality and Trauma center
+            </span>
             <div className="flex items-center space-x-2">
               <div className="flex">
                 {[1, 2, 3, 4].map((star) => (
-                  <Star key={star} className="text-yellow-400 h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 fill-current" />
+                  <Star
+                    key={star}
+                    className="text-yellow-400 h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 fill-current"
+                  />
                 ))}
                 <Star className="text-yellow-400 h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
               </div>
@@ -103,8 +116,11 @@ export function CarouselDemo() {
                 <span>Mayor Road, Behind Machhli Ghar, Ranchi</span>
               </div>
             </div>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/appointment" className="block w-full sm:w-auto lg:hidden">
+            {/* <div className="flex flex-col sm:flex-row gap-4">
+              <Link
+                href="/appointment"
+                className="block w-full sm:w-auto lg:hidden"
+              >
                 <Button className="bg-white text-blue-900 hover:bg-blue-100 px-4 sm:px-8 py-2 sm:py-3 text-sm sm:text-base md:text-lg rounded-full transition-all duration-300 shadow-lg hover:shadow-xl w-full">
                   Appointment
                 </Button>
@@ -114,7 +130,7 @@ export function CarouselDemo() {
                   Find a Doctor
                 </Button>
               </Link>
-            </div>
+            </div> */}
           </div>
 
           {/* Right side - Advanced Carousel */}
@@ -122,7 +138,9 @@ export function CarouselDemo() {
             <div
               className="relative w-full h-[300px] md:h-[400px] lg:h-[500px]"
               style={{
-                clipPath: isMobile ? "none" : "polygon(12% 0, 100% 0, 100% 35%, 100% 70%, 100% 100%, 50% 100%, 0 100%)",
+                clipPath: isMobile
+                  ? 'none'
+                  : 'polygon(12% 0, 100% 0, 100% 35%, 100% 70%, 100% 100%, 50% 100%, 0 100%)',
               }}
             >
               <AnimatePresence initial={false} custom={currentHeroImage}>
@@ -151,7 +169,7 @@ export function CarouselDemo() {
                   initial="enter"
                   animate="center"
                   exit="exit"
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                   className="absolute inset-0"
                 >
                   <Image
@@ -159,10 +177,9 @@ export function CarouselDemo() {
                     alt={`Hospital Facility ${currentHeroImage + 1}`}
                     fill
                     loading="lazy"
-                    style={{ objectFit: "cover" }}
+                    style={{ objectFit: 'cover' }}
                     className="rounded-lg shadow-2xl"
                   />
-
                 </motion.div>
               </AnimatePresence>
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
@@ -189,8 +206,11 @@ export function CarouselDemo() {
               {heroImages.map((_, index) => (
                 <button
                   key={index}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentHeroImage ? 'bg-white scale-125' : 'bg-white/50 hover:bg-white/75'
-                    }`}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentHeroImage
+                      ? 'bg-white scale-125'
+                      : 'bg-white/50 hover:bg-white/75'
+                  }`}
                   onClick={() => handleDotClick(index)}
                 >
                   <span className="sr-only">Go to slide {index + 1}</span>
@@ -204,7 +224,7 @@ export function CarouselDemo() {
       {/* Specialties Navigation */}
       <div className="bg-white text-blue-900 py-6 shadow-lg ">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
             {specialties.map((specialty) => (
               <Link
                 key={specialty.name}
@@ -219,7 +239,9 @@ export function CarouselDemo() {
                   loading="lazy"
                   className="mb-2 transition-transform group-hover:scale-110"
                 />
-                <span className="font-medium text-gray-800 text-center text-sm md:text-base">{specialty.name}</span>
+                <span className="font-medium text-gray-800 text-center text-sm md:text-base">
+                  {specialty.name}
+                </span>
               </Link>
             ))}
             <Link
@@ -236,7 +258,9 @@ export function CarouselDemo() {
       {/* Appointment CTA */}
       <div className="bg-gradient-to-r from-blue-600 to-indigo-600 py-6 px-4 md:px-8">
         <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
-          <span className="font-semibold text-xl md:text-2xl mb-4 md:mb-0 text-center md:text-left">Ready to Book Your Appointment?</span>
+          <span className="font-semibold text-xl md:text-2xl mb-4 md:mb-0 text-center md:text-left">
+            Ready to Book Your Appointment?
+          </span>
           <Button className="bg-white text-blue-900 hover:bg-blue-100 flex items-center px-6 py-3 rounded-full transition-all duration-300 shadow-md hover:shadow-xl w-full md:w-auto justify-center text-lg">
             <Phone className="mr-2 h-5 w-5" />
             Call Us +91 8987999200
@@ -244,5 +268,5 @@ export function CarouselDemo() {
         </div>
       </div>
     </div>
-  )
+  );
 }

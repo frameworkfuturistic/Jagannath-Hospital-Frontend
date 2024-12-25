@@ -1,34 +1,35 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import { format } from "date-fns";
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
+import { format } from 'date-fns';
 import {
   QueryClient,
   QueryClientProvider,
   useQuery,
-} from "@tanstack/react-query";
+} from '@tanstack/react-query';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Input } from '@/components/ui/input';
+import DOMPurify from 'dompurify';
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Toast, ToastProvider } from "@/components/ui/toast";
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Toast, ToastProvider } from '@/components/ui/toast';
 import {
   CircleUserRound,
   Calendar,
@@ -39,9 +40,9 @@ import {
   BookOpen,
   ThumbsUp,
   Share2,
-} from "lucide-react";
-import HeaderBanner from "@/components/HeaderBanner";
-import axiosInstance from "@/lib/axiosInstance";
+} from 'lucide-react';
+import HeaderBanner from '@/components/HeaderBanner';
+import axiosInstance from '@/lib/axiosInstance';
 
 interface BlogPost {
   _id: string;
@@ -51,7 +52,7 @@ interface BlogPost {
   category: string;
   tags: string[];
   status: string;
-  image: string | null;
+  blogImageUrl: string | null;
   readTime: number;
   publishDate: string;
   createdAt: string;
@@ -76,21 +77,15 @@ const fetchBlogs = async (
   searchTerm: string,
   sortBy: string
 ): Promise<BlogResponse> => {
-  const response = await axiosInstance.get<BlogResponse>("/blogs", {
+  const response = await axiosInstance.get<BlogResponse>('/blogs', {
     params: { page, limit, category, search: searchTerm, sortBy },
   });
-
-  // const formattedBlogs = response.data.blogs.map((blog) => ({
-  //   ...blog,
-  //   image: formatImageUrl(blog.image),
-  // }));
 
   return {
     ...response.data,
   };
 };
-console.log("sad", fetchBlogs);
-
+console.log('sad', fetchBlogs);
 
 const queryClient = new QueryClient();
 
@@ -104,17 +99,17 @@ export default function AdvancedResponsiveBlogPage() {
 
 function BlogPageContent() {
   const [page, setPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
-  const [sortBy, setSortBy] = useState("publishDate");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
+  const [sortBy, setSortBy] = useState('publishDate');
   const [showFeaturedOnly, setShowFeaturedOnly] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
+  const [toastMessage, setToastMessage] = useState('');
   const [randomPost, setRandomPost] = useState<BlogPost | null>(null);
   const limit = 9;
 
   const { data, status, error, isFetching } = useQuery<BlogResponse>({
     queryKey: [
-      "blogs",
+      'blogs',
       page,
       categoryFilter,
       searchTerm,
@@ -126,7 +121,7 @@ function BlogPageContent() {
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleLike = (blogId: string) => {
@@ -136,19 +131,19 @@ function BlogPageContent() {
     );
     if (updatedBlogs) {
       queryClient.setQueryData<BlogResponse>(
-        ["blogs", page, categoryFilter, searchTerm, sortBy, showFeaturedOnly],
+        ['blogs', page, categoryFilter, searchTerm, sortBy, showFeaturedOnly],
         (old) => ({
           ...old!,
           blogs: updatedBlogs,
         })
       );
     }
-    setToastMessage("Blog post liked!");
+    setToastMessage('Blog post liked!');
   };
 
   const handleShare = (blogId: string) => {
     navigator.clipboard.writeText(`#`);
-    setToastMessage("Link copied to clipboard!");
+    setToastMessage('Link copied to clipboard!');
   };
 
   const handleRandomPost = () => {
@@ -160,12 +155,12 @@ function BlogPageContent() {
 
   useEffect(() => {
     if (toastMessage) {
-      const timer = setTimeout(() => setToastMessage(""), 3000);
+      const timer = setTimeout(() => setToastMessage(''), 3000);
       return () => clearTimeout(timer);
     }
   }, [toastMessage]);
 
-  if (status === "error") return <div>Error: {(error as Error).message}</div>;
+  if (status === 'error') return <div>Error: {(error as Error).message}</div>;
 
   return (
     <section className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
@@ -301,7 +296,7 @@ function BlogPageContent() {
 
       {toastMessage && (
         <ToastProvider>
-          {" "}
+          {' '}
           <Toast
             variant="default"
             title={toastMessage}
@@ -316,7 +311,7 @@ function BlogPageContent() {
             initial={{ opacity: 0, y: 100 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 100 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
             className="fixed bottom-4 left-4 right-4 bg-white rounded-lg shadow-lg p-4 z-50 md:hidden"
           >
             <h3 className="text-lg font-semibold mb-2">{randomPost.title}</h3>
@@ -370,7 +365,7 @@ function BlogCard({
       <Card className="h-full flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg bg-white">
         <CardHeader className="p-0 relative">
           <Image
-            src={blog.image || "/bg-about.png"}
+            src={blog.blogImageUrl || '/bg-about.png'}
             alt={blog.title}
             width={400}
             height={200}
@@ -390,7 +385,7 @@ function BlogCard({
             <CircleUserRound className="mr-2 h-4 w-4" />
             <span>{blog.author}</span>
             <Calendar className="ml-4 mr-2 h-4 w-4" />
-            <span>{format(new Date(blog.publishDate), "MMM d, yyyy")}</span>
+            <span>{format(new Date(blog.publishDate), 'MMM d, yyyy')}</span>
           </div>
           <div className="flex items-center text-sm text-gray-500 mb-4">
             <Clock className="mr-2 h-4 w-4" />
@@ -398,7 +393,12 @@ function BlogCard({
             <BookOpen className="ml-4 mr-2 h-4 w-4" />
             <span>{blog.views} views</span>
           </div>
-          <p className="text-gray-600 line-clamp-3">{blog.content}</p>
+          <div
+            className="text-gray-600 line-clamp-3 text-xs"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(blog.content),
+            }}
+          />
         </CardContent>
         <CardFooter className="p-6 pt-0 flex justify-between items-center">
           <div className="flex space-x-2">
@@ -407,10 +407,10 @@ function BlogCard({
                 variant="outline"
                 size="sm"
                 onClick={handleLike}
-                className={isLiked ? "bg-blue-100" : ""}
+                className={isLiked ? 'bg-blue-100' : ''}
               >
                 <ThumbsUp
-                  className={`mr-2 h-4 w-4 ${isLiked ? "text-blue-500" : ""}`}
+                  className={`mr-2 h-4 w-4 ${isLiked ? 'text-blue-500' : ''}`}
                 />
                 {blog.likes}
               </Button>

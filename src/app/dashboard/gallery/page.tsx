@@ -1,60 +1,69 @@
 // @ts-nocheck
-'use client'
+'use client';
 
-import { useState, useEffect } from "react"
-import { useForm } from "react-hook-form"
-import { motion, AnimatePresence } from "framer-motion"
-import { Plus, Edit, Trash2, Search, Loader2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Plus, Edit, Trash2, Search, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog"
-import { Card, CardContent } from "@/components/ui/card"
+} from '@/components/ui/dialog';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import axiosInstance from "@/lib/axiosInstance"
-import { useDropzone } from 'react-dropzone'
-import { log } from "console"
-import Image from "next/image"
+} from '@/components/ui/tooltip';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import axiosInstance from '@/lib/axiosInstance';
+import { useDropzone } from 'react-dropzone';
+import { log } from 'console';
+import Image from 'next/image';
 
 interface Image {
-  _id: string
-  title: string
-  description: string
-  imageUrl: string
-  createdBy: string
-  createdAt: string
-  updatedAt: string
-  slug: string
+  _id: string;
+  title: string;
+  description: string;
+  GalleryImageUrl: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  slug: string;
 }
 
 export default function GalleryDashboard() {
-  const [images, setImages] = useState<Image[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [editingImage, setEditingImage] = useState<Image | null>(null)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [sortConfig, setSortConfig] = useState<{ key: keyof Image; direction: 'asc' | 'desc' } | null>(null)
-  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [images, setImages] = useState<Image[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingImage, setEditingImage] = useState<Image | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortConfig, setSortConfig] = useState<{
+    key: keyof Image;
+    direction: 'asc' | 'desc';
+  } | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
-  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<Image>()
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<Image>();
 
   useEffect(() => {
-    fetchImages()
-  }, [])
+    fetchImages();
+  }, []);
 
   const fetchImages = async () => {
     setLoading(true);
@@ -67,7 +76,7 @@ export default function GalleryDashboard() {
       }));
 
       setImages(formattedImages);
-      console.log("Formatted Images:", formattedImages);
+      console.log('Formatted Images:', formattedImages);
     } catch (err) {
       setError('Failed to fetch images');
       console.error(err); // Log the error for debugging
@@ -76,93 +85,94 @@ export default function GalleryDashboard() {
     }
   };
 
-
-
-
   const onSubmit = async (data: Image) => {
-    const formData = new FormData()
-    formData.append('title', data.title)
-    formData.append('description', data.description)
-    formData.append('createdBy', data.createdBy)
+    const formData = new FormData();
+    formData.append('title', data.title);
+    formData.append('description', data.description);
+    formData.append('createdBy', data.createdBy);
     if (imageFile) {
-      formData.append('image', imageFile) // Append the image file
+      formData.append('image', imageFile); // Append the image file
     }
-    setLoading(true)
+    setLoading(true);
     try {
       if (editingImage) {
         await axiosInstance.put(`/gallery/${editingImage._id}`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        })
-        setSuccessMessage('Image updated successfully')
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        setSuccessMessage('Image updated successfully');
       } else {
         await axiosInstance.post('/gallery', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        })
-        setSuccessMessage('Image added successfully')
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        setSuccessMessage('Image added successfully');
       }
-      fetchImages()
-      setIsDialogOpen(false)
-      reset()
-      setImageFile(null) // Reset image file
+      fetchImages();
+      setIsDialogOpen(false);
+      reset();
+      setImageFile(null); // Reset image file
     } catch (err) {
-      setError('Failed to save image')
+      setError('Failed to save image');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const deleteImage = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this image?')) {
-      setLoading(true)
+      setLoading(true);
       try {
-        await axiosInstance.delete(`/gallery/${id}`)
-        setSuccessMessage('Image deleted successfully')
-        fetchImages()
+        await axiosInstance.delete(`/gallery/${id}`);
+        setSuccessMessage('Image deleted successfully');
+        fetchImages();
       } catch (err) {
-        setError('Failed to delete image')
+        setError('Failed to delete image');
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
-  }
+  };
 
   const openDialog = (image?: Image) => {
     if (image) {
-      setEditingImage(image)
-      reset(image)
+      setEditingImage(image);
+      reset(image);
     } else {
-      setEditingImage(null)
-      reset()
+      setEditingImage(null);
+      reset();
     }
-    setIsDialogOpen(true)
-  }
+    setIsDialogOpen(true);
+  };
 
   const handleSort = (key: keyof Image) => {
-    setSortConfig(prevConfig => ({
+    setSortConfig((prevConfig) => ({
       key,
-      direction: prevConfig?.key === key && prevConfig.direction === 'asc' ? 'desc' : 'asc'
-    }))
-  }
+      direction:
+        prevConfig?.key === key && prevConfig.direction === 'asc'
+          ? 'desc'
+          : 'asc',
+    }));
+  };
 
   const filteredImages = images
-    .filter(image =>
-      image.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      image.description.toLowerCase().includes(searchTerm.toLowerCase())
+    .filter(
+      (image) =>
+        image.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        image.description.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => {
-      if (!sortConfig) return 0
-      const { key, direction } = sortConfig
-      if (a[key] < b[key]) return direction === 'asc' ? -1 : 1
-      if (a[key] > b[key]) return direction === 'asc' ? 1 : -1
-      return 0
-    })
+      if (!sortConfig) return 0;
+      const { key, direction } = sortConfig;
+      if (a[key] < b[key]) return direction === 'asc' ? -1 : 1;
+      if (a[key] > b[key]) return direction === 'asc' ? 1 : -1;
+      return 0;
+    });
 
   const onDrop = (acceptedFiles: File[]) => {
     // Only allow one file
-    setImageFile(acceptedFiles[0])
-  }
+    setImageFile(acceptedFiles[0]);
+  };
 
-  const { getRootProps, getInputProps } = useDropzone({ onDrop })
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (
     <main className="flex-1 overflow-hidden flex flex-col">
@@ -221,14 +231,18 @@ export default function GalleryDashboard() {
                       <Card>
                         <CardContent className="p-4">
                           <Image
-                            src={image.imageUrl}                // Dynamic source from the image object
-                            alt={image.title}                   // Alt text for accessibility
-                            width={500}                          // Set width (adjust as needed)
-                            height={192}                         // Set height (48px * 4 for aspect ratio)
+                            src={image.GalleryImageUrl} // Dynamic source from the image object
+                            alt={image.title} // Alt text for accessibility
+                            width={500} // Set width (adjust as needed)
+                            height={192} // Set height (48px * 4 for aspect ratio)
                             className="w-full h-48 object-cover rounded-md mb-4" // Use Tailwind CSS classes for styling
                           />
-                          <h3 className="text-lg font-semibold text-primary mb-2">{image.title}</h3>
-                          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{image.description}</p>
+                          <h3 className="text-lg font-semibold text-primary mb-2">
+                            {image.title}
+                          </h3>
+                          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                            {image.description}
+                          </p>
                           <div className="flex justify-between items-center">
                             <p className="text-xs text-muted-foreground">
                               Added by: {image.createdBy}
@@ -278,7 +292,7 @@ export default function GalleryDashboard() {
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>
-                {editingImage ? "Edit Image" : "Add New Image"}
+                {editingImage ? 'Edit Image' : 'Add New Image'}
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -290,7 +304,7 @@ export default function GalleryDashboard() {
                   <Input
                     id="title"
                     className="col-span-3"
-                    {...register("title", { required: "Title is required" })}
+                    {...register('title', { required: 'Title is required' })}
                   />
                 </div>
                 {errors.title && (
@@ -305,7 +319,9 @@ export default function GalleryDashboard() {
                   <Textarea
                     id="description"
                     className="col-span-3"
-                    {...register("description", { required: "Description is required" })}
+                    {...register('description', {
+                      required: 'Description is required',
+                    })}
                   />
                 </div>
                 {errors.description && (
@@ -318,10 +334,15 @@ export default function GalleryDashboard() {
                     Image
                   </label>
                   <div className="col-span-3">
-                    <div {...getRootProps()} className="border-2 border-dashed border-gray-300 p-4 rounded-md">
+                    <div
+                      {...getRootProps()}
+                      className="border-2 border-dashed border-gray-300 p-4 rounded-md"
+                    >
                       <input {...getInputProps()} />
                       <p className="text-center text-gray-500">
-                        {imageFile ? imageFile.name : "Drag 'n' drop some files here, or click to select files"}
+                        {imageFile
+                          ? imageFile.name
+                          : "Drag 'n' drop some files here, or click to select files"}
                       </p>
                     </div>
                   </div>
@@ -333,7 +354,9 @@ export default function GalleryDashboard() {
                   <Input
                     id="createdBy"
                     className="col-span-3"
-                    {...register("createdBy", { required: "Creator name is required" })}
+                    {...register('createdBy', {
+                      required: 'Creator name is required',
+                    })}
                   />
                 </div>
                 {errors.createdBy && (
@@ -358,5 +381,5 @@ export default function GalleryDashboard() {
         </Dialog>
       </div>
     </main>
-  )
+  );
 }

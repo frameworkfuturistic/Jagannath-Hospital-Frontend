@@ -1,28 +1,53 @@
 // eslint-disable-next-line
 // @ts-nocheck
 
-'use client'
+'use client';
 
-import React, { useState, useEffect, useRef } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion'
-import { Calendar, Clock, MapPin, Phone, Mail, ArrowLeft, Star, Users, Award, ChevronRight, ChevronDown, Heart, Brain, Bone, Microscope, Baby, Eye, Stethoscope } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useInView,
+  AnimatePresence,
+} from 'framer-motion';
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Phone,
+  Mail,
+  ArrowLeft,
+  Star,
+  Users,
+  Award,
+  ChevronRight,
+  ChevronDown,
+  Heart,
+  Brain,
+  Bone,
+  Microscope,
+  Baby,
+  Eye,
+  Stethoscope,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from '@/components/ui/card';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
+} from '@/components/ui/accordion';
 import {
   Dialog,
   DialogContent,
@@ -30,51 +55,59 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { departmentDetails, DepartmentDetail, Doctor } from '@/json/departmentData'
+} from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  departmentDetails,
+  DepartmentDetail,
+  Doctor,
+} from '@/json/departmentData';
 
-export default function DepartmentDetail({ params }: { params: { id: string } }) {
-  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null)
-  const { scrollYProgress } = useScroll()
-  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
+export default function DepartmentDetail({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+  const { scrollYProgress } = useScroll();
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   // Remove the following line:
   // const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8])
-  const [isSticky, setIsSticky] = useState(false)
-  const heroRef = useRef<HTMLDivElement>(null)
-  const isHeroInView = useInView(heroRef, { once: true })
-  const [department, setDepartment] = useState<DepartmentDetail | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isSticky, setIsSticky] = useState(false);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const isHeroInView = useInView(heroRef, { once: true });
+  const [department, setDepartment] = useState<DepartmentDetail | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchDepartment = async () => {
-      setIsLoading(true)
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      const dept = departmentDetails[params.id]
+      setIsLoading(true);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const dept = departmentDetails[params.id];
       if (dept) {
-        setDepartment(dept)
+        setDepartment(dept);
       }
-      setIsLoading(false)
-    }
+      setIsLoading(false);
+    };
 
-    fetchDepartment()
-  }, [params.id])
+    fetchDepartment();
+  }, [params.id]);
 
   useEffect(() => {
     const handleScroll = () => {
       if (heroRef.current) {
-        setIsSticky(window.scrollY > heroRef.current.offsetHeight - 80)
+        setIsSticky(window.scrollY > heroRef.current.offsetHeight - 80);
       }
-    }
+    };
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const sectionVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8 } }
-  }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+  };
 
   if (isLoading) {
     return (
@@ -82,14 +115,18 @@ export default function DepartmentDetail({ params }: { params: { id: string } })
         <motion.div
           className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full"
           animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
         />
       </div>
-    )
+    );
   }
 
   if (!department) {
-    return <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-blue-50 to-white">Department not found</div>
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-blue-50 to-white">
+        Department not found
+      </div>
+    );
   }
 
   return (
@@ -107,7 +144,7 @@ export default function DepartmentDetail({ params }: { params: { id: string } })
           alt={`${department.name} Department`}
           fill
           sizes="100vw"
-          style={{ objectFit: "cover", objectPosition: "center" }}
+          style={{ objectFit: 'cover', objectPosition: 'center' }}
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-b from-blue-900/80 to-blue-900/40 backdrop-blur-sm" />
@@ -145,12 +182,12 @@ export default function DepartmentDetail({ params }: { params: { id: string } })
           </motion.div> */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
             {[
-              { icon: Users, label: "Specialists", value: "20+" },
-              { icon: Award, label: "Years of Excellence", value: "25+" },
-              { icon: Heart, label: "Success Rate", value: "99%" },
-              { icon: Clock, label: "24/7 Care", value: "Always" },
+              { icon: Users, label: 'Specialists', value: '20+' },
+              { icon: Award, label: 'Years of Excellence', value: '25+' },
+              { icon: Heart, label: 'Success Rate', value: '99%' },
+              { icon: Clock, label: '24/7 Care', value: 'Always' },
             ].map((stat, index) => (
-              <motion.div 
+              <motion.div
                 key={stat.label}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -158,13 +195,15 @@ export default function DepartmentDetail({ params }: { params: { id: string } })
                 className="bg-white/10 backdrop-blur-md p-4"
               >
                 <stat.icon className="h-8 w-8 mb-2 mx-auto text-blue-300" />
-                <div className="text-2xl md:text-3xl font-bold mb-1">{stat.value}</div>
+                <div className="text-2xl md:text-3xl font-bold mb-1">
+                  {stat.value}
+                </div>
                 <div className="text-sm opacity-80">{stat.label}</div>
               </motion.div>
             ))}
           </div>
         </div>
-        <Badge 
+        <Badge
           className="absolute top-4 left-4 bg-blue-600 hover:bg-blue-700"
           variant="secondary"
         >
@@ -173,26 +212,34 @@ export default function DepartmentDetail({ params }: { params: { id: string } })
       </motion.div>
 
       {/* Sticky Navigation */}
-      <motion.nav 
+      <motion.nav
         className={`sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-md transition-all duration-300`}
         initial={{ opacity: 0, y: -100 }}
         animate={{ opacity: isSticky ? 1 : 0, y: isSticky ? 0 : -100 }}
       >
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-wrap justify-between items-center">
-            <Link href="/departments" className="flex items-center text-blue-600 hover:text-blue-800 mb-2 sm:mb-0">
+            <Link
+              href="/departments"
+              className="flex items-center text-blue-600 hover:text-blue-800 mb-2 sm:mb-0"
+            >
               <ArrowLeft className="mr-2 h-4 w-4" />
               <span className="hidden sm:inline">Back to Departments</span>
             </Link>
             <nav className="flex-grow sm:flex-grow-0 w-full sm:w-auto">
               <ul className="flex flex-wrap justify-center sm:justify-end space-x-4 sm:space-x-6">
-                {['overview', 'doctors', 'treatments', 'faqs'].map((section) => (
-                  <li key={section}>
-                    <a href={`#${section}`} className="text-sm text-gray-600 hover:text-blue-600 capitalize">
-                      {section}
-                    </a>
-                  </li>
-                ))}
+                {['overview', 'doctors', 'treatments', 'faqs'].map(
+                  (section) => (
+                    <li key={section}>
+                      <a
+                        href={`#${section}`}
+                        className="text-sm text-gray-600 hover:text-blue-600 capitalize"
+                      >
+                        {section}
+                      </a>
+                    </li>
+                  )
+                )}
               </ul>
             </nav>
             <Link href="/appointment" className="mt-2 sm:mt-0 w-full sm:w-auto">
@@ -251,12 +298,16 @@ export default function DepartmentDetail({ params }: { params: { id: string } })
                     <span className="text-sm">{text}</span>
                   </div>
                 ))}
-                <Button className="w-full mt-4">
-                  Book Appointment
-                </Button>
-                <Button variant="outline" className="w-full mt-4">
-                  Enquiry Now
-                </Button>
+                <Link href="/appointment">
+                  {' '}
+                  <Button className="w-full mt-4">Book Appointment</Button>
+                </Link>
+                <Link href="/contact">
+                  {' '}
+                  <Button variant="outline" className="w-full mt-4">
+                    Enquiry Now
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </div>
@@ -292,13 +343,17 @@ export default function DepartmentDetail({ params }: { params: { id: string } })
                     alt={doctor.name}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                    style={{ objectFit: "cover" }}
+                    style={{ objectFit: 'cover' }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
                 </div>
                 <div className="p-6 relative">
-                  <h2 className="text-md font-bold text-gray-800 mb-2">{doctor.name}</h2>
-                  <p className="text-primary text-sm font-medium mb-2">{doctor.title}</p>
+                  <h2 className="text-md font-bold text-gray-800 mb-2">
+                    {doctor.name}
+                  </h2>
+                  <p className="text-primary text-sm font-medium mb-2">
+                    {doctor.title}
+                  </p>
                 </div>
               </motion.div>
             ))}
@@ -320,7 +375,11 @@ export default function DepartmentDetail({ params }: { params: { id: string } })
           <Tabs defaultValue={department.treatments[0].name} className="w-full">
             <TabsList className="mb-4 flex flex-wrap justify-start">
               {department.treatments.map((treatment) => (
-                <TabsTrigger key={treatment.name} value={treatment.name} className="mr-2 mb-2">
+                <TabsTrigger
+                  key={treatment.name}
+                  value={treatment.name}
+                  className="mr-2 mb-2"
+                >
                   {treatment.name}
                 </TabsTrigger>
               ))}
@@ -387,7 +446,8 @@ export default function DepartmentDetail({ params }: { params: { id: string } })
             Take the First Step Towards Better Health
           </h2>
           <p className="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
-            Our team of expert specialists is here to provide you with world-class care. Don't wait to prioritize your health.
+            Our team of expert specialists is here to provide you with
+            world-class care. Don't wait to prioritize your health.
           </p>
           <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
             Schedule Your Consultation
@@ -398,7 +458,10 @@ export default function DepartmentDetail({ params }: { params: { id: string } })
       {/* Doctor Details Dialog */}
       <AnimatePresence>
         {selectedDoctor && (
-          <Dialog open={!!selectedDoctor} onOpenChange={() => setSelectedDoctor(null)}>
+          <Dialog
+            open={!!selectedDoctor}
+            onOpenChange={() => setSelectedDoctor(null)}
+          >
             <DialogContent className="bg-white text-gray-900 max-w-3xl">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -407,8 +470,12 @@ export default function DepartmentDetail({ params }: { params: { id: string } })
                 transition={{ duration: 0.3 }}
               >
                 <DialogHeader>
-                  <DialogTitle className="text-2xl font-bold text-blue-600">{selectedDoctor.name}</DialogTitle>
-                  <DialogDescription className="text-gray-700">{selectedDoctor.title}</DialogDescription>
+                  <DialogTitle className="text-2xl font-bold text-blue-600">
+                    {selectedDoctor.name}
+                  </DialogTitle>
+                  <DialogDescription className="text-gray-700">
+                    {selectedDoctor.title}
+                  </DialogDescription>
                 </DialogHeader>
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
@@ -432,15 +499,22 @@ export default function DepartmentDetail({ params }: { params: { id: string } })
                     <div>
                       <h4 className="font-semibold mb-2">Achievements</h4>
                       <ul className="list-disc list-inside space-y-1">
-                        {selectedDoctor.achievements.map((achievement, index) => (
-                          <li key={index}>{achievement}</li>
-                        ))}
+                        {selectedDoctor.achievements.map(
+                          (achievement, index) => (
+                            <li key={index}>{achievement}</li>
+                          )
+                        )}
                       </ul>
                     </div>
                   </div>
                 </div>
                 <div className="flex justify-end space-x-4 mt-6">
-                  <Button variant="outline" onClick={() => setSelectedDoctor(null)}>Close</Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setSelectedDoctor(null)}
+                  >
+                    Close
+                  </Button>
                   <Button>Book Appointment</Button>
                 </div>
               </motion.div>
@@ -449,5 +523,5 @@ export default function DepartmentDetail({ params }: { params: { id: string } })
         )}
       </AnimatePresence>
     </div>
-  )
+  );
 }
