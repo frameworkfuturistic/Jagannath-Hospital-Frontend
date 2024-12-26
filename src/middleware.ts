@@ -24,7 +24,7 @@ export function middleware(request: NextRequest) {
       "img-src 'self' data: https:;",
       "font-src 'self' data:;",
       "connect-src 'self' https:;",
-      "frame-src 'self';",
+      "frame-src 'self' https://www.google.com https://www.google.com/maps/;",
       "worker-src 'self';",
     ].join(' ')
   );

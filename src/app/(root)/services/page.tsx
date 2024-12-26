@@ -97,7 +97,7 @@ const serviceCategories: ServiceCategory[] = [
     name: '24x7 Services',
     icon: Heart,
     color: 'bg-blue-100 text-blue-700',
-    image: '/services/24x7/ambu.jpg',
+    image: '/services/emergency/ambu.jpg',
     about:
       'Our 24x7 services ensure round-the-clock care for all patients, providing continuous support and immediate attention when needed.',
     items: [
@@ -106,7 +106,7 @@ const serviceCategories: ServiceCategory[] = [
         icon: Zap,
         description:
           '24/7 emergency care for critical conditions and injuries.',
-        image: '/services/24x7/EMERGENCY-TRAUMA-CARE.jpg',
+        image: '/services/emergency/emergency.jpg',
         details: [
           'State-of-the-art emergency room equipped to handle all types of medical emergencies',
           'Dedicated trauma bay for immediate care of severely injured patients',
@@ -119,7 +119,7 @@ const serviceCategories: ServiceCategory[] = [
         name: 'BLS Ambulance',
         icon: Activity,
         description: 'Basic Life Support ambulances available round the clock.',
-        image: '/services/24x7/ambu.jpg',
+        image: '/services/emergency/ambu.jpg',
         details: [
           'Modern fleet of ambulances equipped for emergency response',
           'Trained paramedics and EMTs available 24/7',
@@ -133,7 +133,7 @@ const serviceCategories: ServiceCategory[] = [
         icon: Activity,
         description:
           'Continuous renal replacement therapy for acute kidney disorders.',
-        image: '/services/24x7/pridex-modular-operation-theatre.jpg',
+        image: '/services/emergency/operation-ot.jpg',
         details: [
           'Advanced dialysis machines for effective treatment',
           'Consultations with specialized nephrologists',
@@ -146,7 +146,7 @@ const serviceCategories: ServiceCategory[] = [
         name: 'Pharmacy',
         icon: Pill,
         description: 'Full-service pharmacy open 24 hours a day.',
-        image: '/services/24x7/Pharmecy.jpg',
+        image: '/services/emergency/pharmacy.jpg',
         details: [
           'Wide range of medications available',
           'Experienced pharmacists for consultations',
@@ -159,7 +159,7 @@ const serviceCategories: ServiceCategory[] = [
         name: 'Front Office',
         icon: UserPlus,
         description: 'Always available for inquiries and assistance.',
-        image: '/services/24x7/Front Office.jpg',
+        image: '/services/emergency/front.jpg',
         details: [
           '24/7 reception for patient and visitor assistance',
           'Multilingual staff for diverse needs',
@@ -173,7 +173,7 @@ const serviceCategories: ServiceCategory[] = [
         icon: Heart,
         description:
           'Advanced critical care facilities with High Dependency Units.',
-        image: '/services/24x7/HDU beds_JPG.avif',
+        image: '/services/emergency/emergency.jpg',
         details: [
           '24/7 monitoring by trained specialists',
           'Cutting-edge medical equipment',
@@ -187,7 +187,7 @@ const serviceCategories: ServiceCategory[] = [
         icon: Hospital,
         description:
           'Fully equipped operation theatres for all types of surgeries.',
-        image: '/services/24x7/modular-ot.jpg',
+        image: '/services/emergency/modular-ot.jpg',
         details: [
           'Latest surgical technology for precision and safety',
           'Sterile environment with infection control',
@@ -200,7 +200,7 @@ const serviceCategories: ServiceCategory[] = [
         name: 'Day Care Services',
         icon: Clock,
         description: 'Daycare facilities for minor procedures and surgeries.',
-        image: '/services/24x7/day-care-center-7355023_1280.jpg',
+        image: '/services/emergency/daycare.jpg',
         details: [
           'Efficient procedures with same-day discharge',
           'Dedicated nursing care for post-procedure recovery',
@@ -214,8 +214,7 @@ const serviceCategories: ServiceCategory[] = [
         icon: CreditCard,
         description:
           'Cashless treatment options available through partner insurance providers.',
-        image:
-          '/services/24x7/151670573-online-payment-smartphone-vector-illustration-electronic-payment.jpg',
+        image: '/services/emergency/cashless.jpg',
         details: [
           'Cashless claims for a hassle-free experience',
           'Network of partner insurance providers',
@@ -230,7 +229,7 @@ const serviceCategories: ServiceCategory[] = [
     name: 'Rooms & Bed Services',
     icon: Bed,
     color: 'bg-green-100 text-green-700',
-    image: '/Services/Rooms/super delax room .png',
+    image: '/services/rooms/deluxroo.jpeg',
     about:
       "We offer a range of comfortable and well-equipped rooms to suit every patient's needs, ensuring a restful and healing environment during their stay.",
     items: [
@@ -239,7 +238,7 @@ const serviceCategories: ServiceCategory[] = [
         icon: Bed,
         description:
           'Luxurious accommodations for patients who desire extra comfort.',
-        image: '/Services/Rooms/general room.png',
+        image: '/services/rooms/generalroo.jpeg',
         details: [
           'Spacious room with a living area for visitors',
           'Private bathroom with premium amenities',
@@ -252,7 +251,7 @@ const serviceCategories: ServiceCategory[] = [
         name: 'Deluxe Room',
         icon: Bed,
         description: 'Comfortable private rooms with modern amenities.',
-        image: '/services/Rooms/delux room.png',
+        image: '/services/rooms/deluxroo.jpeg',
         details: [
           'Private room with en-suite bathroom',
           'Adjustable bed for patient comfort',
@@ -265,7 +264,7 @@ const serviceCategories: ServiceCategory[] = [
         name: 'Super Deluxe Room',
         icon: Bed,
         description: 'Extra-spacious room with luxury amenities.',
-        image: '/services/Rooms/super delax room .png',
+        image: '/services/rooms/superdelaxroom.jpeg',
         details: [
           'Enhanced room size for added comfort',
           'Advanced medical equipment for safety',
@@ -278,7 +277,7 @@ const serviceCategories: ServiceCategory[] = [
         name: 'Single Room',
         icon: Bed,
         description: 'Private room for a more personal and quiet environment.',
-        image: '/services/Rooms/singal room.png',
+        image: '/services/rooms/singalroo.jpeg',
         details: [
           'Private space with single occupancy',
           'En-suite bathroom for convenience',
@@ -291,7 +290,7 @@ const serviceCategories: ServiceCategory[] = [
         name: 'Twin Sharing Room',
         icon: Bed,
         description: 'Economical option with two beds per room.',
-        image: '/services/Rooms/singal room.png',
+        image: '/services/rooms/singalroo.jpeg',
         details: [
           'Two beds separated by privacy curtains',
           'Shared bathroom and seating area',
@@ -304,7 +303,7 @@ const serviceCategories: ServiceCategory[] = [
         name: 'General Ward (Male)',
         icon: Bed,
         description: 'Multi-bed wards for male patients.',
-        image: '/placeholder.svg?height=300&width=400&text=General+Ward+Male',
+        image: '/services/rooms/singalroo.jpeg',
         details: [
           'Efficient ward layout for easy monitoring',
           'Shared bathroom and dining area',
@@ -317,7 +316,7 @@ const serviceCategories: ServiceCategory[] = [
         name: 'General Ward (Female)',
         icon: Bed,
         description: 'Multi-bed wards for female patients.',
-        image: '/placeholder.svg?height=300&width=400&text=General+Ward+Female',
+        image: '/services/rooms/singalroo.jpeg',
         details: [
           'Separate ward for female patients',
           'Communal recreation and dining areas',
@@ -354,7 +353,7 @@ const serviceCategories: ServiceCategory[] = [
         icon: Scan,
         description:
           'High-precision imaging for detailed internal assessments.',
-        image: '/services/imaging/ct scan.jpg',
+        image: '/services/imaging/ctscan.jpg',
         details: [
           'Advanced multi-slice CT scanner for rapid imaging',
           '3D reconstruction for accurate diagnosis',
@@ -418,7 +417,7 @@ const serviceCategories: ServiceCategory[] = [
         icon: FlaskConical,
         description:
           'Comprehensive biochemical testing for diagnostic purposes.',
-        image: '/services/pathology/biochemistry.jpg',
+        image: '/services/pathology/Biochemistry.jpg',
         details: [
           'Analysis of blood and body fluids for metabolic and organ function assessment',
           'Testing for glucose, cholesterol, enzymes, and electrolytes',
@@ -432,7 +431,7 @@ const serviceCategories: ServiceCategory[] = [
         icon: Music,
         description:
           'Laboratory analysis of infections and microbial cultures.',
-        image: '/services/pathology/microbiology.jpg',
+        image: '/services/pathology/Microbiology.jpg',
         details: [
           'Detection and identification of bacteria, viruses, fungi, and parasites',
           'Antibiotic sensitivity testing to guide treatment plans',
@@ -460,7 +459,7 @@ const serviceCategories: ServiceCategory[] = [
         name: 'Serology',
         icon: Syringe,
         description: 'Blood tests for detecting antibodies and antigens.',
-        image: '/services/pathology/serology.png',
+        image: '/services/pathology/serolog.jpeg',
         details: [
           'Testing for viral infections like HIV, hepatitis, and dengue',
           'Immunological tests for autoimmune diseases',
@@ -489,7 +488,7 @@ const serviceCategories: ServiceCategory[] = [
     name: 'Other Services',
     icon: Cog,
     color: 'bg-yellow-100 text-yellow-700',
-    image: '/services/other/Bronchoscope.png',
+    image: '/services/other/Bronchoscop.jpeg',
     about:
       'Our hospital provides a variety of additional specialized services to ensure comprehensive care. From diagnostic procedures like endoscopies and bronchoscopies to support services like physiotherapy, dietetics, and even an in-house cafeteria, we cater to every aspect of patient well-being.',
     items: [
@@ -497,7 +496,7 @@ const serviceCategories: ServiceCategory[] = [
         name: 'Bronchoscopy',
         icon: Stethoscope,
         description: 'A diagnostic procedure to examine the lungs and airways.',
-        image: '/services/other/Bronchoscope.png',
+        image: '/services/other/Bronchoscop.jpeg',
         details: [
           'Minimally invasive procedure using a bronchoscope',
           'Used to diagnose lung infections, blockages, and other conditions',
@@ -661,14 +660,17 @@ const ServiceItem: React.FC<ServiceItemProps> = ({ item, category }) => {
           </DialogTitle>
         </DialogHeader>
         <div className="grid gap-6 py-4">
-          <div className="relative h-64 sm:h-80 rounded-lg overflow-hidden">
+          <div className="relative w-full h-64 sm:h-80 lg:h-[400px] flex justify-center">
             <Image
               src={item.image}
-              alt={item.name}
-              layout="fill"
-              objectFit="cover"
+              alt={item.title}
+              width={500}
+              height={300}
+              className="h-full w-auto max-w-full object-cover rounded-lg"
+              style={{ maxWidth: '100%', height: 'auto' }}
             />
           </div>
+
           <div className="space-y-4">
             <h3 className="text-xl font-semibold">About this service:</h3>
             <p className="text-gray-700">{item.description}</p>
