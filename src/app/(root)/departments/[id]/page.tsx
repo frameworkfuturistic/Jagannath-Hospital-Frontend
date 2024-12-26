@@ -515,7 +515,6 @@ export default function DepartmentDetail({
                   >
                     Close
                   </Button>
-                  <Button>Book Appointment</Button>
                 </div>
               </motion.div>
             </DialogContent>

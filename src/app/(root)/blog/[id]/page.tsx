@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
+import DOMPurify from 'dompurify';
 import {
   useQuery,
   QueryClient,
@@ -390,9 +391,12 @@ function RelatedBlogCard({ blog }: { blog: BlogPost }) {
         <h3 className="text-lg font-semibold mb-2 line-clamp-2">
           {blog.title}
         </h3>
-        <p className="text-sm text-gray-600 mb-4 line-clamp-3">
-          {blog.content}
-        </p>
+        <div
+          className="text-gray-600 line-clamp-3 text-xs"
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(blog.content),
+          }}
+        />
         <div className="flex justify-between items-center">
           <span className="text-sm text-gray-500">
             {format(new Date(blog.publishDate), 'MMM d, yyyy')}

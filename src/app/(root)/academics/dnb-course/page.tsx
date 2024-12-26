@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect, useRef } from "react";
-import Image from "next/image";
+import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import {
   motion,
   AnimatePresence,
   useScroll,
   useTransform,
   useSpring,
-} from "framer-motion";
+} from 'framer-motion';
 import {
   ChevronDown,
   Star,
@@ -26,8 +26,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Menu,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -35,7 +35,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -44,32 +44,32 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
+} from '@/components/ui/accordion';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+} from '@/components/ui/popover';
+import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import {
   Sheet,
   SheetContent,
@@ -77,11 +77,11 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import axiosInstance from "@/lib/axiosInstance";
-import Link from "next/link";
+} from '@/components/ui/sheet';
+import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
+import axiosInstance from '@/lib/axiosInstance';
+import Link from 'next/link';
 
 type Doctor = {
   id: string;
@@ -127,210 +127,210 @@ type FAQ = {
 
 const doctors: Doctor[] = [
   {
-    id: "dr-danish",
-    name: "Dr. Danish Sir",
-    specialty: "MBBS, DNB(Orthopaedics)",
-    image: "/departmentHeads/Dr. Danish Sir.jpeg",
-    experience: "2+ years",
+    id: 'dr-danish',
+    name: 'Dr. Danish Sir',
+    specialty: 'MBBS, DNB(Orthopaedics)',
+    image: '/departmentHeads/Dr. Danish Sir.jpeg',
+    experience: '2+ years',
     rating: 4.8,
-    bio: "Dr. Danish is a leading non orthopedic surgeon known for her groundbreaking work in treating complex congenital deformities. Her innovative approaches have improved the lives of thousands of children worldwide.",
-    achievements: ["DNB, Resident(Ortho)"],
-    availability: ["All Day"],
+    bio: 'Dr. Danish is a leading non orthopedic surgeon known for her groundbreaking work in treating complex congenital deformities. Her innovative approaches have improved the lives of thousands of children worldwide.',
+    achievements: ['DNB, Resident(Ortho)'],
+    availability: ['All Day'],
   },
   {
-    id: "dr-Satyam-Kumar",
-    name: "Dr. Satyam Kr Singh",
-    specialty: "MBBS, DNB(Orthopaedics)",
-    image: "/departmentHeads/Dr. Satyam Kr Singh.webp",
-    experience: "3+ years",
+    id: 'dr-Satyam-Kumar',
+    name: 'Dr. Satyam Kr Singh',
+    specialty: 'MBBS, DNB(Orthopaedics)',
+    image: '/departmentHeads/Dr. Satyam Kr Singh.webp',
+    experience: '3+ years',
     rating: 4.9,
-    bio: "Dr. Satyam is a globally recognized Orthopedics specializing in complex spinal deformities and minimally invasive spine surgeries. He is a pioneer in robotic spine surgery and has trained surgeons worldwide in advanced techniques.",
-    achievements: ["DNB Resident(Ortho)"],
-    availability: ["All Day"],
+    bio: 'Dr. Satyam is a globally recognized Orthopedics specializing in complex spinal deformities and minimally invasive spine surgeries. He is a pioneer in robotic spine surgery and has trained surgeons worldwide in advanced techniques.',
+    achievements: ['DNB Resident(Ortho)'],
+    availability: ['All Day'],
   },
   {
-    id: "Dr-nandkishor-tirkey",
-    name: "Dr Nandkishor tirkey",
-    specialty: "Post Diploma, DNB(Orthopaedics)",
-    image: "/departmentHeads/Dr nandkishor tirkey.jpg",
-    experience: "5+ years",
+    id: 'Dr-nandkishor-tirkey',
+    name: 'Dr Nandkishor tirkey',
+    specialty: 'Post Diploma, DNB(Orthopaedics)',
+    image: '/departmentHeads/Dr nandkishor tirkey.jpg',
+    experience: '5+ years',
     rating: 4.9,
-    bio: "Dr. Nandkishor is a world-renowned orthopedic surgeon specializing in advanced joint replacement and arthroscopic surgeries. With over two decades of experience, he has pioneered several minimally invasive techniques that have revolutionized the field.",
-    achievements: ["Post Diploma, DNB(Ortho)"],
-    availability: ["All Day"],
+    bio: 'Dr. Nandkishor is a world-renowned orthopedic surgeon specializing in advanced joint replacement and arthroscopic surgeries. With over two decades of experience, he has pioneered several minimally invasive techniques that have revolutionized the field.',
+    achievements: ['Post Diploma, DNB(Ortho)'],
+    availability: ['All Day'],
   },
 ];
 
 const courses: Course[] = [
   {
-    id: "advanced-joint-replacement",
-    name: "Advanced Joint Replacement Mastery Program",
+    id: 'advanced-joint-replacement',
+    name: 'Advanced Joint Replacement Mastery Program',
     description:
-      "An exclusive, intensive program designed to elevate your joint replacement skills to world-class levels. Master cutting-edge techniques, including AI-assisted and robotic surgeries.",
+      'An exclusive, intensive program designed to elevate your joint replacement skills to world-class levels. Master cutting-edge techniques, including AI-assisted and robotic surgeries.',
     image:
-      "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop",
-    duration: "12 months",
+      'https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop',
+    duration: '12 months',
     enrolledStudents: 25,
     rating: 4.9,
     price: 25000,
-    startDate: "2024-09-01",
+    startDate: '2024-09-01',
     schedule: [
-      { day: "Monday", time: "09:00 AM - 01:00 PM" },
-      { day: "Wednesday", time: "02:00 PM - 06:00 PM" },
-      { day: "Friday", time: "10:00 AM - 02:00 PM" },
+      { day: 'Monday', time: '09:00 AM - 01:00 PM' },
+      { day: 'Wednesday', time: '02:00 PM - 06:00 PM' },
+      { day: 'Friday', time: '10:00 AM - 02:00 PM' },
     ],
     modules: [
-      "Advanced Preoperative Planning with AI",
-      "Cutting-edge Implant Technologies",
-      "Robotic-Assisted Joint Replacement Mastery",
-      "Minimally Invasive Techniques for Complex Cases",
-      "Personalized Patient-Specific Implants",
-      "Advanced Postoperative Care and Rehabilitation Protocols",
-      "Complication Management in High-Risk Patients",
+      'Advanced Preoperative Planning with AI',
+      'Cutting-edge Implant Technologies',
+      'Robotic-Assisted Joint Replacement Mastery',
+      'Minimally Invasive Techniques for Complex Cases',
+      'Personalized Patient-Specific Implants',
+      'Advanced Postoperative Care and Rehabilitation Protocols',
+      'Complication Management in High-Risk Patients',
     ],
     features: [
-      "One-on-one mentoring with world-renowned surgeons",
-      "Access to state-of-the-art simulation labs",
-      "Observership at top international orthopedic centers",
-      "Exclusive industry partnerships for early access to new technologies",
-      "Publication support in high-impact journals",
+      'One-on-one mentoring with world-renowned surgeons',
+      'Access to state-of-the-art simulation labs',
+      'Observership at top international orthopedic centers',
+      'Exclusive industry partnerships for early access to new technologies',
+      'Publication support in high-impact journals',
     ],
   },
   {
-    id: "pediatric-orthopedics-excellence",
-    name: "Pediatric Orthopedic Surgery Excellence Program",
+    id: 'pediatric-orthopedics-excellence',
+    name: 'Pediatric Orthopedic Surgery Excellence Program',
     description:
-      "A comprehensive, elite-level training program focusing on advanced pediatric orthopedic surgeries and innovative treatment approaches for complex congenital deformities.",
+      'A comprehensive, elite-level training program focusing on advanced pediatric orthopedic surgeries and innovative treatment approaches for complex congenital deformities.',
     image:
-      "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop",
-    duration: "18 months",
+      'https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop',
+    duration: '18 months',
     enrolledStudents: 20,
     rating: 4.8,
     price: 30000,
-    startDate: "2024-10-15",
+    startDate: '2024-10-15',
     schedule: [
-      { day: "Tuesday", time: "08:00 AM - 12:00 PM" },
-      { day: "Thursday", time: "01:00 PM - 05:00 PM" },
-      { day: "Saturday", time: "09:00 AM - 01:00 PM" },
+      { day: 'Tuesday', time: '08:00 AM - 12:00 PM' },
+      { day: 'Thursday', time: '01:00 PM - 05:00 PM' },
+      { day: 'Saturday', time: '09:00 AM - 01:00 PM' },
     ],
     modules: [
-      "Advanced Pediatric Musculoskeletal Imaging and Analysis",
-      "Innovative Approaches to Congenital Deformities",
-      "Complex Pediatric Fracture Management",
-      "Cutting-edge Treatments for Neuromuscular Disorders",
-      "Advanced Pediatric Sports Medicine",
-      "3D Printing Applications in Pediatric Orthopedics",
-      "Ethical Considerations in Pediatric Orthopedic Care",
+      'Advanced Pediatric Musculoskeletal Imaging and Analysis',
+      'Innovative Approaches to Congenital Deformities',
+      'Complex Pediatric Fracture Management',
+      'Cutting-edge Treatments for Neuromuscular Disorders',
+      'Advanced Pediatric Sports Medicine',
+      '3D Printing Applications in Pediatric Orthopedics',
+      'Ethical Considerations in Pediatric Orthopedic Care',
     ],
     features: [
-      "Hands-on workshops with leading pediatric orthopedic surgeons",
-      "Virtual reality surgical planning sessions",
-      "International rotations at prestigious pediatric hospitals",
-      "Collaborative research opportunities with global partners",
-      "Advanced training in patient and family-centered care",
+      'Hands-on workshops with leading pediatric orthopedic surgeons',
+      'Virtual reality surgical planning sessions',
+      'International rotations at prestigious pediatric hospitals',
+      'Collaborative research opportunities with global partners',
+      'Advanced training in patient and family-centered care',
     ],
   },
   {
-    id: "advanced-spine-surgery",
-    name: "Advanced Spine Surgery Innovation Program",
+    id: 'advanced-spine-surgery',
+    name: 'Advanced Spine Surgery Innovation Program',
     description:
-      "An elite program at the forefront of spine surgery, covering the most advanced techniques in minimally invasive and robotic spine surgeries, complex deformity corrections, and emerging technologies.",
+      'An elite program at the forefront of spine surgery, covering the most advanced techniques in minimally invasive and robotic spine surgeries, complex deformity corrections, and emerging technologies.',
     image:
-      "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop",
-    duration: "15 months",
+      'https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop',
+    duration: '15 months',
     enrolledStudents: 15,
     rating: 4.9,
     price: 35000,
-    startDate: "2024-11-01",
+    startDate: '2024-11-01',
     schedule: [
-      { day: "Monday", time: "10:00 AM - 02:00 PM" },
-      { day: "Wednesday", time: "03:00 PM - 07:00 PM" },
-      { day: "Friday", time: "08:00 AM - 12:00 PM" },
+      { day: 'Monday', time: '10:00 AM - 02:00 PM' },
+      { day: 'Wednesday', time: '03:00 PM - 07:00 PM' },
+      { day: 'Friday', time: '08:00 AM - 12:00 PM' },
     ],
     modules: [
-      "Advanced Spinal Biomechanics and Pathophysiology",
-      "Cutting-edge Minimally Invasive Spine Surgery Techniques",
-      "Robotic Spine Surgery Mastery",
-      "Complex Spinal Deformity Correction Strategies",
-      "Emerging Technologies in Spine Surgery",
-      "Advanced Spinal Oncology Management",
-      "Regenerative Therapies in Spine Treatment",
+      'Advanced Spinal Biomechanics and Pathophysiology',
+      'Cutting-edge Minimally Invasive Spine Surgery Techniques',
+      'Robotic Spine Surgery Mastery',
+      'Complex Spinal Deformity Correction Strategies',
+      'Emerging Technologies in Spine Surgery',
+      'Advanced Spinal Oncology Management',
+      'Regenerative Therapies in Spine Treatment',
     ],
     features: [
-      "Exclusive access to next-generation spine surgery simulators",
-      "Personalized mentorship by pioneering spine surgeons",
-      "Participation in groundbreaking clinical trials",
-      "Advanced training in AI-assisted surgical planning",
-      "Immersive AR/VR spine anatomy and surgical technique modules",
+      'Exclusive access to next-generation spine surgery simulators',
+      'Personalized mentorship by pioneering spine surgeons',
+      'Participation in groundbreaking clinical trials',
+      'Advanced training in AI-assisted surgical planning',
+      'Immersive AR/VR spine anatomy and surgical technique modules',
     ],
   },
 ];
 
 const blogPosts: BlogPost[] = [
   {
-    id: "ai-orthopedics",
-    title: "The Future of Orthopedics: AI and Robotic Surgeries",
+    id: 'ai-orthopedics',
+    title: 'The Future of Orthopedics: AI and Robotic Surgeries',
     excerpt:
-      "Explore how artificial intelligence and robotics are revolutionizing orthopedic surgeries, improving precision and patient outcomes.",
-    author: "Dr. Arun Sharma",
-    date: "2024-05-15",
+      'Explore how artificial intelligence and robotics are revolutionizing orthopedic surgeries, improving precision and patient outcomes.',
+    author: 'Dr. Arun Sharma',
+    date: '2024-05-15',
     image:
-      "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop",
-    category: "Technology",
+      'https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop',
+    category: 'Technology',
   },
   {
-    id: "pediatric-innovations",
-    title: "Breakthrough Innovations in Pediatric Orthopedics",
+    id: 'pediatric-innovations',
+    title: 'Breakthrough Innovations in Pediatric Orthopedics',
     excerpt:
-      "Discover the latest advancements in treating complex congenital deformities and improving the quality of life for young patients.",
-    author: "Dr. Meera Patel",
-    date: "2024-06-02",
+      'Discover the latest advancements in treating complex congenital deformities and improving the quality of life for young patients.',
+    author: 'Dr. Meera Patel',
+    date: '2024-06-02',
     image:
-      "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop",
-    category: "Pediatrics",
+      'https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop',
+    category: 'Pediatrics',
   },
   {
-    id: "spine-surgery-advancements",
-    title: "Next-Gen Spine Surgery: Minimally Invasive Techniques",
+    id: 'spine-surgery-advancements',
+    title: 'Next-Gen Spine Surgery: Minimally Invasive Techniques',
     excerpt:
-      "Learn about cutting-edge minimally invasive spine surgery techniques that are transforming patient recovery and outcomes.",
-    author: "Dr. Rajiv Singh",
-    date: "2024-06-20",
+      'Learn about cutting-edge minimally invasive spine surgery techniques that are transforming patient recovery and outcomes.',
+    author: 'Dr. Rajiv Singh',
+    date: '2024-06-20',
     image:
-      "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop",
-    category: "Surgical Techniques",
+      'https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=800&h=600&fit=crop',
+    category: 'Surgical Techniques',
   },
 ];
 
 const faqs: FAQ[] = [
   {
     question:
-      "What are the admission requirements for the DNB Orthopedics program?",
+      'What are the admission requirements for the DNB Orthopedics program?',
     answer:
-      "Admission to our DNB Orthopedics program requires completion of MBBS, a valid medical license, and clearing the NEET-PG examination. International applicants may have additional requirements. Shortlisted candidates will undergo an interview process.",
+      'Admission to our DNB Orthopedics program requires completion of MBBS, a valid medical license, and clearing the NEET-PG examination. International applicants may have additional requirements. Shortlisted candidates will undergo an interview process.',
   },
   {
-    question: "How long is the DNB Orthopedics course?",
+    question: 'How long is the DNB Orthopedics course?',
     answer:
-      "The DNB Orthopedics course is typically a 3-year full-time program. However, some of our specialized courses, like the Advanced Spine Surgery Innovation Program, may have different durations tailored to the specific curriculum.",
-  },
-  {
-    question:
-      "What career opportunities are available after completing the DNB Orthopedics program?",
-    answer:
-      "Graduates of our DNB Orthopedics program have diverse career opportunities, including positions in leading hospitals, academic institutions, research centers, and private practice. Many of our alumni have gone on to become renowned surgeons, researchers, and leaders in the field of orthopedics.",
+      'The DNB Orthopedics course is typically a 3-year full-time program. However, some of our specialized courses, like the Advanced Spine Surgery Innovation Program, may have different durations tailored to the specific curriculum.',
   },
   {
     question:
-      "Are there opportunities for international exposure during the program?",
+      'What career opportunities are available after completing the DNB Orthopedics program?',
     answer:
-      "Yes, our program offers various international exposure opportunities, including observerships at top global orthopedic centers, participation in international conferences, and collaborative research projects with international partners.",
+      'Graduates of our DNB Orthopedics program have diverse career opportunities, including positions in leading hospitals, academic institutions, research centers, and private practice. Many of our alumni have gone on to become renowned surgeons, researchers, and leaders in the field of orthopedics.',
   },
   {
     question:
-      "What kind of research opportunities are available in the program?",
+      'Are there opportunities for international exposure during the program?',
     answer:
-      "Our program emphasizes research as a crucial component of advanced orthopedic training. Students have opportunities to engage in cutting-edge research, access state-of-the-art laboratories, and receive mentorship from leading researchers. We also provide support for publishing in high-impact journals and presenting at international conferences.",
+      'Yes, our program offers various international exposure opportunities, including observerships at top global orthopedic centers, participation in international conferences, and collaborative research projects with international partners.',
+  },
+  {
+    question:
+      'What kind of research opportunities are available in the program?',
+    answer:
+      'Our program emphasizes research as a crucial component of advanced orthopedic training. Students have opportunities to engage in cutting-edge research, access state-of-the-art laboratories, and receive mentorship from leading researchers. We also provide support for publishing in high-impact journals and presenting at international conferences.',
   },
 ];
 
@@ -339,8 +339,8 @@ export default function AdvancedOrthopedicsDNB() {
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterSpecialty, setFilterSpecialty] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterSpecialty, setFilterSpecialty] = useState('');
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date()
   );
@@ -359,7 +359,7 @@ export default function AdvancedOrthopedicsDNB() {
   const blogRef = useRef<HTMLDivElement>(null);
 
   const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
-    ref.current?.scrollIntoView({ behavior: "smooth" });
+    ref.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
@@ -370,28 +370,28 @@ export default function AdvancedOrthopedicsDNB() {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await axiosInstance.get("/blogs"); // Adjust the endpoint as needed
-        console.log("hjhsabh", response.data?.blogs);
+        const response = await axiosInstance.get('/blogs'); // Adjust the endpoint as needed
+        console.log('hjhsabh', response.data?.blogs);
         const formattedBlogs = response.data.blogs.map((blog) => ({
           ...blog,
           image: blog.image
             ? `https://test.sjhrc.in/hospital-api/blogs/${blog.image
                 .toString()
-                .replace(/^uploads[\\/]/, "")
-                .replace(/\\/g, "/")}`
+                .replace(/^uploads[\\/]/, '')
+                .replace(/\\/g, '/')}`
             : undefined,
         }));
 
         setBlogs(formattedBlogs.slice(0, 3)); // Limit to the first 6 blogs
       } catch (error) {
-        console.error("Error fetching blogs:", error);
+        console.error('Error fetching blogs:', error);
       }
     };
 
@@ -401,7 +401,7 @@ export default function AdvancedOrthopedicsDNB() {
   const filteredDoctors = doctors.filter(
     (doctor) =>
       doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (filterSpecialty === "" || doctor.specialty === filterSpecialty)
+      (filterSpecialty === '' || doctor.specialty === filterSpecialty)
   );
 
   const filteredCourses = courses.filter(
@@ -571,7 +571,7 @@ export default function AdvancedOrthopedicsDNB() {
             transition={{ duration: 0.8 }}
             className="text-4xl md:text-5xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-600"
           >
-            Our Expert Faculty
+            DNB Resident
           </motion.h2>
           {/* <div className="mb-8 flex flex-wrap gap-4 justify-center">
             <Input
@@ -609,7 +609,7 @@ export default function AdvancedOrthopedicsDNB() {
                         src={doctor.image}
                         alt={doctor.name}
                         fill
-                        style={{ objectFit: "cover" }}
+                        style={{ objectFit: 'cover' }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-white to-transparent" />
                       <div className="absolute bottom-4 left-4 right-4">
@@ -924,7 +924,6 @@ export default function AdvancedOrthopedicsDNB() {
                         {selectedCourse.enrolledStudents} students
                       </p>
                     </div>
-                
 
                     {/* <div>
                       <h4 className="font-semibold text-teal-600 mb-2">Rating:</h4>
@@ -939,35 +938,38 @@ export default function AdvancedOrthopedicsDNB() {
                     </div> */}
                   </div>
                   <div>
-                      <h4 className="font-semibold text-teal-600 mb-2">
-                        More Details:
-                      </h4>
-                      <ul className="mt-2 space-y-1 text-gray-600">
-                        <li>
-                          <strong>Phone:</strong>{" "}
-                          <a
-                            href="tel:+8987999200"
-                            className="text-blue-600 hover:underline"
-                          >
-                            8987999200
-                          </a>{", "}
-                          <a
-                            href="tel:+9471373714"
-                            className="text-blue-600 hover:underline"
-                          > 9471373714
-                          </a>
-                        </li>
-                        <li>
-                          <strong>Email:</strong>{" "}
-                          <a
-                            href="mailto:sjhrc.ranchi@gmail.com"
-                            className="text-blue-600 hover:underline"
-                          >
-                            sjhrc.ranchi@gmail.com
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
+                    <h4 className="font-semibold text-teal-600 mb-2">
+                      More Details:
+                    </h4>
+                    <ul className="mt-2 space-y-1 text-gray-600">
+                      <li>
+                        <strong>Phone:</strong>{' '}
+                        <a
+                          href="tel:+8987999200"
+                          className="text-blue-600 hover:underline"
+                        >
+                          8987999200
+                        </a>
+                        {', '}
+                        <a
+                          href="tel:+9471373714"
+                          className="text-blue-600 hover:underline"
+                        >
+                          {' '}
+                          9471373714
+                        </a>
+                      </li>
+                      <li>
+                        <strong>Email:</strong>{' '}
+                        <a
+                          href="mailto:sjhrc.ranchi@gmail.com"
+                          className="text-blue-600 hover:underline"
+                        >
+                          sjhrc.ranchi@gmail.com
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
                 <div>
                   <h4 className="font-semibold text-teal-600 mb-2">
@@ -1016,7 +1018,7 @@ export default function AdvancedOrthopedicsDNB() {
               Book an Appointment
             </DialogTitle>
             <DialogDescription className="text-gray-700">
-              Select a date and time for your appointment with{" "}
+              Select a date and time for your appointment with{' '}
               {selectedDoctor?.name}.
             </DialogDescription>
           </DialogHeader>
@@ -1028,15 +1030,15 @@ export default function AdvancedOrthopedicsDNB() {
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
-                    variant={"outline"}
+                    variant={'outline'}
                     className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !selectedDate && "text-muted-foreground"
+                      'w-full justify-start text-left font-normal',
+                      !selectedDate && 'text-muted-foreground'
                     )}
                   >
                     <Calendar className="mr-2 h-4 w-4" />
                     {selectedDate ? (
-                      format(selectedDate, "PPP")
+                      format(selectedDate, 'PPP')
                     ) : (
                       <span>Pick a date</span>
                     )}

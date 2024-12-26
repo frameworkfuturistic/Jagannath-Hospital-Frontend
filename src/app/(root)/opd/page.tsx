@@ -1,22 +1,22 @@
 // eslint-disable-next-line
 // @ts-nocheck
 
-"use client";
+'use client';
 
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   QueryClient,
   QueryClientProvider,
   useQuery,
-} from "@tanstack/react-query";
-import axiosInstance from "@/lib/axiosInstance";
-import { format } from "date-fns";
-import { Calendar, Clock, Search, User, Briefcase } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+} from '@tanstack/react-query';
+import axiosInstance from '@/lib/axiosInstance';
+import { format } from 'date-fns';
+import { Calendar, Clock, Search, User, Briefcase } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -24,22 +24,22 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
+} from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import HeaderBanner from "@/components/HeaderBanner";
+} from '@/components/ui/tooltip';
+import HeaderBanner from '@/components/HeaderBanner';
 
 // Existing interface and fetch function...
 interface Consultant {
@@ -55,7 +55,7 @@ interface Consultant {
 }
 
 const fetchDoctors = async (): Promise<Consultant[]> => {
-  const response = await axiosInstance.get("/consultant");
+  const response = await axiosInstance.get('/consultant');
   return response;
 };
 
@@ -70,38 +70,38 @@ export default function DoctorAvailability() {
 }
 
 function DoctorAvailabilityContent() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedDepartment, setSelectedDepartment] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedDepartment, setSelectedDepartment] = useState('');
 
   const {
     data: doctors,
     isLoading,
     error,
   } = useQuery<Consultant[], Error>({
-    queryKey: ["doctors"],
+    queryKey: ['doctors'],
     queryFn: fetchDoctors,
   });
 
   const filteredDoctors = doctors?.filter(
     (doctor) =>
       doctor.consultantName.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (selectedDepartment === "" ||
+      (selectedDepartment === '' ||
         doctor.departmentName === selectedDepartment)
   );
 
   const departments = [
-    ...Array.from(new Set(doctors?.map((doctor) => doctor.departmentName))) // Convert Set to Array
+    ...Array.from(new Set(doctors?.map((doctor) => doctor.departmentName))), // Convert Set to Array
   ];
 
   const formatTime = (timeString: string) => {
     try {
-      const [hours, minutes] = timeString.split(":");
+      const [hours, minutes] = timeString.split(':');
       return format(
         new Date(2000, 0, 1, parseInt(hours), parseInt(minutes)),
-        "h:mm a"
+        'h:mm a'
       );
     } catch {
-      return "Invalid Time";
+      return 'Invalid Time';
     }
   };
 
@@ -241,7 +241,7 @@ function DoctorAvailabilityContent() {
                                 Tue
                               </Badge>
                               <Badge variant="secondary" className="text-xs">
-                                Wed
+                                Wed - OT
                               </Badge>
                               <Badge variant="secondary" className="text-xs">
                                 Thu
@@ -250,7 +250,7 @@ function DoctorAvailabilityContent() {
                                 Fri
                               </Badge>
                               <Badge variant="secondary" className="text-xs">
-                                Sat - Operation Day
+                                Sat - OT
                               </Badge>
                               <Badge variant="secondary" className="text-xs">
                                 Sun
@@ -263,7 +263,7 @@ function DoctorAvailabilityContent() {
                         <TableRow
                           key={doctor.id}
                           className={
-                            index % 2 === 0 ? "bg-secondary/5" : "bg-background"
+                            index % 2 === 0 ? 'bg-secondary/5' : 'bg-background'
                           }
                         >
                           <TableCell className="font-medium">
@@ -299,7 +299,7 @@ function DoctorAvailabilityContent() {
                             <div className="space-y-1">
                               <div className="flex items-center">
                                 <Clock className="mr-2 h-4 w-4 text-muted-foreground" />
-                                {formatTime(doctor.opdTiming.from)} -{" "}
+                                {formatTime(doctor.opdTiming.from)} -{' '}
                                 {formatTime(doctor.opdTiming.to)}
                               </div>
                               <div className="flex flex-wrap items-center gap-1">
