@@ -391,7 +391,7 @@ export const departmentDetails: { [key: string]: DepartmentDetail } = {
       {
         id: 'dr-chiranjib',
         name: 'Dr. Chiranjib Mishra',
-        title: 'Senior Medical Officer (Orhtopedics)',
+        title: 'Senior Medical Officer (Orthopaedics)',
         image: '/departmentHeads/bksingh.jpg?height=400&width=400',
         specialization: 'Orthopedic Surgery',
         experience: '18+ years',
@@ -405,20 +405,20 @@ export const departmentDetails: { [key: string]: DepartmentDetail } = {
           'Member of various Medical Boards of ECL and CCL',
         ],
       },
-      {
-        id: 'dr-Hargave',
-        name: 'Dr. B.V. Hargave',
-        title: '(MBBS, DNB Resident) (Orhtopedics)',
-        image: '/departmentHeads/hargave.jpg?height=400&width=400',
-        specialization: 'Orthopedic',
-        experience: '18+ years',
-        education: ['M.B.B.S.(Magadh University)'],
+      // {
+      //   id: 'dr-Hargave',
+      //   name: 'Dr. B.V. Hargave',
+      //   title: '(MBBS, DNB Resident) (Orhtopedics)',
+      //   image: '/departmentHeads/hargave.jpg?height=400&width=400',
+      //   specialization: 'Orthopedic',
+      //   experience: '18+ years',
+      //   education: ['M.B.B.S.(Magadh University)'],
 
-        achievements: ['Medical Supritendent in Gandhi Nagar Hospital, Ranchi'],
-      },
+      //   achievements: ['Medical Supritendent in Gandhi Nagar Hospital, Ranchi'],
+      // },
       {
         id: 'dr-Danish',
-        name: 'Dr Danish Ejaj',
+        name: 'Dr Danish Ejaz',
         title: '(MBBS DNB Resident)',
         image:
           '/departmentHeads/Dr Danish Ejaz (MBBS DNB Resident).jpg?height=400&width=400',

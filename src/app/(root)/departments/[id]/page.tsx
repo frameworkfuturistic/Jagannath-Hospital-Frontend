@@ -449,9 +449,9 @@ export default function DepartmentDetail({
             Our team of expert specialists is here to provide you with
             world-class care. Don't wait to prioritize your health.
           </p>
-          <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+          {/* <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
             Schedule Your Consultation
-          </Button>
+          </Button> */}
         </motion.section>
       </div>
 

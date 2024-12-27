@@ -4,6 +4,7 @@ import './globals.css';
 import { AuthProvider } from './context/AuthContext';
 import SEO from '@/components/SEO';
 import CookieConsent from '@/pages/CookieConsent';
+import { Toaster } from '@/components/ui/sonner';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -68,6 +69,7 @@ export default function RootLayout({
       <body>
         <CookieConsent />
         <AuthProvider>{children}</AuthProvider>
+        <Toaster />
       </body>
     </html>
   );

@@ -118,8 +118,8 @@ export default function AdvancedAboutUs() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
               <h2 className="text-2xl md:text-2xl font-bold text-gray-800 leading-tight">
-                NABH accredited multispecialty hospital offering advanced
-                healthcare in Ranchi, Jharkhand.
+                NABH Accredited Multispeciality Hospital Offering Advanced
+                Healthcare in Ranchi, Jharkhand
               </h2>
               <p className="text-md text-gray-600">
                 <strong>Shree Jagannath Hospital & Research Centre</strong> is
