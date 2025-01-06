@@ -297,10 +297,10 @@ export default function EnhancedHeader() {
                 />
                 {/* Text Section */}
                 <div className="flex flex-col">
-                  <span className="text-sm sm:text-sm md:text-lg  font-extrabold text-primary tracking-wide leading-tight">
+                  <span className="text-sm sm:text-sm md:text-xl font-extrabold text-primary tracking-wide leading-tight">
                     SHREE JAGANNATH
                   </span>
-                  <span className="text-xs sm:text-sm md:text-sm text-gray-600 leading-tight">
+                  <span className="text-xs sm:text-sm md:text-sm text-center text-gray-600 leading-tight">
                     Hospital & Research Center
                   </span>
                 </div>

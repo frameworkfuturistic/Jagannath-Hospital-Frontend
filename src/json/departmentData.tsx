@@ -391,19 +391,13 @@ export const departmentDetails: { [key: string]: DepartmentDetail } = {
       {
         id: 'dr-chiranjib',
         name: 'Dr. Chiranjib Mishra',
-        title: 'Senior Medical Officer (Orthopaedics)',
-        image: '/departmentHeads/bksingh.jpg?height=400&width=400',
+        title: 'Ms (Orthopaedics)',
+        image: '/departmentHeads/chiranjib.jpg?height=400&width=400',
         specialization: 'Orthopedic Surgery',
         experience: '18+ years',
-        education: ['M.B.B.S.Magadh University)'],
+        education: ['Mbbs (Wbuhs)'],
 
-        achievements: [
-          'Medical Officer (Sanctoria Hospital, West Bengal)',
-          'Medical Supritendent (CCL, Central Hospital Ramgarh)',
-          'Dy. Chief Medical Officer (CCL Central Hospital, Ramgarh)',
-          'HOD, Central Medical Stores (CCL Central Hospital, Ramgarh)',
-          'Member of various Medical Boards of ECL and CCL',
-        ],
+        achievements: ['Ms (Orthopedics)', 'FIJR (fellowship in Arthroplasty)'],
       },
       // {
       //   id: 'dr-Hargave',
@@ -419,11 +413,10 @@ export const departmentDetails: { [key: string]: DepartmentDetail } = {
       {
         id: 'dr-Danish',
         name: 'Dr Danish Ejaz',
-        title: '(MBBS DNB Resident)',
-        image:
-          '/departmentHeads/Dr Danish Ejaz (MBBS DNB Resident).jpg?height=400&width=400',
+        title: 'MBBS, DNB(Orthopaedics)',
+        image: '/departmentHeads/Dr. Danish Sir.jpeg?height=400&width=400',
         specialization: 'Orthopedic Surgery',
-        experience: '18+ years',
+        experience: '3+ years',
         education: [''],
 
         achievements: [''],
@@ -435,21 +428,21 @@ export const departmentDetails: { [key: string]: DepartmentDetail } = {
         image:
           '/departmentHeads/Dr Satyam Kr Singh (MBBS DNB Resident).jpg?height=400&width=400',
         specialization: 'Orthopedic',
-        experience: '18+ years',
+        experience: '2+ years',
         education: [''],
 
         achievements: [''],
       },
       {
         id: 'dr-Tirkey',
-        name: 'Dr. Nand Kishore Tirkey',
-        title: '(MBBS,DNB Resident)',
-        image: '/departmentHeads/doctors.jpg?height=400&width=400',
+        name: 'Dr. NandKishore Tirkey',
+        title: 'Post Diploma, DNB(Orthopaedics)',
+        image: '/departmentHeads/Dr nandkishor tirkey.jpg?height=400&width=400',
         specialization: 'Orthopedic ',
         experience: '18+ years',
-        education: [''],
+        education: [' DNB(Ortho)'],
 
-        achievements: [''],
+        achievements: ['Post Diploma'],
       },
     ],
     treatments: [
@@ -708,7 +701,7 @@ export const departmentDetails: { [key: string]: DepartmentDetail } = {
         id: 'dr-Pramod',
         name: 'Dr. Pramod kumar Singh',
         title: 'Medical Officer',
-        image: '/departmentHeads/doctors.jpg?height=400&width=400',
+        image: '/departmentHeads/promod.jpg?height=400&width=400',
         specialization: 'Medical Officer',
         experience: '18+ years',
         education: ['M.B.B.S.(RANCHI University) DECEMBER , 2005'],

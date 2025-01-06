@@ -229,29 +229,15 @@ const serviceCategories: ServiceCategory[] = [
     name: 'Rooms & Bed Services',
     icon: Bed,
     color: 'bg-green-100 text-green-700',
-    image: '/services/rooms/deluxroo.jpeg',
+    image: '/services/rooms/deluxe-room.jpg',
     about:
       "We offer a range of comfortable and well-equipped rooms to suit every patient's needs, ensuring a restful and healing environment during their stay.",
     items: [
       {
-        name: 'Suite Room',
-        icon: Bed,
-        description:
-          'Luxurious accommodations for patients who desire extra comfort.',
-        image: '/services/rooms/generalroo.jpeg',
-        details: [
-          'Spacious room with a living area for visitors',
-          'Private bathroom with premium amenities',
-          '24/7 personalized nursing care',
-          'Gourmet meal options available',
-          'Comfortable and restful environment',
-        ],
-      },
-      {
         name: 'Deluxe Room',
         icon: Bed,
         description: 'Comfortable private rooms with modern amenities.',
-        image: '/services/rooms/deluxroo.jpeg',
+        image: '/services/rooms/deluxe-room.jpg',
         details: [
           'Private room with en-suite bathroom',
           'Adjustable bed for patient comfort',
@@ -264,7 +250,7 @@ const serviceCategories: ServiceCategory[] = [
         name: 'Super Deluxe Room',
         icon: Bed,
         description: 'Extra-spacious room with luxury amenities.',
-        image: '/services/rooms/superdelaxroom.jpeg',
+        image: '/services/rooms/super-dekuxe.jpg',
         details: [
           'Enhanced room size for added comfort',
           'Advanced medical equipment for safety',
@@ -277,7 +263,7 @@ const serviceCategories: ServiceCategory[] = [
         name: 'Single Room',
         icon: Bed,
         description: 'Private room for a more personal and quiet environment.',
-        image: '/services/rooms/singalroo.jpeg',
+        image: '/services/rooms/single-room.jpg',
         details: [
           'Private space with single occupancy',
           'En-suite bathroom for convenience',
@@ -290,7 +276,7 @@ const serviceCategories: ServiceCategory[] = [
         name: 'Twin Sharing Room',
         icon: Bed,
         description: 'Economical option with two beds per room.',
-        image: '/services/rooms/singalroo.jpeg',
+        image: '/services/rooms/Twin-sharing.jpg',
         details: [
           'Two beds separated by privacy curtains',
           'Shared bathroom and seating area',
@@ -303,7 +289,7 @@ const serviceCategories: ServiceCategory[] = [
         name: 'General Ward (Male)',
         icon: Bed,
         description: 'Multi-bed wards for male patients.',
-        image: '/services/rooms/singalroo.jpeg',
+        image: '/services/rooms/General-ward.jpg',
         details: [
           'Efficient ward layout for easy monitoring',
           'Shared bathroom and dining area',
@@ -316,7 +302,7 @@ const serviceCategories: ServiceCategory[] = [
         name: 'General Ward (Female)',
         icon: Bed,
         description: 'Multi-bed wards for female patients.',
-        image: '/services/rooms/singalroo.jpeg',
+        image: '/services/rooms/General-ward-female.jpg',
         details: [
           'Separate ward for female patients',
           'Communal recreation and dining areas',

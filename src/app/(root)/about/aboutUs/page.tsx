@@ -46,14 +46,14 @@ const DualImageCube = () => {
     <div className="relative w-full h-96 md:h-[500px]">
       <div className="absolute top-0 left-0 w-3/4 h-3/4 z-10">
         <Image
-          src="/hospital/bi.webp"
+          src="/hospital/medd.webp"
           alt="Hospital exterior"
           layout="fill"
           objectFit="cover"
           className="rounded-lg shadow-xl"
         />
       </div>
-      {/* <div className="absolute bottom-0 right-0 w-3/4 h-3/4 z-20">
+      <div className="absolute bottom-0 right-0 w-3/4 h-3/4 z-20">
         <Image
           src="/hospital/bi.webp?height=600&width=800"
           alt="Medical team in action"
@@ -61,7 +61,7 @@ const DualImageCube = () => {
           objectFit="cover"
           className="rounded-lg shadow-xl"
         />
-      </div> */}
+      </div>
     </div>
   );
 };

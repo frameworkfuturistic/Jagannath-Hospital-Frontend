@@ -1,18 +1,30 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect } from 'react'
-import Image from 'next/image'
-import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronRight, Search, X, ChevronLeft, ChevronDown, Phone, Mail, Globe, ChevronsRight, GraduationCap, NotebookTabs } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  ChevronRight,
+  Search,
+  X,
+  ChevronLeft,
+  ChevronDown,
+  Phone,
+  Mail,
+  Globe,
+  ChevronsRight,
+  GraduationCap,
+  NotebookTabs,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from '@/components/ui/select';
 import {
   Dialog,
   DialogContent,
@@ -20,109 +32,118 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import Title from './Title'
+} from '@/components/ui/dialog';
+import Title from './Title';
 
 interface Doctor {
-  id: number
-  name: string
-  title: string
-  image: string
-  specialization: string
-  study: string
-  intro: string
-  Formerly: string
-  featured: boolean
+  id: number;
+  name: string;
+  title: string;
+  image: string;
+  specialization: string;
+  study: string;
+  intro: string;
+  Formerly: string;
+  featured: boolean;
 }
 
 const doctorData: Doctor[] = [
   {
     id: 1,
-    name: "Dr. Sudhir Kumar",
-    title: "Chairman Cum Managing director",
-    image: "/departmentHeads/sudhir.png",
-    specialization: "Orthopedics ",
-    study: "M.B.B.S (B.H.U), M.S. Ortho",
-    intro: "M.B.B.S (B.H.U), M.S. Ortho. (B.H.U) Fellow in Hand (Bombay ortho. Society) Fellow in spine (world Ortho. Concern) Consultant in Orthopedics & Traumatology Hand, Spine and Micro-reconstructive surgeon",
-    Formerly: "Professor in Orthopedics RIMS, Ranchi Specialist & Incharge in Orthopedics HEC Hospital, Ranchi Reader in Orthopedics Mahatma Gandhi Institute of Medical Science, Ward Lecturer (Jr.) Hand Reconstructive Surgery CMC Vellore, Tamil Nadu",
-    featured: true
+    name: 'Dr. Sudhir Kumar',
+    title: 'Chairman Cum Managing director',
+    image: '/departmentHeads/sudhir.png',
+    specialization: 'Orthopedics ',
+    study: 'M.B.B.S (B.H.U), M.S. Ortho',
+    intro:
+      'M.B.B.S (B.H.U), M.S. Ortho. (B.H.U) Fellow in Hand (Bombay ortho. Society) Fellow in spine (world Ortho. Concern) Consultant in Orthopedics & Traumatology Hand, Spine and Micro-reconstructive surgeon',
+    Formerly:
+      'Professor in Orthopedics RIMS, Ranchi Specialist & Incharge in Orthopedics HEC Hospital, Ranchi Reader in Orthopedics Mahatma Gandhi Institute of Medical Science, Ward Lecturer (Jr.) Hand Reconstructive Surgery CMC Vellore, Tamil Nadu',
+    featured: true,
   },
   {
     id: 2,
-    name: "Dr. Vandana Prasad",
-    title: "Director",
-    image: "/departmentHeads/vandana.png",
-    specialization: "Ophthalmology",
-    study: "M.B.B.S (B.H.U), M.S. Ophthalmology. (B.H.U)",
-    intro: "...",
-    Formerly: "Lecturer, Dept. of Ophthalmology, (MGIMS), seva gram, Wardha H.O.D dept. Eye, HEC Plant Hospital, Dhurwa, Ranchi",
-    featured: true
+    name: 'Dr. Vandana Prasad',
+    title: 'Director',
+    image: '/departmentHeads/vandana.png',
+    specialization: 'Ophthalmology',
+    study: 'M.B.B.S (B.H.U), M.S. Ophthalmology. (B.H.U)',
+    intro: '...',
+    Formerly:
+      'Lecturer, Dept. of Ophthalmology, (MGIMS), seva gram, Wardha H.O.D dept. Eye, HEC Plant Hospital, Dhurwa, Ranchi',
+    featured: true,
   },
   {
     id: 3,
-    name: "Dr. Rakesh Arya",
-    title: "Chief Medical Suprintendent",
-    image: "/departmentHeads/rakesh.png",
-    specialization: "medical ",
-    study: "M.B.B.S (G.R.M.C, Gwalior) M.D. (G.R.M.C, Gwalior)",
-    intro: "...",
-    Formerly: "Teacher in G.R medical College, (Gwalior) Specialist in Coal India Ltd. Chief of Medical services, CCL, Ranchi Executive Director medical services Coal India Ltd.",
-    featured: false
+    name: 'Dr. Rakesh Arya',
+    title: 'Chief Medical Suprintendent',
+    image: '/departmentHeads/rakesh.png',
+    specialization: 'Medical ',
+    study: 'M.B.B.S (G.R.M.C, Gwalior) M.D. (G.R.M.C, Gwalior)',
+    intro: '...',
+    Formerly:
+      'Teacher in G.R medical College, (Gwalior) Specialist in Coal India Ltd. Chief of Medical services, CCL, Ranchi Executive Director medical services Coal India Ltd.',
+    featured: false,
   },
   {
     id: 4,
-    name: "Dr. S.P. Mishra",
-    title: "Medical Superintendent",
-    image: "/departmentHeads/spmishra.png",
-    specialization: "Medical ",
-    study: "H.O.D (Dental), CCL Central Hospital, Gandhi Nagar, Ranchi",
-    intro: "...",
-    Formerly: "Medical superintendent (CCL central Hospital, Ranchi) H.O.D, ISO CELL , CCL Hospital, Ranchi",
-    featured: false
+    name: 'Dr. S.P. Mishra',
+    title: 'Medical Superintendent',
+    image: '/departmentHeads/spmishra.png',
+    specialization: 'Medical ',
+    study: 'H.O.D (Dental), CCL Central Hospital, Gandhi Nagar, Ranchi',
+    intro: '...',
+    Formerly:
+      'Medical superintendent (CCL central Hospital, Ranchi) H.O.D, ISO CELL , CCL Hospital, Ranchi',
+    featured: false,
   },
- 
-]
+];
 
 const AdvancedMedicalExperts: React.FC = () => {
-  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [specialization, setSpecialization] = useState('')
-  const [filteredDoctors, setFilteredDoctors] = useState(doctorData)
-  const [carouselIndex, setCarouselIndex] = useState(0)
+  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [specialization, setSpecialization] = useState('');
+  const [filteredDoctors, setFilteredDoctors] = useState(doctorData);
+  const [carouselIndex, setCarouselIndex] = useState(0);
 
   useEffect(() => {
-    const filtered = doctorData.filter(doctor => 
-      doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (specialization === '' || doctor.specialization === specialization)
-    )
-    setFilteredDoctors(filtered)
-  }, [searchTerm, specialization])
+    const filtered = doctorData.filter(
+      (doctor) =>
+        doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        (specialization === '' || doctor.specialization === specialization)
+    );
+    setFilteredDoctors(filtered);
+  }, [searchTerm, specialization]);
 
-  const featuredDoctors = doctorData.filter(doctor => doctor.featured)
+  const featuredDoctors = doctorData.filter((doctor) => doctor.featured);
 
   const nextCarousel = () => {
-    setCarouselIndex((prevIndex) => (prevIndex + 1) % featuredDoctors.length)
-  }
+    setCarouselIndex((prevIndex) => (prevIndex + 1) % featuredDoctors.length);
+  };
 
   const prevCarousel = () => {
-    setCarouselIndex((prevIndex) => (prevIndex - 1 + featuredDoctors.length) % featuredDoctors.length)
-  }
+    setCarouselIndex(
+      (prevIndex) =>
+        (prevIndex - 1 + featuredDoctors.length) % featuredDoctors.length
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-blue-50 p-8">
       <div className="max-w-7xl mx-auto">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <Title title="Our Medical Experts"  />
-        
+          <Title title="Our Medical Experts" />
+
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-          Shree Jagannath Hospital is home to 50 eminent doctors in India, most of whom are pioneers in their
-            respective fields. Our experts are renowned for developing innovative and revolutionary
-            clinical procedures.
+            Shree Jagannath Hospital is home to 50 eminent doctors in India,
+            most of whom are pioneers in their respective fields. Our experts
+            are renowned for developing innovative and revolutionary clinical
+            procedures.
           </p>
         </motion.div>
 
@@ -176,8 +197,6 @@ const AdvancedMedicalExperts: React.FC = () => {
           </div>
         </div> */}
 
-       
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {filteredDoctors.map((doctor, index) => (
             <motion.div
@@ -190,23 +209,27 @@ const AdvancedMedicalExperts: React.FC = () => {
               className="bg-white rounded-xl shadow-xl overflow-hidden cursor-pointer transform hover:scale-105 transition-all duration-300 hover:shadow-2xl"
             >
               <div className="relative h-64">
-              
                 <Image
                   src={doctor.image}
                   alt={doctor.name}
                   layout="fill"
                   objectFit="cover"
                 />
-              <div className="absolute right-0  bg-teal-200 text-primary px-2 py-2 rounded-bl-xl text-xs font-semibold">
+                <div className="absolute right-0  bg-teal-200 text-primary px-2 py-2 rounded-bl-xl text-xs font-semibold">
                   {doctor.specialization}
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
               </div>
               <div className="p-6 relative">
-                
-                <h2 className="text-xl font-bold text-gray-800 mb-2">{doctor.name}</h2>
-                <p className="text-primary text-sm font-medium mb-2">({doctor.title})</p>
-                <p className="text-black text-sm font-medium ">{doctor.study}</p>
+                <h2 className="text-xl font-bold text-gray-800 mb-2">
+                  {doctor.name}
+                </h2>
+                <p className="text-primary text-sm font-medium mb-2">
+                  ({doctor.title})
+                </p>
+                <p className="text-black text-sm font-medium ">
+                  {doctor.study}
+                </p>
               </div>
             </motion.div>
           ))}
@@ -235,9 +258,15 @@ const AdvancedMedicalExperts: React.FC = () => {
                   className="rounded-full"
                 />
               </div>
-              <h2 className="text-3xl font-bold text-center mb-2">{selectedDoctor.name}</h2>
-              <p className="text-blue-600 text-center font-medium mb-2">{selectedDoctor.title}</p>
-              <p className="text-gray-600 text-center mb-6">{selectedDoctor.specialization}</p>
+              <h2 className="text-3xl font-bold text-center mb-2">
+                {selectedDoctor.name}
+              </h2>
+              <p className="text-blue-600 text-center font-medium mb-2">
+                {selectedDoctor.title}
+              </p>
+              <p className="text-gray-600 text-center mb-6">
+                {selectedDoctor.specialization}
+              </p>
               <div className="space-y-4">
                 <div className="flex items-center">
                   <GraduationCap className="text-blue-500 mr-3" size={20} />
@@ -245,11 +274,11 @@ const AdvancedMedicalExperts: React.FC = () => {
                 </div>
                 <div className="flex items-center">
                   <NotebookTabs className="text-blue-500 mr-3" size={20} />
-                  <p className=' text-sm'>{selectedDoctor.intro}</p>
+                  <p className=" text-sm">{selectedDoctor.intro}</p>
                 </div>
                 <div className="flex items-center">
                   <ChevronsRight className="text-blue-500  mr-3" size={36} />
-                  <p className=' text-sm'>{selectedDoctor.Formerly}</p>
+                  <p className=" text-sm">{selectedDoctor.Formerly}</p>
                 </div>
               </div>
               <motion.button
@@ -265,7 +294,7 @@ const AdvancedMedicalExperts: React.FC = () => {
         )}
       </AnimatePresence>
     </div>
-  )
-}
+  );
+};
 
-export default AdvancedMedicalExperts
+export default AdvancedMedicalExperts;

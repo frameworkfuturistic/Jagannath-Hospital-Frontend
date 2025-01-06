@@ -2,16 +2,13 @@
 import {
   Clock10Icon,
   MapPinIcon,
-  MenuIcon,
   Phone,
-  PhoneIcon,
-  XIcon,
+ 
 } from 'lucide-react';
 import { FaFacebookF, FaInstagram, FaYoutube, FaTwitter } from 'react-icons/fa';
 import Navbar from '@/components/Navbar';
-import React, { useEffect, useState } from 'react';
-import NavMobile from './NavMobile';
-import { Button } from './ui/button';
+import React from 'react';
+
 import Link from 'next/link';
 
 const Header = () => {
@@ -52,7 +49,7 @@ const Header = () => {
             className="flex items-center hover:text-sidebar-primary-foreground transition-colors"
           >
             <Clock10Icon className="h-4 w-4 mr-1" />
-            <span className="">Mon - Sat 6.00AM - 12.00AM</span>
+            <span className="">24X7 Emergency Service Available</span>
           </Link>
         </div>
         <div className="flex items-center space-x-4">

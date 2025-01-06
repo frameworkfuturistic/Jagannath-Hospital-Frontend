@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence, useAnimation } from "framer-motion";
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import {
   Clock10,
   Mail,
@@ -15,31 +15,31 @@ import {
   ArrowRight,
   ChevronUp,
   Youtube,
-} from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useForm } from "react-hook-form";
-import { useInView } from "react-intersection-observer";
+} from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { useForm } from 'react-hook-form';
+import { useInView } from 'react-intersection-observer';
 
 const quickLinks = [
-  { name: "About Us", href: "/about/aboutUs" },
+  { name: 'About Us', href: '/about/aboutUs' },
   // { name: "Privacy Policy", href: "/about/policy" },
-  { name: "Terms & Conditions", href: "/about/policy" },
-  { name: "Contact Us", href: "/contact" },
-  { name: "Careers", href: "/career/currentOpenings" },
-  { name: "Blogs", href: "/blog" },
-  { name: "Find a Doctor", href: "/find-doctor" },
+  { name: 'Terms & Conditions', href: '/about/policy' },
+  { name: 'Contact Us', href: '/contact' },
+  { name: 'Careers', href: '/career/currentOpenings' },
+  { name: 'Blogs', href: '/blog' },
+  { name: 'Find a Doctor', href: '/find-doctor' },
 ];
 
 const departments = [
-  { name: "Orthopedics", href: "/departments/orthopedics" },
-  { name: "Neurosurgery", href: "/departments/neurology" },
-  { name: "Nephrology & Dialysis", href: "/departments/nephrology" },
-  { name: "Cardiology", href: "/departments/cardiology" },
-  { name: "Physiotherapy", href: "/departments/physiotherapy" },
-  { name: "Emergency Services", href: "/departments" },
+  { name: 'Orthopedics', href: '/departments/orthopedics' },
+  { name: 'Neurosurgery', href: '/departments/neurology' },
+  { name: 'Nephrology & Dialysis', href: '/departments/nephrology' },
+  { name: 'Cardiology', href: '/departments/cardiology' },
+  { name: 'Physiotherapy', href: '/departments/physiotherapy' },
+  { name: 'Emergency Services', href: '/departments' },
 ];
 
 const FooterSection = ({
@@ -58,14 +58,14 @@ const FooterSection = ({
     const handleResize = () => setIsDesktop(window.innerWidth >= 768);
 
     handleResize(); // Set initial screen size
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
-    return () => window.removeEventListener("resize", handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
     if (inView) {
-      controls.start("visible");
+      controls.start('visible');
     }
   }, [controls, inView]);
 
@@ -88,14 +88,14 @@ const FooterSection = ({
         {title}
         <ChevronDown
           className="h-5 w-5 md:hidden transition-transform duration-300"
-          style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
+          style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
         />
       </button>
       <AnimatePresence>
         {(isOpen || isDesktop) && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
+            animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
             className="space-y-4 text-sm overflow-hidden"
@@ -123,12 +123,12 @@ const Footer = () => {
       setShowScrollTop(window.pageYOffset > 300);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -182,8 +182,9 @@ const Footer = () => {
                   >
                     <Clock10 className="h-5 w-5 text-blue-500" />
                     <div>
-                      <p className="text-gray-600">Mon-Sat 6.00 - 22.00</p>
-                      <p className="text-gray-600">Sunday CLOSED</p>
+                      <p className="text-gray-600">
+                        Emergency 24X7 Service Available
+                      </p>
                     </div>
                   </motion.div>
                 </div>
@@ -256,7 +257,7 @@ const Footer = () => {
             <FooterSection title="Our Location">
               <motion.div
                 className={`aspect-w-16 aspect-h-9 rounded-lg overflow-hidden transition-all duration-500 ease-in-out ${
-                  mapExpanded ? "h-[60vh]" : "h-[30vh]"
+                  mapExpanded ? 'h-[60vh]' : 'h-[30vh]'
                 }`}
                 layout
               >
@@ -295,12 +296,12 @@ const Footer = () => {
             <FooterSection title="Sitemap">
               <div className="grid grid-cols-2 gap-2">
                 {[
-                  "Home",
-                  "Services",
-                  "Doctors",
-                  "Appointments",
-                  "Blog",
-                  "Contact",
+                  'Home',
+                  'Services',
+                  'Doctors',
+                  'Appointments',
+                  'Blog',
+                  'Contact',
                 ].map((link) => (
                   <motion.div
                     key={link}
@@ -328,15 +329,15 @@ const Footer = () => {
           </p>
           <div className="flex space-x-4">
             {[
-              { Icon: Facebook, url: "https://www.facebook.com/sjhrc.in" },
-              { Icon: Twitter, url: "https://x.com/Sjhrcranchi" },
+              { Icon: Facebook, url: 'https://www.facebook.com/sjhrc.in' },
+              { Icon: Twitter, url: 'https://x.com/Sjhrcranchi' },
               {
                 Icon: Instagram,
-                url: "https://www.instagram.com/shreejagannathhospital/",
+                url: 'https://www.instagram.com/shreejagannathhospital/',
               },
               {
                 Icon: Youtube,
-                url: "https://www.youtube.com/@sjhrcjagannath9636",
+                url: 'https://www.youtube.com/@sjhrcjagannath9636',
               },
             ].map(({ Icon, url }, index) => (
               <motion.a

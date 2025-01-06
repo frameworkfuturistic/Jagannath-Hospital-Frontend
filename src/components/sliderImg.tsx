@@ -116,7 +116,7 @@ export function CarouselDemo() {
                 <span>Mayor Road, Behind Machhli Ghar, Ranchi</span>
               </div>
             </div>
-            {/* <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/appointment"
                 className="block w-full sm:w-auto lg:hidden"
@@ -125,12 +125,12 @@ export function CarouselDemo() {
                   Appointment
                 </Button>
               </Link>
-              <Link href="/comingsoon" className="block w-full sm:w-auto">
+              {/* <Link href="/comingsoon" className="block w-full sm:w-auto">
                 <Button className="bg-white text-blue-900 hover:bg-blue-100 px-4 sm:px-8 py-2 sm:py-3 text-sm sm:text-base md:text-lg rounded-full transition-all duration-300 shadow-lg hover:shadow-xl w-full">
                   Find a Doctor
                 </Button>
-              </Link>
-            </div> */}
+              </Link> */}
+            </div>
           </div>
 
           {/* Right side - Advanced Carousel */}

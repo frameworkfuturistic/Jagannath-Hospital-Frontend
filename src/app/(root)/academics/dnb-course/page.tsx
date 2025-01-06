@@ -128,7 +128,7 @@ type FAQ = {
 const doctors: Doctor[] = [
   {
     id: 'dr-danish',
-    name: 'Dr. Danish Sir',
+    name: 'Dr. Danish Ejaz',
     specialty: 'MBBS, DNB(Orthopaedics)',
     image: '/departmentHeads/Dr. Danish Sir.jpeg',
     experience: '2+ years',
@@ -142,7 +142,7 @@ const doctors: Doctor[] = [
     name: 'Dr. Satyam Kr Singh',
     specialty: 'MBBS, DNB(Orthopaedics)',
     image: '/departmentHeads/Dr. Satyam Kr Singh.webp',
-    experience: '3+ years',
+    experience: '2+ years',
     rating: 4.9,
     bio: 'Dr. Satyam is a globally recognized Orthopedics specializing in complex spinal deformities and minimally invasive spine surgeries. He is a pioneer in robotic spine surgery and has trained surgeons worldwide in advanced techniques.',
     achievements: ['DNB Resident(Ortho)'],
