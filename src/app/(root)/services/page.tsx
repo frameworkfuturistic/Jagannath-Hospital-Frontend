@@ -647,14 +647,15 @@ const ServiceItem: React.FC<ServiceItemProps> = ({ item, category }) => {
         </DialogHeader>
         <div className="grid gap-6 py-4">
           <div className="relative w-full h-64 sm:h-80 lg:h-[400px] flex justify-center">
-            <Image
+            <img
               src={item.image}
               alt={item.title}
-              width={500}
-              height={300}
-              className="h-full w-auto max-w-full object-cover rounded-lg"
-              style={{ maxWidth: '100%', height: 'auto' }}
+              className="absolute inset-0 w-full h-full object-cover"
             />
+            <div className="p-4 absolute bottom-0 left-0 bg-black bg-opacity-50 w-full">
+              <h2 className="text-white text-lg font-bold">{item.title}</h2>
+              <p className="text-white text-sm">{item.description}</p>
+            </div>
           </div>
 
           <div className="space-y-4">
@@ -768,7 +769,6 @@ export default function ServicesPage() {
         <HeaderBanner
           title="Our Services"
           subtitle="Comprehensive care for your health and well-being"
-          bgImage="/path-to-your-bg-image.jpg"
         />
 
         <div className="container mx-auto py-12 px-4">

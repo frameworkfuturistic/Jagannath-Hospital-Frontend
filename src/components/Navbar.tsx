@@ -217,7 +217,7 @@ export default function EnhancedHeader() {
   return (
     <>
       <LoadingSpinner isLoading={isLoading} />
-      <header className="sticky top-0 z-40 w-full bg-white shadow-md">
+      <header className="sticky top-0 z-40 w-full bg-white shadow-md ">
         <style jsx global>{`
           .arrow-container {
             position: relative;
@@ -296,13 +296,22 @@ export default function EnhancedHeader() {
                   className="rounded-full shadow-lg w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16"
                 />
                 {/* Text Section */}
-                <div className="flex flex-col">
-                  <span className="text-sm sm:text-sm md:text-xl font-extrabold text-primary tracking-wide leading-tight">
-                    SHREE JAGANNATH
-                  </span>
-                  <span className="text-xs sm:text-sm md:text-sm text-center text-gray-600 leading-tight">
-                    Hospital & Research Center
-                  </span>
+
+                <div className="inline-flex flex-col items-center text-center">
+                  <div className="relative group">
+                    <span className="text-sm sm:text-base md:text-lg lg:text-lg xl:text-2xl font-black text-primary tracking-tight leading-none">
+                      SHREE JAGANNATH
+                    </span>
+                    <span className="absolute -bottom-0.5 left-0 w-full h-[1px] bg-primary transform origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
+                    <span className="absolute -top-0.5 left-0 w-full h-[1px] bg-primary transform origin-right scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
+                  </div>
+                  <div className="relative  px-1">
+                    <span className="text-xs sm:text-sm md:text-sm lg:text-base sm xl:text-lg font-bold tracking-tight leading-none whitespace-nowrap">
+                      <span className="text-primary">Hospital</span>
+                      <span className="text-primary mx-0.5">&</span>
+                      <span className="text-primary">Research Centre</span>
+                    </span>
+                  </div>
                 </div>
                 {/* Accreditation Logo */}
                 <Image
@@ -334,14 +343,14 @@ export default function EnhancedHeader() {
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-4 py-3 px-4">
+                <div className="flex items-center space-x-0 py-3 px-2 gap-1 ">
                   <NavigationMenu>
                     <NavigationMenuList>
                       {navigationLinks.map((link) => (
                         <NavigationMenuItem key={link.title}>
                           {link.children ? (
                             <>
-                              <NavigationMenuTrigger className="bg-transparent text-sm lg:text-base font-semibold text-primary hover:text-gray-700">
+                              <NavigationMenuTrigger className="bg-transparent text-sm md:text-base font-semibold text-primary hover:text-gray-700 ">
                                 {link.title}
                               </NavigationMenuTrigger>
                               <NavigationMenuContent>
@@ -412,7 +421,7 @@ export default function EnhancedHeader() {
                   >
                     <Button
                       variant="gooeyLeft"
-                      className="bg-primary text-white hover:bg-primary-100 transition-colors font-semibold text-sm lg:text-base"
+                      className="bg-primary text-white hover:bg-primary-100 transition-colors font-semibold text-sm lg:text-base shine-effect"
                     >
                       Book Appointment
                     </Button>
@@ -552,7 +561,7 @@ const ListItem = React.forwardRef<
         <a
           ref={ref}
           className={cn(
-            'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 hover:text-primary focus:bg-gray-100 focus:text-primary',
+            'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 hover:text-primary focus:bg-gray-100 focus:text-primary ',
             className
           )}
           {...props}

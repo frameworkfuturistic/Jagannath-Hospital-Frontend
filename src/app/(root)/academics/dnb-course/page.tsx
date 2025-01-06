@@ -381,12 +381,6 @@ export default function AdvancedOrthopedicsDNB() {
         console.log('hjhsabh', response.data?.blogs);
         const formattedBlogs = response.data.blogs.map((blog) => ({
           ...blog,
-          image: blog.image
-            ? `https://test.sjhrc.in/hospital-api/blogs/${blog.image
-                .toString()
-                .replace(/^uploads[\\/]/, '')
-                .replace(/\\/g, '/')}`
-            : undefined,
         }));
 
         setBlogs(formattedBlogs.slice(0, 3)); // Limit to the first 6 blogs
