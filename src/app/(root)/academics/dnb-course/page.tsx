@@ -131,7 +131,7 @@ const doctors: Doctor[] = [
     name: 'Dr. Danish Ejaz',
     specialty: 'MBBS, DNB(Orthopaedics)',
     image: '/departmentHeads/Dr. Danish Sir.jpeg',
-    experience: '2+ years',
+    experience: '3+ years',
     rating: 4.8,
     bio: 'Dr. Danish is a leading non orthopedic surgeon known for her groundbreaking work in treating complex congenital deformities. Her innovative approaches have improved the lives of thousands of children worldwide.',
     achievements: ['DNB, Resident(Ortho)'],

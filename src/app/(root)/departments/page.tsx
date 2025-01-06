@@ -1,12 +1,21 @@
-"use client"
+'use client';
 
-import React, { useState } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Search, ChevronRight, Heart, Brain, Bone, Microscope, Baby, Eye } from 'lucide-react'
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import React, { useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Search,
+  ChevronRight,
+  Heart,
+  Brain,
+  Bone,
+  Microscope,
+  Baby,
+  Eye,
+} from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -14,34 +23,31 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { departments } from '@/json/departmentData'
-import HeaderBanner from '@/components/HeaderBanner'
-
-
+} from '@/components/ui/card';
+import { departments } from '@/json/departmentData';
+import HeaderBanner from '@/components/HeaderBanner';
 
 export default function DepartmentsPage() {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [hoveredDept, setHoveredDept] = useState<string | null>(null)
+  const [searchTerm, setSearchTerm] = useState('');
+  const [hoveredDept, setHoveredDept] = useState<string | null>(null);
 
-  const filteredDepartments = departments.filter(dept =>
-    dept.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    dept.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    dept.specialties.some(specialty => 
-      specialty.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  )
+  const filteredDepartments = departments.filter(
+    (dept) =>
+      dept.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      dept.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      dept.specialties.some((specialty) =>
+        specialty.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-         <HeaderBanner
+      <HeaderBanner
         title=" Our Departments"
         subtitle=" Discover world-class healthcare across our specialized departments."
         bgImage=""
       />
       <div className="container mx-auto px-4 py-16">
-       
-
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -84,8 +90,12 @@ export default function DepartmentsPage() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                       <div className="absolute bottom-4 left-4 right-4">
-                        <h2 className="text-2xl font-bold text-white mb-1">{dept.name}</h2>
-                        <p className="text-sm text-gray-200">{dept.description}</p>
+                        <h2 className="text-2xl font-bold text-white mb-1">
+                          {dept.name}
+                        </h2>
+                        <p className="text-sm text-gray-200">
+                          {dept.description}
+                        </p>
                       </div>
                     </div>
                     <CardContent className="relative">
@@ -94,7 +104,10 @@ export default function DepartmentsPage() {
                       </div>
                       <ul className="space-y-1 py-2">
                         {dept.specialties.map((specialty, index) => (
-                          <li key={index} className="flex items-center text-sm text-gray-600">
+                          <li
+                            key={index}
+                            className="flex items-center text-sm text-gray-600"
+                          >
                             <ChevronRight className="h-4 w-4 mr-2 text-blue-500" />
                             {specialty}
                           </li>
@@ -121,5 +134,5 @@ export default function DepartmentsPage() {
         )}
       </div>
     </div>
-  )
+  );
 }
