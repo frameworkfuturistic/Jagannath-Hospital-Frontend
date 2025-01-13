@@ -13,6 +13,7 @@ import {
   isAfter,
   startOfYear,
   endOfYear,
+  addHours,
 } from 'date-fns';
 import axios from 'axios';
 import {
@@ -259,6 +260,21 @@ export default function Component() {
   const [isCalendarLoading, setIsCalendarLoading] = useState(false); // Added state for calendar loading
   const [daysWithSlots, setDaysWithSlots] = useState<Date[]>([]); // Added state to store available dates
 
+  const parseAndFormatTime = (timeString: string) => {
+    let parsedTime;
+
+    try {
+      // Try parsing with 'HH:mm:ss' format
+      parsedTime = parse(timeString, 'HH:mm:ss', new Date());
+    } catch {
+      // Fallback to 'HH:mm' format if parsing fails
+      parsedTime = parse(timeString, 'HH:mm', new Date());
+    }
+
+    // Format the time with AM/PM
+    return format(parsedTime, 'h:mm a');
+  };
+
   const years = Array.from(
     { length: 121 },
     (_, i) => new Date().getFullYear() - i
@@ -403,11 +419,25 @@ export default function Component() {
         const response = await axios.get(
           `${API_BASE_URL}/available-dates/${doctorId}/${year}/${month + 1}`
         );
-        setDaysWithSlots(
-          response.data.map((dateString: string) => new Date(dateString))
-        );
+
+        if (response.data.length === 0) {
+          // Show a beautiful alert if no slots are found
+          toast('No Slots Found', {
+            description: 'There are no available slots for this month.',
+            type: 'info', // Use 'info' for a neutral notification
+          });
+        } else {
+          setDaysWithSlots(
+            response.data.map((dateString: string) => new Date(dateString))
+          );
+        }
       } catch (error) {
         console.error('Error fetching available dates:', error);
+        // Show an error alert if the API call fails
+        toast('Error Fetching Slots', {
+          description: 'Failed to fetch available dates. Please try again.',
+          type: 'error', // Use 'error' for an error notification
+        });
       } finally {
         setIsCalendarLoading(false);
       }
@@ -1201,10 +1231,7 @@ export default function Component() {
                       >
                         <CardContent className="p-4 text-center">
                           <p className="font-semibold">
-                            {format(
-                              parse(slot.SlotTime, 'HH:mm:ss', new Date()),
-                              'h:mm a'
-                            )}
+                            {parseAndFormatTime(slot.SlotTime)}
                           </p>
                           <p className="text-sm">
                             {slot.isBooked ? 'Booked' : 'Available'}
@@ -1559,7 +1586,7 @@ export default function Component() {
                       state.availableSlots.find(
                         (s) => s.SlotID === state.selectedSlot
                       )?.SlotTime || '',
-                      'HH:mm:ss',
+                      'HH:mm',
                       new Date()
                     ),
                     'h:mm a'
@@ -1830,13 +1857,13 @@ export default function Component() {
           {currentStep === 2 && renderPayment()}
           {currentStep === 3 && renderConfirmation()}
         </form>
-        {state.error && (
+        {/* {state.error && (
           <Alert variant="destructive" className="mt-4">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error</AlertTitle>
             <AlertDescription>{state.error}</AlertDescription>
           </Alert>
-        )}
+        )} */}
       </div>
 
       <Dialog>
