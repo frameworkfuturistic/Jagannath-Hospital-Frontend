@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   QueryClient,
   QueryClientProvider,
   useQuery,
   useMutation,
-} from "@tanstack/react-query";
-import axios from "axios";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+} from '@tanstack/react-query';
+import axios from 'axios';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import {
   Card,
   CardContent,
@@ -18,14 +18,14 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 import {
   Dialog,
   DialogContent,
@@ -33,16 +33,16 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from '@/components/ui/tooltip';
 import {
   Calendar,
   Briefcase,
@@ -57,11 +57,11 @@ import {
   Star,
   Users,
   IndianRupee,
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useToast } from "@/components/ui/use-toast";
-import axiosInstance from "@/lib/axiosInstance";
-import HeaderBanner from "@/components/HeaderBanner";
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useToast } from '@/components/ui/use-toast';
+import axiosInstance from '@/lib/axiosInstance';
+import HeaderBanner from '@/components/HeaderBanner';
 
 // Types
 interface Job {
@@ -92,14 +92,13 @@ interface ApplicationForm {
 
 // API functions
 const fetchJobs = async (): Promise<Job[]> => {
-  const response = await axiosInstance.get<Job[]>("/jobs");
-  console.log("fetchJobs", response.data);
-  return response.data;
+  const response = await axiosInstance.get<{ data: Job[] }>('/jobs');
+  return response.data.data || []; // Adjust based on your API response structure
 };
 
 const postJobApplication = async (applicationData: FormData): Promise<any> => {
-  const response = await axiosInstance.post("/applications", applicationData);
-  console.log("postResume", response.data);
+  const response = await axiosInstance.post('/applications', applicationData);
+  console.log('postResume', response.data);
 
   return response.data;
 };
@@ -108,21 +107,21 @@ const postJobApplication = async (applicationData: FormData): Promise<any> => {
 const queryClient = new QueryClient();
 
 function CareerPageContent() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedDepartment, setSelectedDepartment] = useState("");
-  const [selectedJobType, setSelectedJobType] = useState("");
-  const [selectedExperienceLevel, setSelectedExperienceLevel] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedDepartment, setSelectedDepartment] = useState('');
+  const [selectedJobType, setSelectedJobType] = useState('');
+  const [selectedExperienceLevel, setSelectedExperienceLevel] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [expandedJobId, setExpandedJobId] = useState<number | null>(null);
   const [applicationForm, setApplicationForm] = useState<ApplicationForm>({
-    applicantName: "",
-    email: "",
-    phone: "",
+    applicantName: '',
+    email: '',
+    phone: '',
     resume: null,
-    coverLetter: "",
-    linkedInProfile: "",
-    portfolio: "",
+    coverLetter: '',
+    linkedInProfile: '',
+    portfolio: '',
   });
 
   const { toast } = useToast();
@@ -133,26 +132,26 @@ function CareerPageContent() {
     isError,
     error,
   } = useQuery({
-    queryKey: ["jobs"],
+    queryKey: ['jobs'],
     queryFn: fetchJobs,
   });
 
   const applyMutation = useMutation({
     mutationFn: postJobApplication,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      queryClient.invalidateQueries({ queryKey: ['jobs'] });
       setIsDialogOpen(false);
       toast({
-        title: "Application Submitted",
-        description: "Your job application has been successfully submitted.",
+        title: 'Application Submitted',
+        description: 'Your job application has been successfully submitted.',
       });
     },
     onError: (error) => {
       toast({
-        title: "Error",
+        title: 'Error',
         description:
-          "There was an error submitting your application. Please try again.",
-        variant: "destructive",
+          'There was an error submitting your application. Please try again.',
+        variant: 'destructive',
       });
     },
   });
@@ -161,9 +160,9 @@ function CareerPageContent() {
     jobs?.filter(
       (job) =>
         job.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        (selectedDepartment === "" || job.department === selectedDepartment) &&
-        (selectedJobType === "" || job.jobType === selectedJobType) &&
-        (selectedExperienceLevel === "" ||
+        (selectedDepartment === '' || job.department === selectedDepartment) &&
+        (selectedJobType === '' || job.jobType === selectedJobType) &&
+        (selectedExperienceLevel === '' ||
           job.experienceLevel === selectedExperienceLevel)
     ) || [];
 
@@ -180,7 +179,7 @@ function CareerPageContent() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value, type } = e.target;
-    if (type === "file") {
+    if (type === 'file') {
       const fileInput = e.target as HTMLInputElement;
       setApplicationForm((prev) => ({
         ...prev,
@@ -203,8 +202,7 @@ function CareerPageContent() {
       }
     });
     if (selectedJob) {
-      formData.append("jobId", selectedJob._id);
-      console.log("jobId", selectedJob);
+      formData.append('jobId', selectedJob._id);
     }
     applyMutation.mutate(formData);
   };
@@ -217,7 +215,6 @@ function CareerPageContent() {
         bgImage="/gallery/gallery14.png" // Replace with your actual image path
       />
       <header className="bg-white shadow-md p-6 md:m-10 md:rounded-full m-4 rounded-lg">
-
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-grow relative">
@@ -387,7 +384,7 @@ function CareerPageContent() {
                         {expandedJobId === job.id && (
                           <motion.div
                             initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
+                            animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
                             transition={{ duration: 0.3 }}
                           >
@@ -407,13 +404,13 @@ function CareerPageContent() {
                             <TooltipTrigger asChild>
                               <div className="flex items-center">
                                 <Calendar className="mr-1 h-4 w-4" />
-                                Posted:{" "}
+                                Posted:{' '}
                                 {new Date(job.createdAt).toLocaleDateString(
-                                  "en-US",
+                                  'en-US',
                                   {
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "numeric",
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
                                   }
                                 )}
                               </div>
@@ -429,7 +426,7 @@ function CareerPageContent() {
                             <TooltipTrigger asChild>
                               <div className="flex items-center">
                                 <Clock className="mr-1 h-4 w-4" />
-                                Closes:{" "}
+                                Closes:{' '}
                                 {new Date(job.closingDate).toLocaleDateString()}
                               </div>
                             </TooltipTrigger>
@@ -442,13 +439,12 @@ function CareerPageContent() {
                     </CardContent>
                   </Card>
                 </motion.div>
-              ))}{" "}
+              ))}{' '}
             </div>
           )}
         </AnimatePresence>
       </main>
 
-      
       <AnimatePresence>
         <Card className="py-16 md:py-32 bg-blue-900 text-white relative m-8 rounded-2xl">
           <div className="container mx-auto px-4 text-center">
@@ -555,7 +551,7 @@ function CareerPageContent() {
                     Submitting...
                   </>
                 ) : (
-                  "Submit Application"
+                  'Submit Application'
                 )}
               </Button>
             </DialogFooter>

@@ -62,7 +62,7 @@ interface BlogPost {
 const fetchBlogPost = async (id: string): Promise<BlogPost> => {
   const response = await axiosInstance.get(`/blogs/${id}`);
   return {
-    ...response.data,
+    ...response.data.data,
   };
 };
 
@@ -73,7 +73,8 @@ const fetchRelatedPosts = async (
   const response = await axiosInstance.get('/blogs', {
     params: { category, limit: 9 },
   });
-  return response.data.blogs
+  console.log('Related Posts:', response.data.data.blogs);
+  return response.data.data.blogs
     .filter((blog: BlogPost) => blog._id !== currentId)
     .map((blog: BlogPost) => ({
       ...blog,
@@ -166,8 +167,12 @@ function BlogContent() {
                   <span className="mr-4">{blog.author}</span>
                   <Calendar className="mr-2 h-4 w-4" />
                   <span className="mr-4">
-                    {format(new Date(blog.publishDate), 'MMM d, yyyy')}
+                    {blog.publishDate &&
+                    !isNaN(new Date(blog.publishDate).getTime())
+                      ? format(new Date(blog.publishDate), 'MMM d, yyyy')
+                      : 'Coming Soon'}
                   </span>
+
                   <Clock className="mr-2 h-4 w-4" />
                   <span>{blog.readTime} min read</span>
                 </div>
@@ -242,7 +247,7 @@ function BlogContent() {
 
                 <h2 className="text-xl font-semibold mb-4">Tags</h2>
                 <div className="flex flex-wrap gap-2 mb-6">
-                  {blog.tags.map((tag, index) => (
+                  {blog.tags?.map((tag, index) => (
                     <Badge key={index} variant="secondary">
                       {tag}
                     </Badge>
@@ -401,7 +406,7 @@ function RelatedBlogCard({ blog }: { blog: BlogPost }) {
           <span className="text-sm text-gray-500">
             {format(new Date(blog.publishDate), 'MMM d, yyyy')}
           </span>
-          <Button variant="link" asChild>
+          <Button variant="link" asChild prefetch={true}>
             <Link href={`/blog/${blog._id}`}>Read More</Link>
           </Button>
         </div>

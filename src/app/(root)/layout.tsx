@@ -1,5 +1,7 @@
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
+import Footer from '@/components/Footer';
+import Header from '@/components/Header';
+import { LoadingSpinner } from '@/components/loading-spinner';
+import { Suspense } from 'react';
 
 export default function RootLayout({
   children,
@@ -9,7 +11,7 @@ export default function RootLayout({
   return (
     <>
       <Header />
-      {children}
+      <Suspense fallback={<LoadingSpinner fullPage />}>{children}</Suspense>
       <Footer />
     </>
   );

@@ -13,7 +13,7 @@ const config: Config = {
   prefix: "",
   theme: {
     container: {
-      center: true, // Changed to boolean (not a string)
+      center: true,
       padding: "2rem",
       screens: {
         "2xl": "1400px",
@@ -21,19 +21,19 @@ const config: Config = {
     },
     extend: {
       backgroundImage: {
-        'hero-bg': "url('/images/doctorimg1.png')",
-        'pattern1': "url('/pattern-5.png')",
-        'pattern2': "url('/pattern-5.png')",
-        'pattern3': "url('/pattern-5.png')",
-        'pattern4': "url('/pattern-5.png')",
-        'dottedmap': "url('/dotted-map.png')",
-        'pattern5': "url('/pattern-5.png')",
-        'appointment': "url('/appointment1_bg.png')",
-        'pattern7': "url('/pattern-5.png')",
-        'pattern8': "url('/pattern-5.png')",
-        'pattern9': "url('/pattern-5.png')",
-        'pattern10': "url('/pattern-5.png')",
-        'pattern11': "url('/pattern-5.png')",
+        "hero-bg": "url('/images/doctorimg1.png')",
+        pattern1: "url('/pattern-5.png')",
+        pattern2: "url('/pattern-5.png')",
+        pattern3: "url('/pattern-5.png')",
+        pattern4: "url('/pattern-5.png')",
+        dottedmap: "url('/dotted-map.png')",
+        pattern5: "url('/pattern-5.png')",
+        appointment: "url('/appointment1_bg.png')",
+        pattern7: "url('/pattern-5.png')",
+        pattern8: "url('/pattern-5.png')",
+        pattern9: "url('/pattern-5.png')",
+        pattern10: "url('/pattern-5.png')",
+        pattern11: "url('/pattern-5.png')",
       },
       colors: {
         border: "hsl(var(--border))",

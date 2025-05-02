@@ -54,7 +54,11 @@ import LoadingSpinner from '@/components/widget/spinner';
 const topNavItems = [
   { icon: User, label: 'Find a Doctor', href: '/comingsoon' },
   { icon: FileText, label: 'Blogs', href: '/blog' },
-  { icon: FileSpreadsheet, label: 'My Appointment', href: '/appointment' },
+  {
+    icon: FileSpreadsheet,
+    label: 'My Appointment',
+    href: '/appointment/search',
+  },
   { icon: Briefcase, label: 'Career', href: '/career/currentOpenings' },
   { icon: CalendarRange, label: 'Schedules', href: '/opd' },
   { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard' },

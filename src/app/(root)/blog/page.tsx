@@ -63,6 +63,7 @@ interface BlogPost {
 }
 
 interface BlogResponse {
+  data: BlogResponse | PromiseLike<BlogResponse>;
   success: boolean;
   blogs: BlogPost[];
   total: number;
@@ -78,14 +79,18 @@ const fetchBlogs = async (
   sortBy: string
 ): Promise<BlogResponse> => {
   const response = await axiosInstance.get<BlogResponse>('/blogs', {
-    params: { page, limit, category, search: searchTerm, sortBy },
+    params: {
+      page,
+      limit,
+      category,
+      search: searchTerm,
+      sortBy,
+      status: 'published',
+    },
   });
 
-  return {
-    ...response.data,
-  };
+  return response.data.data;
 };
-console.log('sad', fetchBlogs);
 
 const queryClient = new QueryClient();
 
@@ -252,7 +257,7 @@ function BlogPageContent() {
               ? Array(limit)
                   .fill(0)
                   .map((_, index) => <BlogCardSkeleton key={index} />)
-              : data?.blogs.map((blog) => (
+              : (data?.blogs ?? []).map((blog) => (
                   <BlogCard
                     key={blog._id}
                     blog={blog}
@@ -263,7 +268,7 @@ function BlogPageContent() {
           </motion.div>
         </AnimatePresence>
 
-        {data?.blogs.length === 0 && (
+        {(data?.blogs ?? []).length === 0 && (
           <div className="text-center text-gray-500 mt-8">
             No articles found. Try adjusting your search or filters.
           </div>
@@ -376,7 +381,7 @@ function BlogCard({
           </Badge>
         </CardHeader>
         <CardContent className="flex-grow p-6">
-          <Link href={`/blog/${blog._id}`}>
+          <Link href={`/blog/${blog._id}`} prefetch={true}>
             <h2 className="text-xl sm:text-2xl font-bold mb-2 line-clamp-2 text-gray-800 hover:text-blue-600 transition-colors">
               {blog.title}
             </h2>
@@ -394,7 +399,7 @@ function BlogCard({
             <span>{blog.views} views</span>
           </div>
           <div
-            className="text-gray-600 line-clamp-3 text-xs"
+            className="blog-content"
             dangerouslySetInnerHTML={{
               __html: DOMPurify.sanitize(blog.content),
             }}
@@ -422,7 +427,7 @@ function BlogCard({
               </Button>
             </motion.div>
           </div>
-          <Link href={`/blog/${blog._id}`}>
+          <Link href={`/blog/${blog._id}`} prefetch={true}>
             <Button
               variant="link"
               className="text-blue-500 hover:text-blue-700"

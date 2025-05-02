@@ -37,7 +37,7 @@ const BlogCards = () => {
         const response = await axiosInstance.get('/blogs');
 
         // Format the blogs data
-        const formattedBlogs = response.data.blogs.map((blog: Blog) => ({
+        const formattedBlogs = response.data?.data?.blogs.map((blog: Blog) => ({
           ...blog,
         }));
 
@@ -103,9 +103,9 @@ const BlogCards = () => {
                             />
                           </Link>
                         </div>
-                        <Link href={`/blog/${blog._id}`}>
+                        <Link href={`/blog/${blog._id}`} prefetch={true}>
                           <Button
-                            variant="gooeyLeft"
+                            variant="default"
                             className="text-sm px-3 py-1"
                           >
                             Read More

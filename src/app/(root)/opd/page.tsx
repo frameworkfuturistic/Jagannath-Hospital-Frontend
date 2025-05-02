@@ -56,7 +56,8 @@ interface Consultant {
 
 const fetchDoctors = async (): Promise<Consultant[]> => {
   const response = await axiosInstance.get('/consultant');
-  return response;
+  console.log('Response:', response.data);
+  return response.data;
 };
 
 const queryClient = new QueryClient();

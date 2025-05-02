@@ -94,8 +94,8 @@ export default function AnnouncementManagement() {
     try {
       setLoading(true);
       const response = await axiosInstance.get('/announcement');
-      if (Array.isArray(response.data.announcements)) {
-        setAnnouncements(response.data.announcements);
+      if (Array.isArray(response.data?.data?.announcements)) {
+        setAnnouncements(response.data?.data?.announcements);
       } else {
         throw new Error('Invalid data format received from API');
       }
@@ -222,12 +222,23 @@ export default function AnnouncementManagement() {
     return 0;
   });
 
-  const filteredAnnouncements = sortedAnnouncements.filter(
-    (ann) =>
-      ann.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ann.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ann.type.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredAnnouncements = sortedAnnouncements.filter((ann) => {
+    // Ensure ann exists and has the properties we need
+    if (!ann) return false;
+
+    const searchTermLower = searchTerm.toLowerCase();
+
+    // Safely check each property
+    const titleMatch =
+      ann.title && ann.title.toLowerCase().includes(searchTermLower);
+    const descMatch =
+      ann.description &&
+      ann.description.toLowerCase().includes(searchTermLower);
+    const typeMatch =
+      ann.type && ann.type.toLowerCase().includes(searchTermLower);
+
+    return titleMatch || descMatch || typeMatch;
+  });
 
   const announcementCounts = announcements.reduce(
     (acc, ann) => {

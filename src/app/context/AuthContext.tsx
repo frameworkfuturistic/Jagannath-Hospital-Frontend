@@ -1,79 +1,159 @@
-"use client";
-import axiosInstance from "@/lib/axiosInstance";
-import React, { createContext, useState, useEffect, ReactNode } from "react";
+'use client';
+import axiosInstance from '@/lib/axiosInstance';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  ReactNode,
+  useCallback,
+} from 'react';
+import { useRouter } from 'next/navigation';
 
-// Define the shape of the User object
 interface User {
   username: string;
-  // Add any other user-related fields if necessary
+  token?: string;
 }
 
-// Define the shape of the Auth context
 interface AuthContextType {
   user: User | null;
   login: (formData: { username: string; password: string }) => Promise<User>;
-  logout: () => void;
+  logout: () => Promise<void>;
   loading: boolean;
+  isAuthenticated: boolean;
 }
 
-// Create a default context value
 const defaultAuthContext: AuthContextType = {
   user: null,
-  login: async () => Promise.reject(new Error("Not implemented")),
-  logout: () => {},
+  login: async () => Promise.reject(new Error('Not implemented')),
+  logout: async () => {},
   loading: true,
+  isAuthenticated: false,
 };
 
-// Create the AuthContext
 const AuthContext = createContext<AuthContextType>(defaultAuthContext);
 
-// Create the AuthProvider component
 const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true); // To manage loading state
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
+  const isAuthenticated = !!user?.token;
+
+  // Initialize auth state from session storage
   useEffect(() => {
-    // Check for existing session or user
-    const storedUser = sessionStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setLoading(false);
+    const initializeAuth = async () => {
+      try {
+        const storedUser = sessionStorage.getItem('user');
+        const token = sessionStorage.getItem('token');
+
+        if (storedUser && token) {
+          const parsedUser = JSON.parse(storedUser) as User;
+          setUser(parsedUser);
+          // Set the token in axios instance headers
+          axiosInstance.defaults.headers.common[
+            'Authorization'
+          ] = `Bearer ${token}`;
+        }
+      } catch (error) {
+        console.error('Failed to initialize auth:', error);
+        // Clear invalid session data
+        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('token');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initializeAuth();
   }, []);
 
-  const login = async (formData: { username: string; password: string }): Promise<User> => {
-    const { username, password } = formData;
+  const login = useCallback(
+    async (formData: { username: string; password: string }): Promise<User> => {
+      const { username, password } = formData;
 
-    // Validate input fields
-    if (!username || !password) {
-      return Promise.reject(new Error("Username and password are required"));
-    }
+      if (!username || !password) {
+        return Promise.reject(new Error('Username and password are required'));
+      }
 
+      try {
+        setLoading(true);
+        const response = await axiosInstance.post('/auth/login', {
+          username,
+          password,
+        });
+
+        if (!response.data?.token) {
+          throw new Error('Authentication token missing in response');
+        }
+
+        const userData: User = {
+          username,
+          token: response.data.token,
+          ...response.data.user, // Include any additional user data
+        };
+
+        setUser(userData);
+        sessionStorage.setItem('user', JSON.stringify(userData));
+        sessionStorage.setItem('token', response.data.token);
+        axiosInstance.defaults.headers.common[
+          'Authorization'
+        ] = `Bearer ${response.data.token}`;
+
+        return userData;
+      } catch (error: any) {
+        console.error('Login failed:', error);
+        const errorMessage =
+          error.response?.data?.message ||
+          error.message ||
+          'Login failed. Please try again.';
+        throw new Error(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
+  const logout = useCallback(async () => {
     try {
-      const response = await axiosInstance.post("/auth/login", {
-        username,
-        password,
-      });
-
-      const userData: User = { username, ...response }; // Include any additional data returned from the server
-
-      // Set user in state and session storage
-      setUser(userData);
-      sessionStorage.setItem("user", JSON.stringify(userData)); // Store in session storage
-
-      return userData;
+      setLoading(true);
+      // Attempt to call logout endpoint if available
+      await axiosInstance.post('/auth/logout');
     } catch (error) {
-      return Promise.reject(error);
+      console.error('Logout failed:', error);
+      // Continue with logout even if API call fails
+    } finally {
+      setUser(null);
+      sessionStorage.removeItem('user');
+      sessionStorage.removeItem('token');
+      delete axiosInstance.defaults.headers.common['Authorization'];
+      setLoading(false);
+      router.push('/'); // Redirect to auth page after logout
     }
-  };
+  }, [router]);
 
-  const logout = () => {
-    setUser(null);
-    sessionStorage.removeItem("user"); // Remove user from session storage
-  };
+  // Add response interceptor to handle 401 errors
+  useEffect(() => {
+    const interceptor = axiosInstance.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401) {
+          // Auto-logout if we receive 401 Unauthorized
+          logout();
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      axiosInstance.interceptors.response.eject(interceptor);
+    };
+  }, [logout]);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, loading, isAuthenticated }}
+    >
       {children}
     </AuthContext.Provider>
   );

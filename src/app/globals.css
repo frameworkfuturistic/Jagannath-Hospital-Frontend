@@ -11,7 +11,7 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 209, 100%, 22%, 1; /*  blue color */
+    --primary: 209 100% 22%;
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -23,7 +23,7 @@
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221 83% 53%; /* Updated to match primary color */
+    --ring: 221 83% 53%; 
     --radius: 0.5rem;
 
     /* Chart colors */
@@ -90,12 +90,106 @@
   }
 }
 
-@font-face {
+/* Thin & responsive scrollbar for WebKit browsers (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.4);
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(100, 100, 100, 0.6);
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 100, 100, 0.4) transparent;
+}
+
+
+/* Custom styles for calendar */
+.rbc-calendar {
+  @apply font-sans;
+}
+
+.rbc-toolbar {
+  @apply mb-4;
+}
+
+.rbc-toolbar button {
+  @apply bg-white border border-gray-300 text-gray-700 rounded-md px-3 py-1 text-sm font-medium;
+}
+
+.rbc-toolbar button:hover {
+  @apply bg-gray-100;
+}
+
+.rbc-toolbar button.rbc-active {
+  @apply bg-blue-100 text-blue-800 border-blue-300;
+}
+
+.rbc-month-view {
+  @apply border border-gray-200 rounded-lg overflow-hidden;
+}
+
+.rbc-header {
+  @apply py-2 font-medium text-gray-700 bg-gray-50 border-b border-gray-200;
+}
+
+.rbc-day-bg {
+  @apply transition-colors duration-200;
+}
+
+.rbc-day-bg.rbc-today {
+  @apply bg-blue-50;
+}
+
+.rbc-event {
+  @apply bg-green-500 border-none rounded-md py-1 px-2;
+}
+
+.rbc-event-content {
+  @apply text-xs font-medium text-white;
+}
+
+/* Appointment card animations */
+.appointment-card-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.appointment-card-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.appointment-card-exit {
+  opacity: 1;
+}
+
+.appointment-card-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* @font-face {
   font-family: 'Inter';
   src: url('/fonts/InterVariable.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
-}
+} */
 
 /* Custom styles */
 html {
@@ -197,4 +291,130 @@ html {
   );
   transform: skew(-15deg);
   animation: shine 3s infinite;
+}
+
+/* Pulse animation for available slots */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+.pulse-animation {
+  animation: pulse 2s infinite;
+}
+
+/* Time slot hover effects */
+.time-slot {
+  transition: all 0.3s ease;
+}
+
+.time-slot:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.time-slot.selected {
+  animation: selected-pulse 2s infinite;
+}
+
+@keyframes selected-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+/* Doctor card hover effects */
+.doctor-card {
+  transition: all 0.3s ease;
+}
+
+.doctor-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Calendar day styling */
+.rbc-date-cell {
+  @apply text-center py-1;
+}
+
+.rbc-date-cell.rbc-now {
+  @apply font-bold text-blue-600;
+}
+
+.rbc-day-bg.available {
+  @apply bg-green-50;
+}
+
+.rbc-day-bg.selected {
+  @apply bg-blue-100;
+}
+
+/* Quick date selection styling */
+.date-quick-select {
+  @apply transition-all duration-200 ease-in-out;
+}
+
+.date-quick-select:hover {
+  @apply bg-blue-50 transform -translate-y-1;
+}
+
+.date-quick-select.selected {
+  @apply bg-blue-100 border-blue-400 text-blue-800;
+}
+
+/* Time period tabs styling */
+.time-period-tab {
+  @apply transition-all duration-200 ease-in-out;
+}
+
+.time-period-tab:hover {
+  @apply bg-gray-100;
+}
+
+.time-period-tab.selected {
+  @apply bg-blue-100 text-blue-800;
+}
+
+/* Smooth scrolling for the page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Glassmorphism effects for cards */
+.glass-card {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* 3D button effect */
+.button-3d {
+  transition: all 0.2s ease;
+  transform: translateY(0);
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.button-3d:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+}
+
+.button-3d:active {
+  transform: translateY(1px);
+  box-shadow: 0 3px 5px rgba(50, 50, 93, 0.1), 0 1px 2px rgba(0, 0, 0, 0.08);
 }

@@ -160,15 +160,16 @@ export const departments: Department[] = [
     description: 'Comprehensive kidney care',
     icon: <Shield className="h-8 w-8 text-orange-500" />,
     image: '/department/Nephrology.jpg?height=400&width=600',
-    specialties: ['Dialysis', 'Kidney Transplant', 'Hypertension Management'],
+    specialties: ['Renal Care', 'Kidney Injury', 'Hypertension Management'],
   },
   {
-    id: 'criticalcare',
-    name: 'CRITICAL CARE UNIT',
-    description: 'For intensive treatment of serious illnesses.',
+    id: 'urology',
+    name: 'UROLOGY',
+    description:
+      ' Expert care for urinary tract system and the male reproductive organs.',
     icon: <Shield className="h-8 w-8 text-orange-500" />,
     image: '/department/Nephrology.jpg?height=400&width=600',
-    specialties: ['Dialysis', 'Kidney Transplant', 'Hypertension Management'],
+    specialties: ['Typhoid', 'Kidney Stone', 'Hypertension Management'],
   },
   {
     id: 'physiotherapy',
@@ -932,6 +933,138 @@ export const departmentDetails: { [key: string]: DepartmentDetail } = {
         question: 'How often should my child have check-ups?',
         answer:
           "The frequency of check-ups depends on your child's age. Newborns typically need more frequent visits, while older children may only need annual check-ups. Our pediatricians follow the American Academy of Pediatrics guidelines and will provide a personalized schedule for your child.",
+      },
+    ],
+  },
+  nephrology: {
+    id: 'nephrology',
+    name: 'Nephrology Department',
+    description:
+      'Specialized care for kidney diseases and disorders for patients of all ages',
+    image: '/departmentHeads/vijay-singh.jpg?height=400&width=400',
+    overview:
+      'Our Nephrology Department provides comprehensive care for patients with kidney-related conditions. From early detection to advanced treatment of kidney diseases, our team of nephrologists offers personalized care plans to manage acute and chronic kidney conditions.',
+    features: [
+      'Hemodialysis Unit',
+      'Peritoneal Dialysis Program',
+      'Kidney Transplant Evaluation',
+      'Chronic Kidney Disease Management',
+      'Hypertension Clinic',
+      'Electrolyte and Acid-Base Disorders Treatment',
+    ],
+    contactInfo: {
+      phone: '+91 8987999200',
+      email: 'sjhrc.ranchi@gmail.com',
+      location: '(Mayor Road, Behind Machhli Ghar, Ranchi, Jharkhand - 834001)',
+      hours: '24X7 Emergency Services Available',
+    },
+    doctors: [
+      {
+        id: 'dr-singh',
+        name: 'Dr. Vijay Kumar Singh',
+        title: 'Associate Consultant',
+        image: '/departmentHeads/vijay-singh.jpg?height=400&width=400',
+        specialization: 'Interventional Nephrology & Renal Transplantation',
+        experience: '',
+        education: [
+          'DM (Nephrology) - SGPGIMS Lucknow',
+          'MD (Internal Medicine) - Institute of Medical Sciences BHU Varanasi',
+          'MBBS - Darbhanga Medical College',
+        ],
+        achievements: [
+          'Renal Care',
+          'Acute Kidney Injury',
+          'Chronic Kidney Patient In ICU',
+          'Interventional Nephrology',
+          'Renal Transplantation',
+        ],
+      },
+    ],
+    treatments: [
+      {
+        name: 'Hemodialysis',
+        description:
+          'Life-sustaining treatment that performs the functions of healthy kidneys for patients with kidney failure',
+        duration: 'Typically 3-4 hours per session, 3 times weekly',
+        preparation: [
+          'Complete blood tests and vascular access evaluation',
+          'Maintain dietary restrictions as advised',
+          'Monitor fluid intake between sessions',
+          'Regular blood pressure checks',
+        ],
+      },
+    ],
+    faqs: [],
+  },
+  urology: {
+    id: 'urology',
+    name: 'Urology Department',
+    description:
+      'Comprehensive care for urinary tract and male reproductive system disorders',
+    image: '/department/Urology.jpeg?height=1080&width=1920',
+    overview:
+      'Our Urology Department provides advanced diagnostic and treatment services for conditions affecting the urinary system in both men and women, as well as male reproductive health. Our team specializes in medical and surgical management of urological disorders using state-of-the-art technology and minimally invasive techniques.',
+    features: [
+      'Kidney Stone Treatment',
+      'Prostate Care',
+      'Urological Cancer Management',
+      'Male Infertility Treatment',
+      'Urinary Incontinence Management',
+      'Minimally Invasive Urological Surgery',
+      'Pediatric Urology',
+    ],
+    contactInfo: {
+      phone: '+91 8987999200',
+      email: 'sjhrc.ranchi@gmail.com',
+      location: '(Mayor Road, Behind Machhli Ghar, Ranchi, Jharkhand - 834001)',
+      hours: '24X7 Emergency Services Available',
+    },
+    doctors: [
+      {
+        id: 'dr-vatsa',
+        name: 'Dr. Rajiv Kumar Vatsa',
+        title: 'Urologist',
+        image: '/departmentHeads/vatsa.jpg?height=400&width=400',
+        specialization: 'Urology and Kidney Stone Management',
+        experience: '',
+        education: ['MBBS - PAT', 'MS (General Surgery)', 'DrNB (Urology)'],
+        achievements: [
+          'Kidney Stone Treatment',
+          'Blood in Urine',
+          'Prostate and Bladder Cancer',
+          'Urinary Leakage',
+          'Diabetes-related Urological Issues',
+          'Hypertension-related Kidney Disorders',
+          'Abdominal Pain Management',
+          'Typhoid-related Complications',
+          'Jaundice-related Complications',
+        ],
+      },
+    ],
+    treatments: [
+      {
+        name: 'Kidney Stone Treatment',
+        description:
+          'Comprehensive management of kidney stones including medical therapy, ESWL, URS, and PCNL',
+        duration: 'Varies from outpatient procedures to 1-3 day hospital stays',
+        preparation: [
+          'Complete blood work and imaging studies',
+          'Urine analysis and culture',
+          'Fasting as advised before procedures',
+          'Medication review with your urologist',
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: 'What conditions does the Urology Department treat?',
+        answer:
+          'Our department treats kidney stones, urinary tract infections, prostate enlargement, bladder and prostate cancers, male infertility, erectile dysfunction, urinary incontinence, pediatric urological conditions, and other disorders of the urinary system.',
+      },
+      {
+        question: 'When should I see a urologist?',
+        answer:
+          'You should consult a urologist if you experience symptoms like blood in urine, frequent urination, painful urination, urinary incontinence, erectile dysfunction, kidney stones, or any abnormalities in the urinary system. Regular prostate checks are also recommended for men over 50.',
       },
     ],
   },

@@ -5,6 +5,11 @@ import { AuthProvider } from './context/AuthContext';
 import SEO from '@/components/SEO';
 import CookieConsent from '@/pages/CookieConsent';
 import { Toaster } from '@/components/ui/sonner';
+import sayHello from '@/lib/sayHello';
+import { RouteLoader } from '@/components/route-loader';
+import { Suspense } from 'react';
+import { LoadingSpinner } from '@/components/loading-spinner';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -54,23 +59,24 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  if (process.env.NODE_ENV === 'development') {
+    sayHello();
+  }
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`${inter.variable}`}>
       <head>
-        <link
-          rel="preload"
-          href="/fonts/inter-var.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <SEO />
       </head>
       <body>
+        <RouteLoader />
+        <Toaster position="top-center" richColors />
         <CookieConsent />
-        <AuthProvider>{children}</AuthProvider>
-        <Toaster />
+        <AuthProvider>
+          <Suspense fallback={<LoadingSpinner fullPage />}>{children}</Suspense>
+        </AuthProvider>
       </body>
+      {/* <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} /> */}
     </html>
   );
 }

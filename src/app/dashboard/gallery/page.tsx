@@ -1,10 +1,9 @@
-// @ts-nocheck
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Edit, Trash2, Search, Loader2 } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Plus, Edit, Trash2, Search, Loader2, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -23,12 +22,12 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import axiosInstance from '@/lib/axiosInstance';
 import { useDropzone } from 'react-dropzone';
-import { log } from 'console';
 import Image from 'next/image';
+import axiosInstance from '@/lib/axiosInstance';
 
-interface Image {
+// Define types
+interface GalleryImage {
   _id: string;
   title: string;
   description: string;
@@ -39,61 +38,78 @@ interface Image {
   slug: string;
 }
 
+interface FormData {
+  title: string;
+  description: string;
+  createdBy: string;
+}
+
 export default function GalleryDashboard() {
-  const [images, setImages] = useState<Image[]>([]);
+  // State management
+  const [images, setImages] = useState<GalleryImage[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingImage, setEditingImage] = useState<Image | null>(null);
+  const [editingImage, setEditingImage] = useState<GalleryImage | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState<{
-    key: keyof Image;
+    key: keyof GalleryImage;
     direction: 'asc' | 'desc';
   } | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
+  // Form setup
   const {
     register,
     handleSubmit,
     reset,
-    setValue,
     formState: { errors },
-  } = useForm<Image>();
+  } = useForm<FormData>();
 
+  // Fetch images on component mount
   useEffect(() => {
     fetchImages();
   }, []);
 
+  // Clear success message after 3 seconds
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => {
+        setSuccessMessage(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
+
+  // Fetch images function
   const fetchImages = async () => {
     setLoading(true);
     try {
       const response = await axiosInstance.get('/gallery');
-
-      // Transform the image URLs to the desired format
-      const formattedImages = response.data.images.map((image) => ({
-        ...image,
-      }));
-
-      setImages(formattedImages);
-      console.log('Formatted Images:', formattedImages);
+      setImages(response.data?.data?.images);
+      setError(null);
     } catch (err) {
       setError('Failed to fetch images');
-      console.error(err); // Log the error for debugging
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  const onSubmit = async (data: Image) => {
+  // Form submission handler
+  const onSubmit = async (data: FormData) => {
     const formData = new FormData();
     formData.append('title', data.title);
     formData.append('description', data.description);
     formData.append('createdBy', data.createdBy);
+
     if (imageFile) {
-      formData.append('image', imageFile); // Append the image file
+      formData.append('image', imageFile);
     }
+
     setLoading(true);
+
     try {
       if (editingImage) {
         await axiosInstance.put(`/gallery/${editingImage._id}`, formData, {
@@ -106,10 +122,11 @@ export default function GalleryDashboard() {
         });
         setSuccessMessage('Image added successfully');
       }
+
       fetchImages();
       setIsDialogOpen(false);
       reset();
-      setImageFile(null); // Reset image file
+      setImageFile(null);
     } catch (err) {
       setError('Failed to save image');
     } finally {
@@ -117,6 +134,7 @@ export default function GalleryDashboard() {
     }
   };
 
+  // Delete image handler
   const deleteImage = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this image?')) {
       setLoading(true);
@@ -132,18 +150,27 @@ export default function GalleryDashboard() {
     }
   };
 
-  const openDialog = (image?: Image) => {
-    if (image) {
-      setEditingImage(image);
-      reset(image);
-    } else {
-      setEditingImage(null);
-      reset();
-    }
-    setIsDialogOpen(true);
-  };
+  // Dialog open handler
+  const openDialog = useCallback(
+    (image?: GalleryImage) => {
+      if (image) {
+        setEditingImage(image);
+        reset({
+          title: image.title,
+          description: image.description,
+          createdBy: image.createdBy,
+        });
+      } else {
+        setEditingImage(null);
+        reset();
+      }
+      setIsDialogOpen(true);
+    },
+    [reset]
+  );
 
-  const handleSort = (key: keyof Image) => {
+  // Sort handler
+  const handleSort = useCallback((key: keyof GalleryImage) => {
     setSortConfig((prevConfig) => ({
       key,
       direction:
@@ -151,35 +178,54 @@ export default function GalleryDashboard() {
           ? 'desc'
           : 'asc',
     }));
+  }, []);
+
+  // Dropzone setup
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    if (acceptedFiles.length > 0) {
+      setImageFile(acceptedFiles[0]);
+    }
+  }, []);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: {
+      'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.webp'],
+    },
+    maxSize: 5242880, // 5MB
+  });
+
+  // Memoized filtered and sorted images
+  const filteredImages = useMemo(() => {
+    return images
+      .filter(
+        (image) =>
+          image.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          image.description.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      .sort((a, b) => {
+        if (!sortConfig) return 0;
+        const { key, direction } = sortConfig;
+        if (a[key] < b[key]) return direction === 'asc' ? -1 : 1;
+        if (a[key] > b[key]) return direction === 'asc' ? 1 : -1;
+        return 0;
+      });
+  }, [images, searchTerm, sortConfig]);
+
+  // Animation variants
+  const cardVariants = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.3 } },
+    exit: { opacity: 0, scale: 0.9, transition: { duration: 0.2 } },
   };
-
-  const filteredImages = images
-    .filter(
-      (image) =>
-        image.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        image.description.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .sort((a, b) => {
-      if (!sortConfig) return 0;
-      const { key, direction } = sortConfig;
-      if (a[key] < b[key]) return direction === 'asc' ? -1 : 1;
-      if (a[key] > b[key]) return direction === 'asc' ? 1 : -1;
-      return 0;
-    });
-
-  const onDrop = (acceptedFiles: File[]) => {
-    // Only allow one file
-    setImageFile(acceptedFiles[0]);
-  };
-
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (
-    <main className="flex-1 overflow-hidden flex flex-col">
-      <div className="flex-1 overflow-auto p-4 md:p-6 space-y-6">
-        <div className="bg-background rounded-lg shadow-xl overflow-hidden">
-          <div className="p-4 sm:p-6">
-            <div className="mb-4 flex flex-col sm:flex-row gap-4 items-center">
+    <main className="flex-1 flex flex-col">
+      <div className="flex-1 overflow-auto p-3 md:p-6 space-y-4">
+        <div className="  overflow-hidden">
+          <div className="p-4">
+            {/* Header with search and add button */}
+            <div className="mb-4 flex flex-col sm:flex-row gap-3 items-center">
               <div className="relative w-full sm:w-64">
                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -198,6 +244,7 @@ export default function GalleryDashboard() {
               </Button>
             </div>
 
+            {/* Alerts */}
             {error && (
               <Alert variant="destructive" className="mb-4">
                 <AlertDescription>{error}</AlertDescription>
@@ -213,64 +260,83 @@ export default function GalleryDashboard() {
               </Alert>
             )}
 
-            {loading ? (
+            {/* Loading state or gallery grid */}
+            {loading && images.length === 0 ? (
               <div className="flex justify-center items-center h-64">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
                 <AnimatePresence>
                   {filteredImages.map((image) => (
                     <motion.div
                       key={image._id}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      transition={{ duration: 0.3 }}
+                      variants={cardVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                      layout
                     >
-                      <Card>
-                        <CardContent className="p-4">
-                          <Image
-                            src={image.GalleryImageUrl} // Dynamic source from the image object
-                            alt={image.title} // Alt text for accessibility
-                            width={500} // Set width (adjust as needed)
-                            height={192} // Set height (48px * 4 for aspect ratio)
-                            className="w-full h-48 object-cover rounded-md mb-4" // Use Tailwind CSS classes for styling
-                          />
-                          <h3 className="text-lg font-semibold text-primary mb-2">
+                      <Card className="h-full flex flex-col">
+                        <CardContent className="p-3 flex flex-col h-full">
+                          <div className="relative aspect-video mb-3 overflow-hidden rounded-md">
+                            <Image
+                              src={
+                                image.GalleryImageUrl || '/default-image.jpg'
+                              }
+                              alt={image.title}
+                              fill
+                              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 16vw"
+                              className="object-cover"
+                              priority={false}
+                              unoptimized={
+                                process.env.NODE_ENV !== 'production'
+                              }
+                            />
+                          </div>
+
+                          <h3 className="text-base font-semibold text-primary mb-1 line-clamp-1">
                             {image.title}
                           </h3>
-                          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                          <p className="text-xs text-muted-foreground mb-3 line-clamp-2 flex-grow">
                             {image.description}
                           </p>
-                          <div className="flex justify-between items-center">
-                            <p className="text-xs text-muted-foreground">
-                              Added by: {image.createdBy}
+                          <div className="flex justify-between items-center mt-auto">
+                            <p className="text-xs text-muted-foreground truncate max-w-[120px]">
+                              {image.createdBy}
                             </p>
-                            <div className="flex space-x-2">
-                              <TooltipProvider>
+                            <div className="flex space-x-1">
+                              <TooltipProvider delayDuration={300}>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
                                     <Button
-                                      variant="outline"
-                                      size="sm"
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-7 w-7"
                                       onClick={() => openDialog(image)}
                                     >
-                                      <Edit className="h-4 w-4" />
+                                      <Edit className="h-3.5 w-3.5" />
+                                      <span className="sr-only">
+                                        Edit image
+                                      </span>
                                     </Button>
                                   </TooltipTrigger>
                                   <TooltipContent>Edit image</TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
-                              <TooltipProvider>
+                              <TooltipProvider delayDuration={300}>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
                                     <Button
-                                      variant="destructive"
-                                      size="sm"
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-7 w-7 text-destructive hover:bg-destructive/10"
                                       onClick={() => deleteImage(image._id)}
                                     >
-                                      <Trash2 className="h-4 w-4" />
+                                      <Trash2 className="h-3.5 w-3.5" />
+                                      <span className="sr-only">
+                                        Delete image
+                                      </span>
                                     </Button>
                                   </TooltipTrigger>
                                   <TooltipContent>Delete image</TooltipContent>
@@ -283,11 +349,19 @@ export default function GalleryDashboard() {
                     </motion.div>
                   ))}
                 </AnimatePresence>
+
+                {filteredImages.length === 0 && !loading && (
+                  <div className="col-span-full text-center py-12 text-muted-foreground">
+                    No images found. Try adjusting your search or add a new
+                    image.
+                  </div>
+                )}
               </div>
             )}
           </div>
         </div>
 
+        {/* Add/Edit Dialog */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
@@ -298,82 +372,105 @@ export default function GalleryDashboard() {
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor="title" className="text-right">
+                  <label
+                    htmlFor="title"
+                    className="text-right text-sm font-medium"
+                  >
                     Title
                   </label>
-                  <Input
-                    id="title"
-                    className="col-span-3"
-                    {...register('title', { required: 'Title is required' })}
-                  />
+                  <div className="col-span-3">
+                    <Input
+                      id="title"
+                      {...register('title', { required: 'Title is required' })}
+                    />
+                    {errors.title && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.title.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                {errors.title && (
-                  <p className="text-red-500  text-sm ml-[8.5rem]">
-                    {errors.title.message}
-                  </p>
-                )}
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor="description" className="text-right">
+
+                <div className="grid grid-cols-4 items-start gap-4">
+                  <label
+                    htmlFor="description"
+                    className="text-right text-sm font-medium pt-2"
+                  >
                     Description
                   </label>
-                  <Textarea
-                    id="description"
-                    className="col-span-3"
-                    {...register('description', {
-                      required: 'Description is required',
-                    })}
-                  />
+                  <div className="col-span-3">
+                    <Textarea
+                      id="description"
+                      rows={3}
+                      {...register('description', {
+                        required: 'Description is required',
+                      })}
+                    />
+                    {errors.description && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.description.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                {errors.description && (
-                  <p className="text-red-500 text-sm ml-[8.5rem]">
-                    {errors.description.message}
-                  </p>
-                )}
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor="image" className="text-right">
+
+                <div className="grid grid-cols-4 items-start gap-4">
+                  <label className="text-right text-sm font-medium pt-2">
                     Image
                   </label>
                   <div className="col-span-3">
                     <div
                       {...getRootProps()}
-                      className="border-2 border-dashed border-gray-300 p-4 rounded-md"
+                      className="border-2 border-dashed border-gray-300 rounded-md p-4 transition-colors hover:border-primary/50 cursor-pointer text-center"
                     >
                       <input {...getInputProps()} />
-                      <p className="text-center text-gray-500">
+                      <Upload className="h-5 w-5 mx-auto mb-2 text-muted-foreground" />
+                      <p className="text-xs text-muted-foreground">
                         {imageFile
                           ? imageFile.name
-                          : "Drag 'n' drop some files here, or click to select files"}
+                          : 'Drag an image here or click to browse'}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Max size: 5MB
                       </p>
                     </div>
                   </div>
                 </div>
+
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor="createdBy" className="text-right">
+                  <label
+                    htmlFor="createdBy"
+                    className="text-right text-sm font-medium"
+                  >
                     Created By
                   </label>
-                  <Input
-                    id="createdBy"
-                    className="col-span-3"
-                    {...register('createdBy', {
-                      required: 'Creator name is required',
-                    })}
-                  />
+                  <div className="col-span-3">
+                    <Input
+                      id="createdBy"
+                      {...register('createdBy', {
+                        required: 'Creator name is required',
+                      })}
+                    />
+                    {errors.createdBy && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.createdBy.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                {errors.createdBy && (
-                  <p className="text-red-500 text-sm ml-[8.5rem]">
-                    {errors.createdBy.message}
-                  </p>
-                )}
               </div>
+
               <DialogFooter>
                 <Button
-                  type="submit"
-                  className="bg-primary text-primary-foreground hover:bg-primary/90"
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsDialogOpen(false)}
                 >
-                  {loading ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : null}
-                  Save
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={loading}>
+                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {editingImage ? 'Update' : 'Save'}
                 </Button>
               </DialogFooter>
             </form>

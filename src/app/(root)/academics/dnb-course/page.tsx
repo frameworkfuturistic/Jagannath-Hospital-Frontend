@@ -777,7 +777,7 @@ export default function AdvancedOrthopedicsDNB() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <Link href={`/blog/${post._id}`}>
+                <Link href={`/blog/${post._id}`} prefetch={true}>
                   <Card className="bg-white border-blue-200 border-2 overflow-hidden hover:shadow-lg hover:shadow-blue-100 transition-all duration-300">
                     <div className="relative h-48">
                       <Image

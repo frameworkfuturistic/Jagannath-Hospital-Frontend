@@ -27,6 +27,7 @@ import axiosInstance from '@/lib/axiosInstance';
 import HeaderBanner from '@/components/HeaderBanner';
 
 interface Image {
+  _id: string;
   id: string;
   GalleryImageUrl: string;
   title: string;
@@ -56,7 +57,7 @@ const HospitalGallery: React.FC = () => {
       const response = await axiosInstance.get('/gallery', {
         params: { page, limit: 12 },
       });
-      const data = response.data;
+      const data = response.data?.data || [];
 
       // Transform the image URLs to the desired format
       const formattedImages = data.images.map((image: Image) => ({
@@ -167,7 +168,7 @@ const HospitalGallery: React.FC = () => {
               className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
             >
               {memoizedImages.map((image) => (
-                <ImageCard key={image.id} image={image} />
+                <ImageCard key={image._id} image={image} />
               ))}
             </motion.div>
           )}

@@ -78,7 +78,7 @@ export default function DepartmentsPage() {
                 onMouseEnter={() => setHoveredDept(dept.id)}
                 onMouseLeave={() => setHoveredDept(null)}
               >
-                <Link href={`/departments/${dept.id}`}>
+                <Link href={`/departments/${dept.id}`} prefetch={true}>
                   <Card className="overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
                     <div className="relative h-48">
                       <Image

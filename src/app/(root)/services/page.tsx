@@ -28,15 +28,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import Image from 'next/image';
 
 const ServiceItem = ({ item, category }) => {
   const Icon = item.icon;
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg group">
       <AspectRatio ratio={16 / 9} className="relative">
-        <img
+        <Image
           src={item.image}
           alt={item.name}
+          width={500}
+          height={300}
           className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
         />
         <Dialog>

@@ -242,7 +242,11 @@ export default function DepartmentDetail({
                 )}
               </ul>
             </nav>
-            <Link href="/appointment" className="mt-2 sm:mt-0 w-full sm:w-auto">
+            <Link
+              href="/appointment"
+              className="mt-2 sm:mt-0 w-full sm:w-auto"
+              prefetch={true}
+            >
               <Button className="w-full sm:w-auto">Book Appointment</Button>
             </Link>
           </div>
@@ -337,7 +341,8 @@ export default function DepartmentDetail({
                 onClick={() => setSelectedDoctor(doctor)}
                 className="bg-white rounded-xl shadow-xl overflow-hidden cursor-pointer transform hover:scale-105 transition-all duration-300 hover:shadow-2xl"
               >
-                <div className="relative h-64">
+                <div className="relative h-64 md:h-72 lg:h-[24rem]  overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-t from-blue-900 to-blue-900/50"></div>
                   <Image
                     src={doctor.image}
                     alt={doctor.name}
