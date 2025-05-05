@@ -72,9 +72,7 @@ export default function RootLayout({
         <RouteLoader />
         <Toaster position="top-center" richColors />
         <CookieConsent />
-        <AuthProvider>
-          <Suspense fallback={<LoadingSpinner fullPage />}>{children}</Suspense>
-        </AuthProvider>
+        <AuthProvider>{children}</AuthProvider>
       </body>
       {/* <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} /> */}
     </html>

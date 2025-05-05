@@ -471,7 +471,7 @@ export function AppointmentProvider({
           key,
           amount: state.selectedDoctor.Fee * 100, // Razorpay expects amount in paise
           currency: 'INR',
-          name: 'Healthcare Provider',
+          name: 'Shree Jagannath Hospital & Research Centre',
           description: 'Appointment Booking',
           order_id: orderId,
           handler: async (response: any) => {

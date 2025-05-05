@@ -55,7 +55,6 @@ import { AppointmentDetailsDialog } from './AppointmentDetailsDialog';
 import { CompleteAppointmentDialog } from './CompleteAppointmentDialog';
 import { RefundPaymentDialog } from './RefundPaymentDialog';
 
-
 export default function TodayAppointmentsPage() {
   const {
     data: appointmentsData,
@@ -473,8 +472,6 @@ export default function TodayAppointmentsPage() {
         onOpenChange={setIsDetailsOpen}
         onSuccess={refreshAppointments}
       />
-
-  
 
       {/* Complete Dialog */}
       <CompleteAppointmentDialog

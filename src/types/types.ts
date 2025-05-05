@@ -23,7 +23,7 @@ export interface Appointment {
   PatientName: string;
   MobileNo: string;
   DepartmentID: number;
-  
+  CancelledAt: string;
   Remarks?: string;
   PaymentID?: number;
   PaymentMode?: 'Online';
@@ -236,4 +236,29 @@ export interface PatientData {
   MRNo?: string;
   reason?: string;
   Email?: string;
+}
+
+export interface SlotWithAppointment {
+  SlotID: number
+  ConsultantID: number
+  SlotDate: string
+  SlotTime: string
+  SlotEndTime: string
+  PatientID: number | null
+  MaxSlots: number
+  AvailableSlots: number
+  IsBooked: number
+  IsActive: number
+  AppointmentID: number | null
+  Status: string
+  SlotToken: string
+  CreatedAt: string
+  UpdatedAt: string
+  appointment: Appointment | null
+  consultant: {
+    DepartmentID: number
+  }
+  department: {
+    Department: string
+  }
 }

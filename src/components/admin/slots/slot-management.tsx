@@ -3,11 +3,42 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import { Card, CardContent } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { format, isToday, isSameDay, addDays, subDays } from 'date-fns';
+import {
+  Calendar,
+  Clock,
+  Users,
+  Building2,
+  ChevronLeft,
+  ChevronRight,
+  RefreshCw,
+  Search,
+  Filter,
+  CheckCircle2,
+  XCircle,
+  AlertCircle,
+  Clock3,
+  CreditCard,
+  User,
+  Phone,
+  CalendarClock,
+  CalendarPlus,
+  CalendarRange,
+  LayoutGrid,
+  List,
+} from 'lucide-react';
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -16,754 +47,971 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  CalendarPlus,
-  CalendarRange,
-  Search,
-  Edit,
-  Trash2,
-  Eye,
-  Loader2,
-  User,
-  Phone,
-  Clock,
-  Info,
-} from 'lucide-react';
-import { format, parseISO } from 'date-fns';
-import { toast } from '@/components/ui/use-toast';
-import {
-  fetchSlots,
-  fetchConsultants,
-  fetchDepartments,
-  fetchAppointments,
-} from '@/lib/api';
-import type { Slot, Consultant, Department, Appointment } from '@/types/types';
-import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { Progress } from '@/components/ui/progress';
+import { useToast } from '@/components/ui/use-toast';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible';
+  fetchSlotsWithAppointments,
+  fetchConsultants,
+  fetchDepartments,
+} from '@/lib/api';
+import {
+  Slot,
+  Consultant,
+  Appointment,
+  Department,
+  SlotWithAppointment,
+} from '@/types/types';
+import Link from 'next/link';
 
-export default function SlotManagement() {
-  const router = useRouter();
-  const [view, setView] = useState<'calendar' | 'list'>('list');
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    new Date()
-  );
+export default function AppointmentDashboard() {
+  const { toast } = useToast();
+
+  // State
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedConsultant, setSelectedConsultant] = useState<number | null>(
     null
   );
   const [selectedDepartment, setSelectedDepartment] = useState<number | null>(
     null
   );
-  const [loading, setLoading] = useState(true);
-  const [slots, setSlots] = useState<Slot[]>([]);
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [slots, setSlots] = useState<SlotWithAppointment[]>([]);
   const [consultants, setConsultants] = useState<Consultant[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true);
   const [expandedSlots, setExpandedSlots] = useState<Record<number, boolean>>(
     {}
   );
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [calendarDates, setCalendarDates] = useState<Date[]>([]);
 
-  // Fetch initial data
+  // Generate 7 days for the calendar view
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        setLoading(true);
+    const dates = [];
+    for (let i = -3; i <= 3; i++) {
+      dates.push(addDays(selectedDate, i));
+    }
+    setCalendarDates(dates);
+  }, [selectedDate]);
 
-        // Fetch data in parallel
-        const [slotsData, consultantsData, departmentsData, appointmentsData] =
-          await Promise.all([
-            fetchSlots(),
-            fetchConsultants(),
-            fetchDepartments(),
-            fetchAppointments(),
-          ]);
+  // Fetch data with memoized filters
+  const currentFilters = useMemo(
+    () => ({
+      date: format(selectedDate, 'yyyy-MM-dd'),
+      consultantId: selectedConsultant || undefined,
+      departmentId: selectedDepartment || undefined,
+    }),
+    [selectedDate, selectedConsultant, selectedDepartment]
+  );
 
-        setSlots(slotsData);
-        setConsultants(consultantsData);
-        setDepartments(departmentsData);
-        setAppointments(appointmentsData.data || []);
-      } catch (error) {
-        toast({
-          title: 'Error',
-          description: 'Failed to load data',
-          variant: 'destructive',
-        });
-        console.error('Error loading data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Data fetching with error handling
+  const fetchData = useCallback(async () => {
+    try {
+      setLoading(true);
 
-    loadData();
-  }, []);
+      const [slotsData, consultantsData, departmentsData] = await Promise.all([
+        fetchSlotsWithAppointments(currentFilters),
+        fetchConsultants(),
+        fetchDepartments(),
+      ]);
 
-  // Create a map of appointments by slot ID
-  const appointmentsBySlotId = useMemo(() => {
-    const map: Record<number, Appointment> = {};
-    appointments.forEach((appointment) => {
-      if (appointment.SlotID) {
-        map[appointment.SlotID] = appointment;
-      }
-    });
-    return map;
-  }, [appointments]);
+      setSlots(slotsData);
+      setConsultants(consultantsData);
+      setDepartments(departmentsData);
+    } catch (error) {
+      toast({
+        title: 'Error loading data',
+        description: 'Please try again or contact support.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [currentFilters, toast]);
 
-  // Memoized filtered slots for better performance
-  const filteredSlots = useMemo(() => {
-    return slots.filter((slot) => {
-      const matchesDate = selectedDate
-        ? format(parseISO(slot.SlotDate), 'yyyy-MM-dd') ===
-          format(selectedDate, 'yyyy-MM-dd')
-        : true;
+  // Initial data load
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
-      const matchesConsultant = selectedConsultant
-        ? slot.ConsultantID === selectedConsultant
-        : true;
-
-      const matchesDepartment = selectedDepartment
-        ? consultants.find((c) => c.ConsultantID === slot.ConsultantID)
-            ?.DepartmentID === selectedDepartment
-        : true;
-
-      const matchesSearch = searchQuery
-        ? slot.SlotToken.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (consultants
-            .find((c) => c.ConsultantID === slot.ConsultantID)
-            ?.ConsultantName.toLowerCase()
-            .includes(searchQuery.toLowerCase()) ??
-            false) ||
-          appointmentsBySlotId[slot.SlotID]?.PatientName.toLowerCase().includes(
-            searchQuery.toLowerCase()
-          )
-        : true;
-
-      return (
-        matchesDate && matchesConsultant && matchesDepartment && matchesSearch
-      );
-    });
-  }, [
-    slots,
-    selectedDate,
-    selectedConsultant,
-    selectedDepartment,
-    searchQuery,
-    consultants,
-    appointmentsBySlotId,
-  ]);
-
-  // Get appointment for a slot
-  const getAppointmentForSlot = (slotId: number): Appointment | undefined => {
-    return appointmentsBySlotId[slotId];
-  };
-
-  // Get consultant name by ID
+  // Helper functions
   const getConsultantName = useCallback(
     (consultantId: number) => {
       return (
         consultants.find((c) => c.ConsultantID === consultantId)
-          ?.ConsultantName || 'N/A'
+          ?.ConsultantName || 'Unknown'
       );
     },
     [consultants]
   );
 
   const getDepartmentName = useCallback(
-    (consultantId: number) => {
-      const consultant = consultants.find(
-        (c) => c.ConsultantID === consultantId
+    (departmentId: number) => {
+      return (
+        departments.find((d) => d.DepartmentID === departmentId)?.Department ||
+        'Unknown'
       );
-      return consultant?.Department || 'N/A';
     },
-    [consultants]
+    [departments]
   );
 
-  // Status badge color mapping
-  const getStatusColor = (status: string, isBooked: boolean) => {
-    if (isBooked) return 'bg-red-100 text-red-800 hover:bg-red-200';
+  const toggleSlotExpansion = useCallback((slotId: number) => {
+    setExpandedSlots((prev) => ({
+      ...prev,
+      [slotId]: !prev[slotId],
+    }));
+  }, []);
 
+  const resetFilters = useCallback(() => {
+    setSelectedDate(new Date());
+    setSelectedConsultant(null);
+    setSelectedDepartment(null);
+    setSearchQuery('');
+  }, []);
+
+  // Filter slots by search query
+  const filteredSlots = useMemo(() => {
+    if (!searchQuery.trim()) return slots;
+
+    const query = searchQuery.toLowerCase();
+    return slots.filter((slot) => {
+      // Search in appointment details if available
+      if (slot.appointment) {
+        return (
+          slot.appointment.PatientName.toLowerCase().includes(query) ||
+          slot.appointment.MRNo.toLowerCase().includes(query) ||
+          slot.appointment.MobileNo.includes(query)
+        );
+      }
+      // Search in slot details
+      return (
+        slot.SlotToken.toLowerCase().includes(query) ||
+        getConsultantName(slot.ConsultantID).toLowerCase().includes(query) ||
+        getDepartmentName(slot.consultant.DepartmentID)
+          .toLowerCase()
+          .includes(query)
+      );
+    });
+  }, [slots, searchQuery, getConsultantName, getDepartmentName]);
+
+  // Memoized slot grouping by time for better performance
+  const slotsByTime = useMemo(() => {
+    const groups: Record<string, SlotWithAppointment[]> = {};
+
+    filteredSlots.forEach((slot) => {
+      const timeKey = `${slot.SlotTime}-${slot.SlotEndTime}`;
+      if (!groups[timeKey]) {
+        groups[timeKey] = [];
+      }
+      groups[timeKey].push(slot);
+    });
+
+    // Sort by time
+    return Object.entries(groups).sort(([timeA], [timeB]) => {
+      return timeA.localeCompare(timeB);
+    });
+  }, [filteredSlots]);
+
+  // Memoized stats
+  const stats = useMemo(() => {
+    const total = slots.length;
+    const booked = slots.filter((slot) => slot.Status === 'Booked').length;
+    const available = slots.filter((slot) => slot.Status !== 'Booked').length;
+
+    const statusCounts: Record<string, number> = {};
+    slots.forEach((slot) => {
+      if (slot.appointment?.Status) {
+        const status = slot.appointment.Status;
+        statusCounts[status] = (statusCounts[status] || 0) + 1;
+      }
+    });
+
+    const paymentCounts = {
+      paid: slots.filter((slot) => slot.appointment?.PaymentStatus === 'Paid')
+        .length,
+      pending: slots.filter(
+        (slot) => slot.appointment?.PaymentStatus === 'Pending'
+      ).length,
+    };
+
+    return { total, booked, available, statusCounts, paymentCounts };
+  }, [slots]);
+
+  // Time slot distribution
+  const timeDistribution = useMemo(() => {
+    const morning = filteredSlots.filter((slot) => {
+      const hour = Number.parseInt(slot.SlotTime.split(':')[0]);
+      return hour >= 6 && hour < 12;
+    }).length;
+
+    const afternoon = filteredSlots.filter((slot) => {
+      const hour = Number.parseInt(slot.SlotTime.split(':')[0]);
+      return hour >= 12 && hour < 17;
+    }).length;
+
+    const evening = filteredSlots.filter((slot) => {
+      const hour = Number.parseInt(slot.SlotTime.split(':')[0]);
+      return hour >= 17 && hour < 22;
+    }).length;
+
+    return { morning, afternoon, evening };
+  }, [filteredSlots]);
+
+  // Helper functions for styling
+  const getStatusBadgeClass = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'available':
+      case 'scheduled':
+        return 'bg-blue-100 text-blue-800 hover:bg-blue-200';
+      case 'confirmed':
         return 'bg-green-100 text-green-800 hover:bg-green-200';
-      case 'hold':
-        return 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200';
+      case 'completed':
+        return 'bg-purple-100 text-purple-800 hover:bg-purple-200';
       case 'cancelled':
         return 'bg-red-100 text-red-800 hover:bg-red-200';
-      case 'completed':
-        return 'bg-blue-100 text-blue-800 hover:bg-blue-200';
       default:
         return 'bg-gray-100 text-gray-800 hover:bg-gray-200';
     }
   };
 
-  // Toggle slot expansion
-  const toggleSlotExpansion = (slotId: number) => {
-    setExpandedSlots((prev) => ({
-      ...prev,
-      [slotId]: !prev[slotId],
-    }));
-  };
-
-  // Action handlers
-  const handleAddSlot = () => router.push('/dashboard/appointment/slots/add');
-  const handleAddSlotRange = () =>
-    router.push('/dashboard/appointment/slots/range');
-
-  // const handleViewSlot = (slot: Slot) => {
-  //   router.push(`/dashboard/appointment/slots/${slot.SlotID}`);
-  // };
-
-  // const handleEditSlot = (slot: Slot) => {
-  //   router.push(`/dashboard/appointment/slots/${slot.SlotID}/edit`);
-  // };
-
-  // const handleDeleteSlot = async (slotId: number) => {
-  //   try {
-  //     // In a real implementation, you would call your API to delete the slot
-  //     // await deleteSlot(slotId);
-  //     setSlots(slots.filter((slot) => slot.SlotID !== slotId));
-  //     toast({
-  //       title: 'Success',
-  //       description: 'Slot deleted successfully',
-  //     });
-  //   } catch (error) {
-  //     toast({
-  //       title: 'Error',
-  //       description: 'Failed to delete slot',
-  //       variant: 'destructive',
-  //     });
-  //   }
-  // };
-
-  // Refresh slots data
-  const refreshSlots = async () => {
-    try {
-      setLoading(true);
-      const [slotsData, appointmentsData] = await Promise.all([
-        fetchSlots(),
-        fetchAppointments(),
-      ]);
-
-      setSlots(slotsData);
-      setAppointments(appointmentsData.data || []);
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to refresh data',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
+  const getPaymentBadgeClass = (status: string) => {
+    switch (status?.toLowerCase()) {
+      case 'paid':
+        return 'bg-green-100 text-green-800 hover:bg-green-200';
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200';
+      default:
+        return 'bg-gray-100 text-gray-800 hover:bg-gray-200';
     }
   };
 
-  // Render appointment details for booked slots
-  const renderAppointmentDetails = (slot: Slot) => {
-    const appointment = getAppointmentForSlot(slot.SlotID);
-    if (!appointment) return null;
-
-    return (
-      <div className="mt-2 p-3 bg-gray-50 rounded-md border border-gray-200">
-        <div className="grid grid-cols-2 gap-2 text-sm">
-          <div className="flex items-center gap-2">
-            <User className="h-4 w-4 text-gray-500" />
-            <span className="font-medium">Patient:</span>
-            <span>{appointment.PatientName}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Phone className="h-4 w-4 text-gray-500" />
-            <span className="font-medium">Contact:</span>
-            <span>{appointment.MobileNo}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4 text-gray-500" />
-            <span className="font-medium">Status:</span>
-            <Badge variant="outline" className="capitalize">
-              {appointment.Status.toLowerCase()}
-            </Badge>
-          </div>
-          <div className="flex items-center gap-2">
-            <Info className="h-4 w-4 text-gray-500" />
-            <span className="font-medium">MR No:</span>
-            <span>{appointment.MRNo}</span>
-          </div>
-        </div>
-      </div>
-    );
+  const getSlotCardClass = (status: string) => {
+    return status === 'Booked'
+      ? 'bg-red-50 border-red-200'
+      : 'bg-green-50 border-green-200';
   };
 
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between gap-4">
-        {/* Filters section */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          {/* Consultant filter */}
-          <div className="w-full sm:w-auto">
-            <Label htmlFor="consultant">Consultant</Label>
-            <Select
-              value={selectedConsultant?.toString() || ''}
-              onValueChange={(value) =>
-                setSelectedConsultant(value ? parseInt(value) : null)
-              }
-            >
-              <SelectTrigger id="consultant" className="w-full sm:w-[200px]">
-                <SelectValue placeholder="All Consultants" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Consultants</SelectItem>
-                {consultants.map((consultant) => (
-                  <SelectItem
-                    key={consultant.ConsultantID}
-                    value={consultant.ConsultantID.toString()}
-                  >
-                    {consultant.ConsultantName}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+  const formatDateTime = (dateString: string) => {
+    try {
+      return format(new Date(dateString), 'MMM d, yyyy h:mm a');
+    } catch (e) {
+      return dateString;
+    }
+  };
 
-          {/* Department filter */}
-          <div className="w-full sm:w-auto">
-            <Label htmlFor="department">Department</Label>
-            <Select
-              value={selectedDepartment?.toString() || ''}
-              onValueChange={(value) =>
-                setSelectedDepartment(value ? parseInt(value) : null)
-              }
-            >
-              <SelectTrigger id="department" className="w-full sm:w-[200px]">
-                <SelectValue placeholder="All Departments" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Departments</SelectItem>
-                {departments.map((department) => (
-                  <SelectItem
-                    key={department.DepartmentID}
-                    value={department.DepartmentID.toString()}
-                  >
-                    {department.Department}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+  const formatTime = (timeString: string) => {
+    try {
+      // Convert 24-hour format to 12-hour format
+      const [hours, minutes] = timeString.split(':');
+      const hour = Number.parseInt(hours);
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const hour12 = hour % 12 || 12;
+      return `${hour12}:${minutes} ${ampm}`;
+    } catch (e) {
+      return timeString;
+    }
+  };
 
-          {/* Search input */}
-          <div className="w-full sm:w-auto">
-            <Label htmlFor="search">Search</Label>
-            <div className="relative">
-              <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                id="search"
-                placeholder="Search slots, patients..."
-                className="pl-8"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+  // Calendar navigation
+  const navigateCalendar = (direction: 'prev' | 'next') => {
+    if (direction === 'prev') {
+      setSelectedDate(subDays(selectedDate, 7));
+    } else {
+      setSelectedDate(addDays(selectedDate, 7));
+    }
+  };
+
+  // Render appointment details
+  const renderAppointmentDetails = useCallback(
+    (appointment: Appointment | null) => {
+      if (!appointment) return null;
+
+      return (
+        <div className="mt-3 p-4 bg-white rounded-md border border-gray-100 shadow-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="flex items-center gap-2">
+              <User className="h-4 w-4 text-gray-500" />
+              <span className="text-sm text-gray-500">Patient:</span>
+              <span className="font-medium">{appointment.PatientName}</span>
             </div>
+            <div className="flex items-center gap-2">
+              <Phone className="h-4 w-4 text-gray-500" />
+              <span className="text-sm text-gray-500">Contact:</span>
+              <span className="font-medium">{appointment.MobileNo}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <AlertCircle className="h-4 w-4 text-gray-500" />
+              <span className="text-sm text-gray-500">Status:</span>
+              <Badge
+                variant="outline"
+                className={getStatusBadgeClass(appointment.Status)}
+              >
+                {appointment.Status}
+              </Badge>
+            </div>
+            <div className="flex items-center gap-2">
+              <CalendarClock className="h-4 w-4 text-gray-500" />
+              <span className="text-sm text-gray-500">MR No:</span>
+              <span className="font-medium">{appointment.MRNo}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CreditCard className="h-4 w-4 text-gray-500" />
+              <span className="text-sm text-gray-500">Payment:</span>
+              <Badge
+                variant="outline"
+                className={getPaymentBadgeClass(appointment.PaymentStatus)}
+              >
+                {appointment.PaymentStatus}
+              </Badge>
+            </div>
+            {appointment.CancelledAt && (
+              <div className="col-span-2 text-red-500 text-xs flex items-center gap-1">
+                <XCircle className="h-3 w-3" />
+                Cancelled at: {formatDateTime(appointment.CancelledAt)}
+              </div>
+            )}
           </div>
         </div>
+      );
+    },
+    []
+  );
 
-        {/* Action buttons */}
-        <div className="flex flex-col sm:flex-row gap-2 sm:items-end">
-          <Button onClick={handleAddSlot}>
-            <CalendarPlus className="mr-2 h-4 w-4" />
-            Add Slot
-          </Button>
-          <Button onClick={handleAddSlotRange} variant="outline">
-            <CalendarRange className="mr-2 h-4 w-4" />
-            Add Slot Range
-          </Button>
-          <Button onClick={refreshSlots} variant="outline">
-            <Loader2 className="mr-2 h-4 w-4" />
+  // Render time slot card
+  const renderTimeSlotCard = useCallback(
+    (slot: SlotWithAppointment) => {
+      const isExpanded = expandedSlots[slot.SlotID];
+
+      return (
+        <div
+          key={slot.SlotID}
+          className={`rounded-lg border p-0 overflow-hidden transition-all duration-200 ${
+            slot.Status === 'Booked' ? 'border-red-200' : 'border-green-200'
+          }`}
+        >
+          <div
+            className={`p-4 ${
+              slot.Status === 'Booked'
+                ? 'bg-gradient-to-r from-red-50 to-red-100'
+                : 'bg-gradient-to-r from-green-50 to-green-100'
+            }`}
+          >
+            <div className="flex justify-between items-start">
+              <Badge
+                variant="outline"
+                className={
+                  slot.Status === 'Booked'
+                    ? 'bg-red-100 text-red-800 border-red-200'
+                    : 'bg-green-100 text-green-800 border-green-200'
+                }
+              >
+                {slot.Status}
+              </Badge>
+              <span className="text-xs font-medium bg-white px-2 py-1 rounded-md shadow-sm">
+                {slot.SlotToken}
+              </span>
+            </div>
+
+            <div className="mt-3 space-y-1">
+              <div className=" flex justify-between">
+                <p className="font-medium">
+                  {getConsultantName(slot.ConsultantID)}
+                </p>
+                <p className="text-xs flex text-gray-500 items-center gap-1">
+                  <Clock className="h-3 w-3" />
+                  <span className=" text-lg font-semibold">
+                    {formatTime(slot.SlotTime)}
+                  </span>{' '}
+                  - {formatTime(slot.SlotEndTime)}
+                </p>
+              </div>
+
+              <p className="text-xs text-gray-500 flex items-center gap-1">
+                <Building2 className="h-3 w-3" />
+                {getDepartmentName(slot.consultant.DepartmentID)}
+              </p>
+            </div>
+
+            {slot.Status === 'Booked' && slot.appointment && (
+              <div className="mt-3 pt-3 border-t border-gray-200">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-1">
+                    <User className="h-3 w-3 text-gray-500" />
+                    <span className="text-xs text-gray-500">
+                      {slot.appointment.PatientName}
+                    </span>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => toggleSlotExpansion(slot.SlotID)}
+                    className="h-7 px-2 text-xs"
+                  >
+                    {isExpanded ? 'Hide' : 'Details'}
+                  </Button>
+                </div>
+
+                {isExpanded && renderAppointmentDetails(slot.appointment)}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    },
+    [
+      expandedSlots,
+      getConsultantName,
+      getDepartmentName,
+      renderAppointmentDetails,
+      toggleSlotExpansion,
+    ]
+  );
+
+  return (
+    <div className="space-y-4">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row justify-between gap-4 ">
+        <div>
+          <p className="text-muted-foreground">
+            Manage and monitor all appointment slots for{' '}
+            {format(selectedDate, 'MMMM d, yyyy')}
+          </p>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          <Button onClick={fetchData} variant="outline" className="h-9">
+            <RefreshCw className="mr-2 h-4 w-4" />
             Refresh
           </Button>
+          <Link href="/dashboard/appointment/slots/add">
+            <Button className="h-9 bg-blue-600 hover:bg-blue-700">
+              <CalendarPlus className="mr-2 h-4 w-4" />
+              Add Slot
+            </Button>
+          </Link>
+          <Link href="/dashboard/appointment/slots/range">
+            <Button variant="outline" className="h-9">
+              <CalendarRange className="mr-2 h-4 w-4" />
+              Add Slot Range
+            </Button>
+          </Link>
         </div>
       </div>
 
-      <Tabs
-        defaultValue="list"
-        onValueChange={(value) => setView(value as 'calendar' | 'list')}
-      >
-        <TabsList>
-          <TabsTrigger value="list">List View</TabsTrigger>
-          <TabsTrigger value="calendar">Calendar View</TabsTrigger>
-        </TabsList>
+      {/* Calendar Navigation */}
+      <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
+        <div className="flex justify-between items-center mb-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigateCalendar('prev')}
+          >
+            <ChevronLeft className="h-4 w-4 mr-1" /> Previous
+          </Button>
+          <h2 className="text-lg font-semibold text-blue-800">
+            {format(selectedDate, 'MMMM yyyy')}
+          </h2>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigateCalendar('next')}
+          >
+            Next <ChevronRight className="h-4 w-4 ml-1" />
+          </Button>
+        </div>
 
-        <TabsContent value="list">
+        <div className="grid grid-cols-7 gap-2">
+          {calendarDates.map((date, index) => (
+            <Button
+              key={index}
+              variant="ghost"
+              className={`flex flex-col items-center p-2 h-auto ${
+                isSameDay(date, selectedDate)
+                  ? 'bg-blue-200 text-blue-800'
+                  : isToday(date)
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'hover:bg-blue-100'
+              }`}
+              onClick={() => setSelectedDate(date)}
+            >
+              <span className="text-xs font-medium">{format(date, 'EEE')}</span>
+              <span className="text-lg font-bold">{format(date, 'd')}</span>
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="border-l-4 border-l-blue-500">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-blue-500" />
+              Total Slots
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.total}</div>
+            <div className="flex justify-between items-center mt-2">
+              <span className="text-xs text-muted-foreground">
+                Booked vs Available
+              </span>
+              <span className="text-xs font-medium">
+                {stats.booked}/{stats.available}
+              </span>
+            </div>
+            <div className="w-full h-2 bg-gray-100 rounded-full mt-1 overflow-hidden">
+              <div
+                className="h-full bg-blue-500 rounded-full"
+                style={{
+                  width: `${
+                    stats.total > 0 ? (stats.booked / stats.total) * 100 : 0
+                  }%`,
+                }}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-l-4 border-l-green-500">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-green-500" />
+              Appointment Status
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {Object.entries(stats.statusCounts).length > 0 ? (
+              <div className="space-y-2">
+                {Object.entries(stats.statusCounts).map(([status, count]) => (
+                  <div
+                    key={status}
+                    className="flex justify-between items-center"
+                  >
+                    <Badge
+                      variant="outline"
+                      className={getStatusBadgeClass(status)}
+                    >
+                      {status}
+                    </Badge>
+                    <span className="text-sm font-medium">{count}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-muted-foreground">No appointments</p>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="border-l-4 border-l-yellow-500">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <CreditCard className="h-4 w-4 text-yellow-500" />
+              Payment Status
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <Badge
+                  variant="outline"
+                  className="bg-green-100 text-green-800"
+                >
+                  Paid
+                </Badge>
+                <span className="text-sm font-medium">
+                  {stats.paymentCounts.paid}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <Badge
+                  variant="outline"
+                  className="bg-yellow-100 text-yellow-800"
+                >
+                  Pending
+                </Badge>
+                <span className="text-sm font-medium">
+                  {stats.paymentCounts.pending}
+                </span>
+              </div>
+              <div className="w-full h-2 bg-gray-100 rounded-full mt-2 overflow-hidden">
+                <div
+                  className="h-full bg-green-500 rounded-full"
+                  style={{
+                    width: `${
+                      stats.paymentCounts.paid + stats.paymentCounts.pending > 0
+                        ? (stats.paymentCounts.paid /
+                            (stats.paymentCounts.paid +
+                              stats.paymentCounts.pending)) *
+                          100
+                        : 0
+                    }%`,
+                  }}
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-l-4 border-l-purple-500">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Clock3 className="h-4 w-4 text-purple-500" />
+              Time Distribution
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-xs">Morning</span>
+                <span className="text-xs font-medium">
+                  {timeDistribution.morning} slots
+                </span>
+              </div>
+              <Progress
+                value={(timeDistribution.morning / filteredSlots.length) * 100}
+                className="h-1.5 bg-yellow-100"
+              >
+                <div className="h-full bg-yellow-400 rounded-full" />
+              </Progress>
+
+              <div className="flex justify-between items-center">
+                <span className="text-xs">Afternoon</span>
+                <span className="text-xs font-medium">
+                  {timeDistribution.afternoon} slots
+                </span>
+              </div>
+              <Progress
+                value={
+                  (timeDistribution.afternoon / filteredSlots.length) * 100
+                }
+                className="h-1.5 bg-orange-100"
+              >
+                <div className="h-full bg-orange-400 rounded-full" />
+              </Progress>
+
+              <div className="flex justify-between items-center">
+                <span className="text-xs">Evening</span>
+                <span className="text-xs font-medium">
+                  {timeDistribution.evening} slots
+                </span>
+              </div>
+              <Progress
+                value={(timeDistribution.evening / filteredSlots.length) * 100}
+                className="h-1.5 bg-purple-100"
+              >
+                <div className="h-full bg-purple-400 rounded-full" />
+              </Progress>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Main Content */}
+      <div className="grid grid-cols-12 gap-6">
+        {/* Filters Panel */}
+        <div className="col-span-12 lg:col-span-3">
           <Card>
-            <CardContent className="p-0">
-              {loading ? (
-                <div className="h-96 flex items-center justify-center">
-                  <Loader2 className="h-8 w-8 animate-spin" />
-                </div>
-              ) : (
-                <div className="rounded-md border">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Token</TableHead>
-                        <TableHead>Consultant</TableHead>
-                        <TableHead>Department</TableHead>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Time</TableHead>
-                        <TableHead>Availability</TableHead>
-                        <TableHead>Slot Status</TableHead>
-
-                        <TableHead className="text-right">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {filteredSlots.length === 0 ? (
-                        <TableRow>
-                          <TableCell colSpan={8} className="text-center py-8">
-                            No slots found for the selected filters
-                          </TableCell>
-                        </TableRow>
-                      ) : (
-                        filteredSlots.map((slot) => (
-                          <Collapsible key={slot.SlotID} asChild>
-                            <>
-                              <TableRow>
-                                <TableCell className="font-medium">
-                                  {slot.SlotToken}
-                                </TableCell>
-                                <TableCell>
-                                  {getConsultantName(slot.ConsultantID)}
-                                </TableCell>
-                                <TableCell>
-                                  {getDepartmentName(slot.ConsultantID)}
-                                </TableCell>
-                                <TableCell>
-                                  {format(
-                                    parseISO(slot.SlotDate),
-                                    'MMM d, yyyy'
-                                  )}
-                                </TableCell>
-                                <TableCell>
-                                  {slot.SlotTime} - {slot.SlotEndTime}
-                                </TableCell>
-                                <TableCell>
-                                  <div className="flex items-center gap-2">
-                                    <span>
-                                      {slot.AvailableSlots}/{slot.MaxSlots}
-                                    </span>
-                                    <div className="w-full bg-gray-200 rounded-full h-2">
-                                      <div
-                                        className={`h-2 rounded-full ${
-                                          slot.AvailableSlots === 0
-                                            ? 'bg-red-500'
-                                            : slot.AvailableSlots ===
-                                              slot.MaxSlots
-                                            ? 'bg-green-500'
-                                            : 'bg-yellow-500'
-                                        }`}
-                                        style={{
-                                          width: `${
-                                            (slot.AvailableSlots /
-                                              slot.MaxSlots) *
-                                            100
-                                          }%`,
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
-                                </TableCell>
-                                <TableCell>
-                                  <Badge
-                                    className={getStatusColor(
-                                      slot.Status,
-                                      slot.IsBooked
-                                    )}
-                                    variant="outline"
-                                  >
-                                    {slot.Status}
-                                  </Badge>
-                                </TableCell>
-                                <TableCell className="text-right">
-                                  <div className="flex justify-end space-x-2">
-                                    <TooltipProvider>
-                                      <Tooltip>
-                                        <TooltipTrigger asChild>
-                                          {slot.IsBooked && (
-                                            <CollapsibleTrigger asChild>
-                                              <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="h-8 w-8"
-                                                onClick={() =>
-                                                  toggleSlotExpansion(
-                                                    slot.SlotID
-                                                  )
-                                                }
-                                              >
-                                                <Eye className="h-4 w-4" />
-                                              </Button>
-                                            </CollapsibleTrigger>
-                                          )}
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                          <p>View details</p>
-                                        </TooltipContent>
-                                      </Tooltip>
-                                    </TooltipProvider>
-
-                                    {/* <TooltipProvider>
-                                      <Tooltip>
-                                        <TooltipTrigger asChild>
-                                          <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-8 w-8 text-red-600 hover:text-red-800"
-                                            onClick={() =>
-                                              handleDeleteSlot(slot.SlotID)
-                                            }
-                                            disabled={slot.IsBooked}
-                                          >
-                                            <Trash2 className="h-4 w-4" />
-                                          </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                          <p>
-                                            {slot.IsBooked
-                                              ? 'Cannot delete booked slot'
-                                              : 'Delete slot'}
-                                          </p>
-                                        </TooltipContent>
-                                      </Tooltip>
-                                    </TooltipProvider> */}
-                                  </div>
-                                </TableCell>
-                              </TableRow>
-                              {slot.IsBooked && (
-                                <CollapsibleContent asChild>
-                                  <TableRow>
-                                    <TableCell colSpan={8} className="p-0">
-                                      {renderAppointmentDetails(slot)}
-                                    </TableCell>
-                                  </TableRow>
-                                </CollapsibleContent>
-                              )}
-                            </>
-                          </Collapsible>
-                        ))
-                      )}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="calendar">
-          <Card>
-            <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-7 gap-6">
-                <div className="md:col-span-2">
-                  <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={setSelectedDate}
-                    className="border rounded-md p-3"
-                    disabled={(date) => date < new Date()}
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Filter className="h-5 w-5" />
+                Filters
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Search</label>
+                <div className="relative">
+                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Patient, MR No, Token..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-8"
                   />
                 </div>
+              </div>
 
-                <div className="md:col-span-5">
-                  {loading ? (
-                    <div className="h-96 flex items-center justify-center">
-                      <Loader2 className="h-8 w-8 animate-spin" />
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Consultant</label>
+                <Select
+                  value={selectedConsultant?.toString() || ''}
+                  onValueChange={(value) =>
+                    setSelectedConsultant(value ? Number.parseInt(value) : null)
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="All Consultants" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Consultants</SelectItem>
+                    {consultants.map((consultant) => (
+                      <SelectItem
+                        key={consultant.ConsultantID}
+                        value={consultant.ConsultantID.toString()}
+                      >
+                        {consultant.ConsultantName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Department</label>
+                <Select
+                  value={selectedDepartment?.toString() || ''}
+                  onValueChange={(value) =>
+                    setSelectedDepartment(value ? Number.parseInt(value) : null)
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="All Departments" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Departments</SelectItem>
+                    {departments.map((department) => (
+                      <SelectItem
+                        key={department.DepartmentID}
+                        value={department.DepartmentID.toString()}
+                      >
+                        {department.Department}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">View Mode</label>
+                <div className="flex space-x-2">
+                  <Button
+                    variant={viewMode === 'grid' ? 'default' : 'outline'}
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => setViewMode('grid')}
+                  >
+                    <LayoutGrid className="h-4 w-4 mr-2" />
+                    Grid
+                  </Button>
+                  <Button
+                    variant={viewMode === 'list' ? 'default' : 'outline'}
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => setViewMode('list')}
+                  >
+                    <List className="h-4 w-4 mr-2" />
+                    List
+                  </Button>
+                </div>
+              </div>
+
+              <Button
+                onClick={resetFilters}
+                variant="outline"
+                className="w-full"
+              >
+                Reset Filters
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Availability Summary */}
+          <Card className="mt-4">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">
+                Availability Summary
+              </CardTitle>
+              <CardDescription>
+                {format(selectedDate, 'EEEE, MMMM d, yyyy')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                  <span className="text-sm">Available</span>
+                </div>
+                <span className="font-medium">{stats.available}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                  <span className="text-sm">Booked</span>
+                </div>
+                <span className="font-medium">{stats.booked}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                  <span className="text-sm">Total</span>
+                </div>
+                <span className="font-medium">{stats.total}</span>
+              </div>
+
+              <div className="pt-2">
+                <div className="text-sm font-medium mb-2">Consultants</div>
+                <div className="space-y-1 max-h-40 overflow-y-auto pr-2">
+                  {consultants.slice(0, 5).map((consultant) => (
+                    <div
+                      key={consultant.ConsultantID}
+                      className="flex justify-between items-center text-xs"
+                    >
+                      <span>{consultant.ConsultantName}</span>
+                      <Badge variant="outline" className="text-xs">
+                        {
+                          slots.filter(
+                            (s) => s.ConsultantID === consultant.ConsultantID
+                          ).length
+                        }{' '}
+                        slots
+                      </Badge>
                     </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-medium">
-                        Slots for{' '}
-                        {selectedDate
-                          ? format(selectedDate, 'MMMM d, yyyy')
-                          : 'Today'}
-                      </h3>
-
-                      {filteredSlots.length === 0 ? (
-                        <div className="text-center py-8 border rounded-md">
-                          <p className="text-gray-500">
-                            No slots found for the selected date
-                          </p>
-                        </div>
-                      ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                          {filteredSlots.map((slot) => (
-                            <Collapsible
-                              key={slot.SlotID}
-                              open={expandedSlots[slot.SlotID]}
-                              onOpenChange={() =>
-                                toggleSlotExpansion(slot.SlotID)
-                              }
-                            >
-                              <div
-                                className={`p-4 rounded-lg border ${
-                                  slot.IsBooked
-                                    ? 'bg-red-50 border-red-200'
-                                    : 'bg-green-50 border-green-200'
-                                }`}
-                              >
-                                <div className="flex justify-between items-start">
-                                  <div>
-                                    <Badge
-                                      className={getStatusColor(
-                                        slot.Status,
-                                        slot.IsBooked
-                                      )}
-                                      variant="outline"
-                                    >
-                                      {slot.Status}
-                                    </Badge>
-                                    <h4 className="font-medium mt-2">
-                                      {getConsultantName(slot.ConsultantID)}
-                                    </h4>
-                                    <p className="text-sm text-gray-500">
-                                      {slot.SlotToken}
-                                    </p>
-                                  </div>
-                                  <div className="text-right">
-                                    <p className="text-sm font-medium">
-                                      {slot.SlotTime}
-                                    </p>
-                                    <p className="text-xs text-gray-500">
-                                      to {slot.SlotEndTime}
-                                    </p>
-                                  </div>
-                                </div>
-
-                                <div className="mt-3 pt-3 border-t border-gray-200">
-                                  <div className="flex justify-between items-center mb-2">
-                                    <span className="text-sm font-medium">
-                                      Availability
-                                    </span>
-                                    <span className="text-sm">
-                                      {slot.AvailableSlots}/{slot.MaxSlots}
-                                    </span>
-                                  </div>
-                                  <div className="w-full bg-gray-200 rounded-full h-2">
-                                    <div
-                                      className={`h-2 rounded-full ${
-                                        slot.AvailableSlots === 0
-                                          ? 'bg-red-500'
-                                          : slot.AvailableSlots ===
-                                            slot.MaxSlots
-                                          ? 'bg-green-500'
-                                          : 'bg-yellow-500'
-                                      }`}
-                                      style={{
-                                        width: `${
-                                          (slot.AvailableSlots /
-                                            slot.MaxSlots) *
-                                          100
-                                        }%`,
-                                      }}
-                                    />
-                                  </div>
-                                </div>
-
-                                <div className="mt-3 pt-3 border-t border-gray-200 flex justify-between items-center">
-                                  <span className="text-xs text-gray-500">
-                                    {getDepartmentName(slot.ConsultantID)}
-                                  </span>
-                                  <div className="flex space-x-1">
-                                    {/* <TooltipProvider>
-                                      <Tooltip>
-                                        <TooltipTrigger asChild>
-                                          <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-7 w-7"
-                                            onClick={() => handleEditSlot(slot)}
-                                            disabled={slot.IsBooked}
-                                          >
-                                            <Edit className="h-3 w-3" />
-                                          </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                          <p>
-                                            {slot.IsBooked
-                                              ? 'Cannot edit booked slot'
-                                              : 'Edit slot'}
-                                          </p>
-                                        </TooltipContent>
-                                      </Tooltip>
-                                    </TooltipProvider>
-                                    <TooltipProvider>
-                                      <Tooltip>
-                                        <TooltipTrigger asChild>
-                                          <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-7 w-7 text-red-600 hover:text-red-800"
-                                            onClick={() =>
-                                              handleDeleteSlot(slot.SlotID)
-                                            }
-                                            disabled={slot.IsBooked}
-                                          >
-                                            <Trash2 className="h-3 w-3" />
-                                          </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                          <p>
-                                            {slot.IsBooked
-                                              ? 'Cannot delete booked slot'
-                                              : 'Delete slot'}
-                                          </p>
-                                        </TooltipContent>
-                                      </Tooltip>
-                                    </TooltipProvider> */}
-                                    {slot.IsBooked && (
-                                      <CollapsibleTrigger asChild>
-                                        <Button
-                                          variant="ghost"
-                                          size="icon"
-                                          className="h-7 w-7"
-                                        >
-                                          <Eye className="h-3 w-3" />
-                                        </Button>
-                                      </CollapsibleTrigger>
-                                    )}
-                                  </div>
-                                </div>
-                                <CollapsibleContent>
-                                  {renderAppointmentDetails(slot)}
-                                </CollapsibleContent>
-                              </div>
-                            </Collapsible>
-                          ))}
-                        </div>
-                      )}
+                  ))}
+                  {consultants.length > 5 && (
+                    <div className="text-xs text-center text-muted-foreground pt-1">
+                      +{consultants.length - 5} more consultants
                     </div>
                   )}
                 </div>
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
-      </Tabs>
+        </div>
+
+        {/* Slots Panel */}
+        <div className="col-span-12 lg:col-span-9">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-xl font-bold">
+                Appointment Slots
+              </CardTitle>
+              <div className="flex items-center space-x-2">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Badge
+                        variant="outline"
+                        className="bg-green-100 text-green-800 hover:bg-green-200"
+                      >
+                        <div className="flex items-center gap-1">
+                          <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                          Available
+                        </div>
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Slots available for booking</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Badge
+                        variant="outline"
+                        className="bg-red-100 text-red-800 hover:bg-red-200"
+                      >
+                        <div className="flex items-center gap-1">
+                          <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                          Booked
+                        </div>
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Slots already booked</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {loading ? (
+                <div className="space-y-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="space-y-2">
+                      <Skeleton className="h-6 w-32" />
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {[1, 2, 3].map((j) => (
+                          <Skeleton key={j} className="h-32 w-full" />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : filteredSlots.length === 0 ? (
+                <div className="text-center py-12 border rounded-md">
+                  <p className="text-muted-foreground">
+                    No slots found for the selected filters
+                  </p>
+                  <Button
+                    onClick={resetFilters}
+                    variant="outline"
+                    className="mt-4"
+                  >
+                    Reset Filters
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {consultants
+                    .filter((consultant) =>
+                      filteredSlots.some(
+                        (slot) => slot.ConsultantID === consultant.ConsultantID
+                      )
+                    )
+                    .map((consultant) => (
+                      <div key={consultant.ConsultantID} className="space-y-3">
+                        <div className="flex items-center gap-2 bg-gray-50 p-2 rounded-md">
+                          <Users className="h-4 w-4 text-gray-500" />
+                          <h3 className="font-medium">
+                            {consultant.ConsultantName}
+                          </h3>
+                          <Badge variant="outline" className="ml-2">
+                            {
+                              filteredSlots.filter(
+                                (slot) =>
+                                  slot.ConsultantID === consultant.ConsultantID
+                              ).length
+                            }{' '}
+                            slots
+                          </Badge>
+                        </div>
+
+                        <div
+                          className={
+                            viewMode === 'grid'
+                              ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'
+                              : 'space-y-4'
+                          }
+                        >
+                          {filteredSlots
+                            .filter(
+                              (slot) =>
+                                slot.ConsultantID === consultant.ConsultantID
+                            )
+                            .map((slot) => renderTimeSlotCard(slot))}
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              )}
+            </CardContent>
+            <CardFooter className="border-t pt-4 flex justify-between">
+              <div className="text-sm text-muted-foreground">
+                Showing {filteredSlots.length} of {slots.length} slots
+              </div>
+            </CardFooter>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }

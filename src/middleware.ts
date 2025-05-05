@@ -6,30 +6,30 @@ const TRUSTED_DOMAINS = {
   scripts: [
     'https://checkout.razorpay.com',
     'https://js.razorpay.com',
-    'https://www.googletagmanager.com',
-    'https://www.google-analytics.com'
+    // 'https://www.googletagmanager.com',
+    // 'https://www.google-analytics.com',
   ],
   styles: [
-    'https://fonts.googleapis.com'
+    'https://fonts.googleapis.com',
   ],
   images: [
     'https://*.sjhrc.in',
     'https://loremflickr.com',
-    'https://images.unsplash.com'
+    'https://images.unsplash.com',
   ],
   fonts: [
-    'https://fonts.gstatic.com'
+    'https://fonts.gstatic.com',
   ],
   connections: [
     'https://api.razorpay.com',
     'https://lumberjack.razorpay.com',
     'https://checkout.razorpay.com',
-    'https://www.google-analytics.com'
+    'https://www.google-analytics.com',
   ],
   frames: [
     'https://checkout.razorpay.com',
-    'https://js.razorpay.com'
-  ]
+    'https://js.razorpay.com',
+  ],
 };
 
 export function middleware(request: NextRequest) {
@@ -63,7 +63,7 @@ export function middleware(request: NextRequest) {
     "frame-ancestors 'self';",
     "object-src 'none';",
 
-    // Script policies
+    // Script policies (allow unsafe-inline/eval in dev for Next.js)
     `script-src 'self' ${isDevelopment ? "'unsafe-eval' 'unsafe-inline'" : ""} ${TRUSTED_DOMAINS.scripts.join(" ")};`,
 
     // Style policies
@@ -80,7 +80,7 @@ export function middleware(request: NextRequest) {
     `connect-src 'self' ${TRUSTED_DOMAINS.connections.join(" ")} ${isDevelopment ? "http://localhost:5555 ws://localhost:5555" : ""};`,
 
     // Frame policies (for Razorpay/Stripe)
-    `frame-src 'self' ${TRUSTED_DOMAINS.frames.join(" ")};`
+    `frame-src 'self' ${TRUSTED_DOMAINS.frames.join(" ")};`,
   ].join(' ');
 
   // Apply CSP with report-only in dev

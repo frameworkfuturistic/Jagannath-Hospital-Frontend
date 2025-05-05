@@ -69,7 +69,7 @@ export function AppointmentDetailsDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[95vw] sm:max-w-[600px]">
+      <DialogContent className="max-w-5xl h-[40rem] overflow-auto">
         <DialogHeader>
           <DialogTitle className="text-lg sm:text-xl">
             Appointment Details
@@ -116,7 +116,7 @@ export function AppointmentDetailsDialog({
               <div className="p-2 bg-gray-50 rounded-lg">
                 <h4 className="text-gray-500 font-medium">Doctor</h4>
                 <p className="font-medium">
-                  {selectedAppointment.ConsultantName}
+                  {selectedAppointment?.Consultant?.ConsultantName}
                 </p>
                 <p className="text-gray-600 text-xs">
                   {selectedAppointment.ProfessionalDegree}
@@ -126,7 +126,7 @@ export function AppointmentDetailsDialog({
               {/* Department */}
               <div className="p-2 bg-gray-50 rounded-lg">
                 <h4 className="text-gray-500 font-medium">Department</h4>
-                <p>{selectedAppointment.DepartmentName}</p>
+                <p>{selectedAppointment?.Department?.DepartmentName}</p>
               </div>
 
               {/* Date */}
@@ -144,8 +144,8 @@ export function AppointmentDetailsDialog({
               <div className="p-2 bg-gray-50 rounded-lg">
                 <h4 className="text-gray-500 font-medium">Time</h4>
                 <p>
-                  {selectedAppointment.SlotTime
-                    ? formatTime(selectedAppointment.SlotTime)
+                  {selectedAppointment?.Slot?.SlotTime
+                    ? formatTime(selectedAppointment?.Slot?.SlotTime)
                     : 'N/A'}
                 </p>
               </div>
@@ -166,7 +166,7 @@ export function AppointmentDetailsDialog({
             {/* Payment Details */}
             <div className="p-2 bg-gray-50 rounded-lg space-y-1">
               <h4 className="text-gray-500 font-medium">Payment Details</h4>
-              <div className="grid grid-cols-1 xs:grid-cols-2 gap-1">
+              <div className="grid grid-cols-2 xs:grid-cols-2 gap-1">
                 <div>
                   <p className="text-xs text-gray-500">Order ID</p>
                   <p className="text-xs font-mono truncate">
@@ -195,6 +195,11 @@ export function AppointmentDetailsDialog({
                       ? `₹${selectedAppointment.RefundAmount}`
                       : 'N/A'}
                   </p>
+                  <p className="text-xs">
+                    {selectedAppointment.RefundID
+                      ? `₹${selectedAppointment.RefundID}`
+                      : 'N/A'}
+                  </p>
                 </div>
               </div>
             </div>
@@ -204,6 +209,20 @@ export function AppointmentDetailsDialog({
               <h4 className="text-gray-500 font-medium">Remarks</h4>
               <p className="whitespace-pre-wrap text-sm">
                 {selectedAppointment.Remarks || 'No remarks provided'}
+              </p>
+            </div>
+
+            <div className="p-2 bg-gray-50 rounded-lg">
+              <h4 className="text-gray-500 font-medium">More</h4>
+              <p className="text-xs">
+                {selectedAppointment.Prescription
+                  ? `₹${selectedAppointment.Prescription}`
+                  : 'Not yet'}
+              </p>
+              <p className="text-xs">
+                {selectedAppointment.Diagnosis
+                  ? `₹${selectedAppointment.Diagnosis}`
+                  : 'Not yet'}
               </p>
             </div>
           </div>

@@ -187,6 +187,37 @@ export const fetchSlots = async (
   }
 };
 
+
+export const fetchSlotsWithAppointments = async (filters: {
+  date?: string;
+  consultantId?: number;
+  departmentId?: number;
+} = {}): Promise<Slot[]> => {
+  try {
+    let url = '/slots/appointments';
+    const params: Record<string, any> = {};
+    
+    if (filters.date) params.date = filters.date;
+    if (filters.consultantId) params.consultantId = filters.consultantId;
+    if (filters.departmentId) params.departmentId = filters.departmentId;
+
+    const response = await api.get<{
+      message: string; 
+      success: boolean;
+      data: Slot[];
+    }>(url, { params });
+
+    if (!response.data.success) {
+      throw new Error(response.data.message || 'Failed to fetch slots');
+    }
+
+    return response.data.data;
+  } catch (error) {
+    console.error('Error fetching slots with appointments:', error);
+    throw error;
+  }
+};
+
 export const createSlot = async (payload: CreateSlotPayload): Promise<Slot[]> => {
   try {
     const response = await api.post<{ data: Slot[] }>('/slots', payload);
