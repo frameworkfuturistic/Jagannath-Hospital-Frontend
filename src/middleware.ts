@@ -1,21 +1,28 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { randomBytes } from 'crypto';
 
 // Domain allowlists
 const TRUSTED_DOMAINS = {
   scripts: [
     'https://checkout.razorpay.com',
     'https://js.razorpay.com',
-    // 'https://www.googletagmanager.com',
-    // 'https://www.google-analytics.com',
+    'https://www.googletagmanager.com',
+    'https://www.google-analytics.com',
   ],
   styles: [
     'https://fonts.googleapis.com',
   ],
   images: [
+    'https://sjhrc.in',
     'https://*.sjhrc.in',
+    'https://res.cloudinary.com',
     'https://loremflickr.com',
     'https://images.unsplash.com',
+    'https://images.pexels.com',
+    'https://cdn.eyemyeye.com',
+    'https://gratisography.com',
+    'https://azbigmedia.com',
   ],
   fonts: [
     'https://fonts.gstatic.com',
@@ -29,85 +36,100 @@ const TRUSTED_DOMAINS = {
   frames: [
     'https://checkout.razorpay.com',
     'https://js.razorpay.com',
+    'https://api.razorpay.com', // Added for Razorpay iframe
+    'https://www.google.com',
+    'https://www.google.com/maps/',
   ],
 };
 
+// CSP violation reporting endpoint (optional, configure your own)
+const CSP_REPORT_URI = process.env.CSP_REPORT_URI || 'https://sjhrc.in/';
+
 export function middleware(request: NextRequest) {
-  const response = NextResponse.next();
-  const isDevelopment = process.env.NODE_ENV === 'development';
+  try {
+    const response = NextResponse.next();
+    const isDevelopment = process.env.NODE_ENV === 'development';
 
-  // =====================
-  // Core Security Headers
-  // =====================
-  const securityHeaders = {
-    'X-XSS-Protection': '1; mode=block',
-    'X-Frame-Options': 'SAMEORIGIN',
-    'X-Content-Type-Options': 'nosniff',
-    'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Permissions-Policy': 'geolocation=(), microphone=(), camera=(), payment=()',
-    'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
-  };
+    // Generate nonce for production CSP
+    const nonce = isDevelopment ? '' : randomBytes(16).toString('base64');
 
-  Object.entries(securityHeaders).forEach(([key, value]) => {
-    response.headers.set(key, value);
-  });
+    // Core Security Headers
+    const securityHeaders = {
+      'X-XSS-Protection': '1; mode=block',
+      'X-Frame-Options': 'SAMEORIGIN',
+      'X-Content-Type-Options': 'nosniff',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      'Permissions-Policy': 'geolocation=(), microphone=(), camera=(), payment=(), interest-cohort=()',
+      'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
+    };
 
-  // =====================
-  // Dynamic CSP Builder
-  // =====================
-  const cspDirectives = [
-    // Base restrictions
-    "default-src 'self';",
-    "base-uri 'self';",
-    "form-action 'self';",
-    "frame-ancestors 'self';",
-    "object-src 'none';",
+    Object.entries(securityHeaders).forEach(([key, value]) => {
+      response.headers.set(key, value);
+    });
 
-    // Script policies (allow unsafe-inline/eval in dev for Next.js)
-    `script-src 'self' ${isDevelopment ? "'unsafe-eval' 'unsafe-inline'" : ""} ${TRUSTED_DOMAINS.scripts.join(" ")};`,
+    // Inline script hash for Razorpay
+    const inlineScriptHash = "'sha256-Q+8tPsjVtiDsjF/Cv8FMOpg2Yg91oKFKDAJat1PPb2g='";
 
-    // Style policies
-    `style-src 'self' 'unsafe-inline' ${TRUSTED_DOMAINS.styles.join(" ")};`,
+    // Dynamic CSP Builder
+    const cspDirectives = [
+      // Base restrictions
+      `default-src 'self';`,
+      `base-uri 'self';`,
+      `form-action 'self' https://api.razorpay.com;`,
+      `frame-ancestors 'self';`,
+      `object-src 'none';`,
+      // Script policies
+      `script-src 'self' ${isDevelopment ? "'unsafe-eval' 'unsafe-inline'" : `'nonce-${nonce}' ${inlineScriptHash}`} ${TRUSTED_DOMAINS.scripts.join(' ')};`,
+      // Style policies
+      `style-src 'self' 'unsafe-inline' ${TRUSTED_DOMAINS.styles.join(' ')};`,
+      // Media policies
+      `img-src 'self' data: blob: ${TRUSTED_DOMAINS.images.join(' ')} http://localhost:3000;`,
+      `media-src 'self' blob:;`,
+      // Font policies
+      `font-src 'self' ${TRUSTED_DOMAINS.fonts.join(' ')};`,
+      // Connection policies
+      `connect-src 'self' ${TRUSTED_DOMAINS.connections.join(' ')} ${isDevelopment ? 'http://localhost:3000 ws://localhost:3000 http://localhost:5555 ws://localhost:5555' : ''};`,
+      // Frame policies
+      `frame-src 'self' ${TRUSTED_DOMAINS.frames.join(' ')};`,
+      `report-uri ${CSP_REPORT_URI};`,
+    ].join(' ');
 
-    // Media policies
-    `img-src 'self' data: blob: ${TRUSTED_DOMAINS.images.join(" ")};`,
-    `media-src 'self' blob:;`,
+    // Apply CSP
+    response.headers.set(
+      isDevelopment ? 'Content-Security-Policy-Report-Only' : 'Content-Security-Policy',
+      cspDirectives
+    );
 
-    // Font policies
-    `font-src 'self' ${TRUSTED_DOMAINS.fonts.join(" ")};`,
+    // Additional Protections
+    if (!isDevelopment) {
+      response.headers.set('Expect-CT', 'max-age=86400, enforce');
+      response.headers.set('X-DNS-Prefetch-Control', 'on');
+    }
 
-    // Connection policies
-    `connect-src 'self' ${TRUSTED_DOMAINS.connections.join(" ")} ${isDevelopment ? "http://localhost:5555 ws://localhost:5555" : ""};`,
+    // Set nonce for use in <script> tags
+    if (!isDevelopment) {
+      response.headers.set('X-Nonce', nonce);
+    }
 
-    // Frame policies (for Razorpay/Stripe)
-    `frame-src 'self' ${TRUSTED_DOMAINS.frames.join(" ")};`,
-  ].join(' ');
+    // Preload critical scripts
+    response.headers.set('Link', '<https://checkout.razorpay.com/v1/checkout.js>; rel=preload; as=script');
 
-  // Apply CSP with report-only in dev
-  response.headers.set(
-    isDevelopment ? 'Content-Security-Policy-Report-Only' : 'Content-Security-Policy',
-    cspDirectives
-  );
+    // Log request for debugging
+    if (isDevelopment) {
+      console.log(`[Middleware] Processing ${request.method} ${request.nextUrl.pathname}`);
+    }
 
-  // =====================
-  // Additional Protections
-  // =====================
-  if (!isDevelopment) {
-    response.headers.set('Expect-CT', 'max-age=86400, enforce');
+    return response;
+  } catch (error) {
+    console.error('[Middleware] Error:', error);
+    const fallbackResponse = NextResponse.next();
+    fallbackResponse.headers.set('X-Middleware-Error', 'true');
+    return fallbackResponse;
   }
-
-  return response;
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except:
-     * - API routes
-     * - Static files
-     * - Next.js internals
-     * - Public folder
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico|sw.js|workbox-*.js|manifest.json).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|sw.js|workbox-*.js|manifest.json|robots.txt|sitemap.xml).*)',
   ],
 };

@@ -4,31 +4,25 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 
 const nextConfig = {
-  // =====================
   // Core Configuration
-  // =====================
-  reactStrictMode: false,
+  reactStrictMode: false, // Kept from your working code
   output: 'standalone',
   trailingSlash: true,
   poweredByHeader: false,
   generateEtags: true,
   productionBrowserSourceMaps: false,
 
-  // =====================
   // Console Management
-  // =====================
   compiler: {
     removeConsole:
       process.env.NODE_ENV === 'production'
         ? {
-            exclude: ['error'],
+            exclude: ['error', 'warn'], // Allow warnings for debugging
           }
         : false,
   },
 
-  // =====================
   // Image Optimization
-  // =====================
   images: {
     remotePatterns: [
       // Primary domains
@@ -42,14 +36,12 @@ const nextConfig = {
         hostname: '*.sjhrc.in',
         pathname: '/**',
       },
-
       // Cloud/CDN providers
       {
         protocol: 'https',
         hostname: 'res.cloudinary.com',
         pathname: '/**',
       },
-
       // Stock image providers
       {
         protocol: 'https',
@@ -66,56 +58,50 @@ const nextConfig = {
         hostname: 'loremflickr.com',
         pathname: '/**',
       },
-
       // Partner domains
       {
         protocol: 'https',
         hostname: 'cdn.eyemyeye.com',
         pathname: '/**',
       },
-
       // Media outlets
       {
         protocol: 'https',
         hostname: 'gratisography.com',
-        pathname: '/wp-content/uploads/**',
+        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'azbigmedia.com',
-        pathname: '/wp-content/uploads/**',
+        pathname: '/**',
       },
-
       // Development only
       ...(process.env.NODE_ENV === 'development'
         ? [
             {
               protocol: 'http',
               hostname: 'localhost',
-              port: '3000',
+              port: '',
               pathname: '/**',
             },
           ]
         : []),
     ],
-
-    // Optimization settings
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 3600,
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     dangerouslyAllowSVG: false,
+    loader: 'default',
+    unoptimized: false,
   },
 
-  // =====================
   // Production Optimizations
-  // =====================
   compress: true,
   swcMinify: true,
+  optimizeFonts: true,
 
-  // =====================
   // Security Headers
-  // =====================
   headers: async () => [
     {
       source: '/(.*)',
@@ -142,27 +128,42 @@ const nextConfig = {
         },
       ],
     },
+    {
+      source: '/_next/static/(.*)',
+      headers: [
+        {
+          key: 'Cache-Control',
+          value: 'public, max-age=31536000, immutable',
+        },
+      ],
+    },
+    {
+      source: '/default-image.jpg',
+      headers: [
+        {
+          key: 'Cache-Control',
+          value: 'public, max-age=31536000, immutable',
+        },
+      ],
+    },
   ],
 
-  // =====================
   // Environment Configuration
-  // =====================
   env: {
     NEXT_PUBLIC_ENV: process.env.NODE_ENV || 'production',
-    NEXT_PUBLIC_SITE_URL: 'https://sjhrc.in',
+    NEXT_PUBLIC_SITE_URL:
+      process.env.NEXT_PUBLIC_SITE_URL || 'https://sjhrc.in',
   },
 
-  // =====================
-  // Advanced Webpack Configuration
-  // =====================
+  // Webpack Configuration
   webpack: (config, { isServer }) => {
-    // Production-only optimizations
     if (process.env.NODE_ENV === 'production') {
       config.optimization = {
         ...config.optimization,
         splitChunks: {
           chunks: 'all',
-          maxSize: 244 * 1024,
+          minSize: 20000,
+          maxSize: 250000, // Reduced to prevent build issues
           cacheGroups: {
             react: {
               test: /[\\/]node_modules[\\/](react|react-dom|react-is)[\\/]/,
@@ -171,7 +172,7 @@ const nextConfig = {
               priority: 20,
             },
             vendors: {
-              test: /[\\/]node_modules[\\/]/,
+              test: /[\\/]node_modules[\\/](?!react|react-dom|react-is)/,
               name: 'vendors',
               chunks: 'all',
               priority: 10,
@@ -189,8 +190,8 @@ const nextConfig = {
               ...plugin.options.terserOptions,
               compress: {
                 ...plugin.options.terserOptions?.compress,
-                drop_console: true,
-                pure_funcs: ['console.log', 'console.info', 'console.debug'],
+                drop_console: false, // Preserve console for debugging
+                pure_funcs: ['console.debug'],
               },
             };
           }
@@ -199,36 +200,26 @@ const nextConfig = {
       };
 
       config.performance = {
-        maxAssetSize: 300 * 1024,
-        maxEntrypointSize: 300 * 1024,
+        maxAssetSize: 300000,
+        maxEntrypointSize: 300000,
         hints: 'warning',
       };
     }
 
-    // Important: return the modified config
+    // Add aliases for better module resolution
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@components': `${__dirname}/components`,
+      '@lib': `${__dirname}/lib`,
+    };
+
     return config;
   },
 
-  // =====================
   // Experimental Features
-  // =====================
   experimental: {
-    optimizeCss: true, // Disabled to prevent critters error
     scrollRestoration: true,
-    outputFileTracingExcludes: {
-      '**': ['**canvas**', '**@next/swc*/**'],
-    },
     serverComponentsExternalPackages: ['sharp'],
-    modularizeImports: {
-      lodash: {
-        transform: 'lodash/{{member}}',
-        preventFullImport: true,
-      },
-      '@heroicons/react/24/outline': {
-        transform: '@heroicons/react/24/outline/{{member}}',
-        preventFullImport: true,
-      },
-    },
   },
 };
 
