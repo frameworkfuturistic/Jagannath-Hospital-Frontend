@@ -786,7 +786,7 @@ function ApplicationDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[625px]">
+      <DialogContent className="md:max-w-5xl h-[40rem] overflow-auto">
         <DialogHeader>
           <DialogTitle>Application Details</DialogTitle>
         </DialogHeader>

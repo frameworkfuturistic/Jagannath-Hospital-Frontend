@@ -45,14 +45,24 @@ const TRUSTED_DOMAINS = {
 // CSP violation reporting endpoint (optional, configure your own)
 const CSP_REPORT_URI = process.env.CSP_REPORT_URI || 'https://sjhrc.in/';
 
+
+// Generate a simple nonce for Edge Runtime (no crypto dependency)
+const generateNonce = () => {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let nonce = '';
+  for (let i = 0; i < 16; i++) {
+    nonce += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return nonce;
+};
+
 export function middleware(request: NextRequest) {
   try {
     const response = NextResponse.next();
     const isDevelopment = process.env.NODE_ENV === 'development';
 
     // Generate nonce for production CSP
-    const nonce = isDevelopment ? '' : randomBytes(16).toString('base64');
-
+    const nonce = isDevelopment ? '' : generateNonce();
     // Core Security Headers
     const securityHeaders = {
       'X-XSS-Protection': '1; mode=block',

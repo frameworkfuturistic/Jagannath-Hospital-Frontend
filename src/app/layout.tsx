@@ -74,7 +74,7 @@ export default function RootLayout({
         <CookieConsent />
         <AuthProvider>{children}</AuthProvider>
       </body>
-      {/* <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} /> */}
+      <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
     </html>
   );
 }

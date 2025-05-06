@@ -3,7 +3,8 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://sjhrc.in
+Host: https://sjhrc.in/
 
 # Sitemaps
 Sitemap: https://sjhrc.in/sitemap.xml
+Sitemap: https://sjhrc.in//sitemap.xml
