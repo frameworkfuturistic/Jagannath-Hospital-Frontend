@@ -199,7 +199,7 @@ export default function AddSlotForm() {
                 </Button>
                 <Button
                   type="button"
-                  onClick={() => router.push('/admin/slots')}
+                  onClick={() => router.push('/dashboard/appointment/slots')}
                 >
                   View All Slots
                 </Button>
