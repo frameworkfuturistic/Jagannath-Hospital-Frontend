@@ -148,7 +148,7 @@ export default function ConfirmationStep({ onBack }: ConfirmationStepProps) {
       doc.setFontSize(80);
       doc.setTextColor(200, 200, 200);
       doc.setFont('helvetica', 'bold');
-      doc.text('SJHC', pageWidth / 2, pageHeight / 2, {
+      doc.text('SJHRC', pageWidth / 2, pageHeight / 2, {
         align: 'center',
         angle: 45,
       });
@@ -299,11 +299,14 @@ export default function ConfirmationStep({ onBack }: ConfirmationStepProps) {
       y += lineHeight;
       doc.setFont('helvetica', 'normal');
       const instructions = [
-        '1. If the patient requires in-patient admission a female attendant is mandatory.',
-        '2. Appointment booked online will Not be refunded.',
-        '3. Change Of Department/Unit Not allowed.',
-        '4. Change In appointment Date will be allowed only once, upto one day prior To the appointment Date.',
-        '5. Please provide atleast Government Related ID proof When you present yourself at the Entrance / MRO counter.',
+        '1. Keep this payment slip safely. Present a printed copy or show the digital version at the reception on the day of your visit.',
+        '2. Arrive at least 15 minutes before your scheduled appointment time for registration and preliminary checks.',
+        '3. Bring a valid photo ID (e.g., Aadhaar Card, Driving Licence, Passport) for verification.',
+        '4. Carry relevant medical records, prescriptions, and test reports.',
+        '5. Appointment fee non-refundable; rescheduling permitted once, 48 hours prior, subject to availability.',
+        '6. Late arrivals (10 minutes or more) may result in rescheduling or longer waiting time, depending on the doctor’s schedule.',
+        '7. For cashless/insurance cases, bring the necessary approval letters and insurance cards.',
+        '8. Contact our helpdesk at +91-8987999200.',
       ];
       instructions.forEach((instruction) => {
         doc.text(instruction, margin, y, { maxWidth: pageWidth - margin * 2 });
