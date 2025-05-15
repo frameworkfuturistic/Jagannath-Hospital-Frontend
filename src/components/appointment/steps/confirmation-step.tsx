@@ -222,7 +222,8 @@ export default function ConfirmationStep({ onBack }: ConfirmationStepProps) {
         margin,
         y
       );
-      doc.text('Token No: ______', pageWidth / 2, y);
+      doc.text(`Time: ${displayData.SlotTime || 'N/A'}`, pageWidth / 2, y);
+
       y += lineHeight;
       doc.text(`Doctor: ${displayData.ConsultantName || 'N/A'}`, margin, y);
       y += lineHeight * 2;

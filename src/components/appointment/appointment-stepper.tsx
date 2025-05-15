@@ -32,7 +32,7 @@ export default function AppointmentStepper({
   ];
 
   return (
-    <div className="w-full px-4 py-5">
+    <div className="w-full px-4 py-5 ">
       <div className="relative">
         {/* Progress bar */}
         <div className="hidden sm:block absolute top-1/2 left-0 -translate-y-1/2 w-full h-1 bg-gray-200 rounded-full">

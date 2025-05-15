@@ -308,7 +308,7 @@ export function AppointmentProvider({
         const response = await axios.get(
           `${API_BASE_URL}/slots/${doctorId}/${date}`
         );
-        console.log('Available slots response:', response.data.data);
+        // console.log('Available slots response:', response.data.data);
         dispatch({ type: 'SET_AVAILABLE_SLOTS', payload: response.data.data });
       } catch (error) {
         dispatch({

@@ -21,7 +21,10 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Calendar } from '@/components/ui/calendar';
-import { fetchSlots, scheduleAppointment } from '@/lib/api';
+import {
+  fetchAvailableSlotsForReschedule,
+  scheduleAppointment,
+} from '@/lib/api';
 import {
   Tooltip,
   TooltipContent,
@@ -30,8 +33,8 @@ import {
 } from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Appointment, Slot } from '@/types/types';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import type { Appointment, Slot } from '@/types/types';
 
 interface ScheduleDialogProps {
   appointment: Appointment;
@@ -52,6 +55,7 @@ export function ScheduleDialog({
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [isScheduling, setIsScheduling] = useState(false);
   const [view, setView] = useState<'grid' | 'list'>('grid');
+  const [datesWithSlots, setDatesWithSlots] = useState<Set<string>>(new Set());
 
   // Initialize selectedDate when appointment is available
   useEffect(() => {
@@ -76,12 +80,84 @@ export function ScheduleDialog({
     return `${formatTime(startTime)} - ${formatTime(endTime)}`;
   };
 
+  // Fetch all available slots for the current month to highlight dates in calendar
+  useEffect(() => {
+    if (appointment?.ConsultantID) {
+      const fetchAllAvailableSlots = async () => {
+        try {
+          // This would be your actual API call to get all slots for the month
+          // For now, we'll use the sample data
+          const data = {
+            success: true,
+            data: [
+              {
+                SlotID: 7,
+                ConsultantID: 12,
+                SlotDate: '2025-05-18T18:30:00.000Z',
+                SlotTime: '09:00:00',
+                SlotEndTime: '10:00:00',
+                AvailableSlots: 1,
+                MaxSlots: 1,
+                Status: 'Available',
+                SlotToken: '202505190900A32O',
+                IsBooked: 0,
+              },
+              {
+                SlotID: 8,
+                ConsultantID: 12,
+                SlotDate: '2025-05-18T18:30:00.000Z',
+                SlotTime: '10:00:00',
+                SlotEndTime: '11:00:00',
+                AvailableSlots: 0,
+                MaxSlots: 1,
+                Status: 'Booked',
+                SlotToken: '202505191000loac',
+                IsBooked: 1,
+              },
+              {
+                SlotID: 9,
+                ConsultantID: 12,
+                SlotDate: '2025-05-18T18:30:00.000Z',
+                SlotTime: '11:00:00',
+                SlotEndTime: '12:00:00',
+                AvailableSlots: 1,
+                MaxSlots: 1,
+                Status: 'Available',
+                SlotToken: '202505191100OOCY',
+                IsBooked: 0,
+              },
+              // Add more slots as needed
+            ],
+          };
+
+          if (data.success && data.data) {
+            // Extract unique dates that have available slots
+            const availableDates = new Set<string>();
+            data.data.forEach((slot) => {
+              if (slot.AvailableSlots > 0 && slot.Status === 'Available') {
+                const dateStr = new Date(slot.SlotDate)
+                  .toISOString()
+                  .split('T')[0];
+                availableDates.add(dateStr);
+              }
+            });
+            setDatesWithSlots(availableDates);
+          }
+        } catch (error) {
+          console.error('Error fetching all available slots:', error);
+        }
+      };
+
+      fetchAllAvailableSlots();
+    }
+  }, [appointment?.ConsultantID]);
+
   useEffect(() => {
     if (selectedDate && appointment?.ConsultantID) {
       const fetchAvailableSlots = async () => {
         setLoadingSlots(true);
         try {
-          const slots = await fetchSlots(
+          const slots = await fetchAvailableSlotsForReschedule(
             appointment.ConsultantID,
             format(selectedDate, 'yyyy-MM-dd')
           );
@@ -173,6 +249,22 @@ export function ScheduleDialog({
     return <XCircle className="h-4 w-4 text-red-500" />;
   };
 
+  // Custom calendar day renderer to highlight dates with available slots
+  const modifiersStyles = {
+    hasSlots: {
+      backgroundColor: '#10B98133', // Light green with transparency
+      border: '1px solid #10B981', // Green border
+      color: '#065F46', // Dark green text
+      fontWeight: 'bold' as const,
+    },
+  };
+
+  // Function to check if a date has available slots
+  const hasAvailableSlots = (date: Date) => {
+    const dateStr = date.toISOString().split('T')[0];
+    return datesWithSlots.has(dateStr);
+  };
+
   if (!appointment) {
     return null;
   }
@@ -230,7 +322,17 @@ export function ScheduleDialog({
                     date < new Date() ||
                     date > new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
                   }
+                  modifiers={{
+                    hasSlots: (date) => hasAvailableSlots(date),
+                  }}
+                  modifiersStyles={modifiersStyles}
                 />
+                <div className="flex justify-center space-x-4 text-sm mt-4">
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
+                    <span>Available Slots</span>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -302,6 +404,7 @@ export function ScheduleDialog({
                                     <span className="text-xs text-muted-foreground">
                                       to {formatTime(slot.SlotEndTime)}
                                     </span>
+                                    <small>{slot.ConsultantID}</small>
                                   </div>
                                   {getSlotStatusIcon(slot)}
                                 </Button>
@@ -367,14 +470,14 @@ export function ScheduleDialog({
             )}
           </div>
 
-          {selectedSlot && (
+          {selectedSlot && selectedDate && (
             <Card className="bg-muted/50">
               <CardContent className="p-4">
                 <h3 className="font-medium mb-2">Selected Appointment</h3>
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2">
                     <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-                    <span>{format(selectedDate!, 'MMMM d, yyyy')}</span>
+                    <span>{format(selectedDate, 'MMMM d, yyyy')}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4 text-muted-foreground" />

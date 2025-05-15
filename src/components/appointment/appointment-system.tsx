@@ -66,7 +66,7 @@ export default function AppointmentSystem() {
       <RazorpayLoader />
 
       {/* <AppointmentHeader /> */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="py-8 max-w-7xl mx-auto">
         <AppointmentStepper currentStep={currentStep} />
         <div className="mt-8">{steps[currentStep].component}</div>
       </div>

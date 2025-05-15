@@ -213,7 +213,7 @@ export default function CalendarView({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 ">
       <div className="flex justify-between items-center">
         <div className="flex space-x-2">
           <motion.button
@@ -249,9 +249,9 @@ export default function CalendarView({
         </motion.button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 ">
         <div className="md:col-span-3">
-          <Card className="p-4 h-96 overflow-hidden bg-white shadow-sm">
+          <Card className="p-4 h-96 overflow-hidden bg-white  shadow-sm">
             <Calendar
               localizer={localizer}
               events={events}
@@ -274,7 +274,7 @@ export default function CalendarView({
           </Card>
         </div>
 
-        <div className="md:col-span-1">
+        <div className="md:col-span-1 hidden md:flex">
           <Card className="p-4 h-96 bg-white shadow-sm">
             <div className="h-full flex flex-col">
               <h3 className="text-lg font-semibold text-blue-800 mb-4 flex items-center">

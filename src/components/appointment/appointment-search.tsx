@@ -292,13 +292,14 @@ export default function AppointmentSearch() {
       y += lineHeight;
       doc.setFont('helvetica', 'normal');
       doc.text(`Department: ${appointment.DepartmentName || 'N/A'}`, margin, y);
+      doc.text(`Time: ${appointment.SlotTime}`, pageWidth / 2, y);
+      y += lineHeight;
+      doc.text(`Doctor: ${appointment.ConsultantName || 'N/A'}`, margin, y);
       doc.text(
         `Token No: ${appointment.TokenNo || '______'}`,
         pageWidth / 2,
         y
       );
-      y += lineHeight;
-      doc.text(`Doctor: ${appointment.ConsultantName || 'N/A'}`, margin, y);
       y += lineHeight * 2;
 
       // Payment details section
@@ -349,7 +350,8 @@ export default function AppointmentSearch() {
       doc.text(
         `Status: ${appointment.PaymentStatus || 'N/A'}`,
         pageWidth / 2,
-        y);
+        y
+      );
       y += lineHeight * 2;
 
       doc.setDrawColor(25, 91, 255);

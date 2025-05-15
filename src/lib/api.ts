@@ -187,6 +187,35 @@ export const fetchSlots = async (
   }
 };
 
+export const fetchAvailableSlotsForReschedule = async (
+  consultantId: number,
+  date: string | null,
+): Promise<Slot[]> => {
+  try {
+    const response = await api.get<{ data: Slot[] }>(
+      `/slots/${consultantId}/${date}`
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error('Error fetching slots for reschedule:', error);
+    throw error;
+  }
+};
+
+export const fetchSlotsForReschedule = async (
+  consultantId: number,
+  appointmentId: number
+): Promise<Slot[]> => {
+  try {
+    const response = await api.get<{ data: Slot[] }>(
+      `/slots/reschedule/${consultantId}/${appointmentId}`
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error('Error fetching slots for reschedule:', error);
+    throw error;
+  }
+};
 
 export const fetchSlotsWithAppointments = async (filters: {
   date?: string;

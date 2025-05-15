@@ -175,7 +175,9 @@ export default function DateSelector({
                   {format(date, 'd')}
                 </span>
                 <span className="text-xs mt-1">{format(date, 'MMM')}</span>
-                {getStatusBadge(status, isSelected)}
+                <span className=" hidden md:flex">
+                  {getStatusBadge(status, isSelected)}
+                </span>
               </Button>
             </motion.div>
           );

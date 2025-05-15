@@ -80,6 +80,7 @@ export interface AppointmentSearchParams {
 export type SlotStatus = 'Available' | 'Hold' | 'Booked' | 'Cancelled' | 'Completed';
 
 export interface Slot {
+  isCurrent: unknown;
   SlotID: number;
   ConsultantID: number;
   SlotDate: string;

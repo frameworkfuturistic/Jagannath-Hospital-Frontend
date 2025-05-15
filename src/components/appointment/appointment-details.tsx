@@ -55,7 +55,7 @@ export default function AppointmentDetails({
   // };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 ">
       {/* Header with Appointment ID and Status */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
         <div className="text-lg font-semibold text-gray-800">
