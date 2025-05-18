@@ -5,11 +5,10 @@ import { AuthProvider } from './context/AuthContext';
 import SEO from '@/components/SEO';
 import CookieConsent from '@/pages/CookieConsent';
 import { Toaster } from '@/components/ui/sonner';
-import sayHello from '@/lib/sayHello';
 import { RouteLoader } from '@/components/route-loader';
 import { Suspense } from 'react';
 import { LoadingSpinner } from '@/components/loading-spinner';
-import { GoogleAnalytics } from '@next/third-parties/google';
+// import { GoogleAnalytics } from '@next/third-parties/google';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -59,9 +58,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  if (process.env.NODE_ENV === 'development') {
-    sayHello();
-  }
   return (
     <html lang="en" className={`${inter.variable}`}>
       <head>
@@ -74,7 +70,7 @@ export default function RootLayout({
         <CookieConsent />
         <AuthProvider>{children}</AuthProvider>
       </body>
-      <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+      {/* <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} /> */}
     </html>
   );
 }

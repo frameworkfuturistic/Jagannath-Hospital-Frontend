@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { toast } from 'sonner';
 import {
   CalendarIcon,
@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/dialog';
 import { Calendar } from '@/components/ui/calendar';
 import {
+  fetchConsultantSlots,
   fetchAvailableSlotsForReschedule,
   scheduleAppointment,
 } from '@/lib/api';
@@ -57,10 +58,18 @@ export function ScheduleDialog({
   const [view, setView] = useState<'grid' | 'list'>('grid');
   const [datesWithSlots, setDatesWithSlots] = useState<Set<string>>(new Set());
 
+  // Helper function to normalize dates to UTC
+  const normalizeToUTC = (date: Date) => {
+    return new Date(
+      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+    );
+  };
+
   // Initialize selectedDate when appointment is available
   useEffect(() => {
     if (appointment?.ConsultationDate) {
-      setSelectedDate(new Date(appointment.ConsultationDate));
+      const appointmentDate = parseISO(appointment.ConsultationDate);
+      setSelectedDate(appointmentDate);
     }
   }, [appointment]);
 
@@ -85,64 +94,29 @@ export function ScheduleDialog({
     if (appointment?.ConsultantID) {
       const fetchAllAvailableSlots = async () => {
         try {
-          // This would be your actual API call to get all slots for the month
-          // For now, we'll use the sample data
-          const data = {
-            success: true,
-            data: [
-              {
-                SlotID: 7,
-                ConsultantID: 12,
-                SlotDate: '2025-05-18T18:30:00.000Z',
-                SlotTime: '09:00:00',
-                SlotEndTime: '10:00:00',
-                AvailableSlots: 1,
-                MaxSlots: 1,
-                Status: 'Available',
-                SlotToken: '202505190900A32O',
-                IsBooked: 0,
-              },
-              {
-                SlotID: 8,
-                ConsultantID: 12,
-                SlotDate: '2025-05-18T18:30:00.000Z',
-                SlotTime: '10:00:00',
-                SlotEndTime: '11:00:00',
-                AvailableSlots: 0,
-                MaxSlots: 1,
-                Status: 'Booked',
-                SlotToken: '202505191000loac',
-                IsBooked: 1,
-              },
-              {
-                SlotID: 9,
-                ConsultantID: 12,
-                SlotDate: '2025-05-18T18:30:00.000Z',
-                SlotTime: '11:00:00',
-                SlotEndTime: '12:00:00',
-                AvailableSlots: 1,
-                MaxSlots: 1,
-                Status: 'Available',
-                SlotToken: '202505191100OOCY',
-                IsBooked: 0,
-              },
-              // Add more slots as needed
-            ],
-          };
+          const response = await fetchConsultantSlots(appointment.ConsultantID);
+          const slotsByDate = response as unknown as Record<string, Slot[]>;
+          const availableDates = new Set<string>();
 
-          if (data.success && data.data) {
-            // Extract unique dates that have available slots
-            const availableDates = new Set<string>();
-            data.data.forEach((slot) => {
-              if (slot.AvailableSlots > 0 && slot.Status === 'Available') {
-                const dateStr = new Date(slot.SlotDate)
-                  .toISOString()
-                  .split('T')[0];
-                availableDates.add(dateStr);
+          const today = normalizeToUTC(new Date());
+
+          Object.entries(slotsByDate).forEach(([dateStr, slotsForDate]) => {
+            const slotDate = normalizeToUTC(new Date(dateStr));
+
+            // Only consider dates today or in the future
+            if (slotDate >= today) {
+              const hasAvailableSlot = slotsForDate.some(
+                (slot) => slot.AvailableSlots > 0
+              );
+
+              if (hasAvailableSlot) {
+                // Store date in YYYY-MM-DD format
+                availableDates.add(format(slotDate, 'yyyy-MM-dd'));
               }
-            });
-            setDatesWithSlots(availableDates);
-          }
+            }
+          });
+
+          setDatesWithSlots(availableDates);
         } catch (error) {
           console.error('Error fetching all available slots:', error);
         }
@@ -157,17 +131,18 @@ export function ScheduleDialog({
       const fetchAvailableSlots = async () => {
         setLoadingSlots(true);
         try {
+          const dateStr = format(selectedDate, 'yyyy-MM-dd');
           const slots = await fetchAvailableSlotsForReschedule(
             appointment.ConsultantID,
-            format(selectedDate, 'yyyy-MM-dd')
+            dateStr
           );
           setAvailableSlots(slots);
 
           // Preselect current slot if on same date
           if (
             appointment.SlotID &&
-            format(new Date(appointment.ConsultationDate), 'yyyy-MM-dd') ===
-              format(selectedDate, 'yyyy-MM-dd')
+            format(parseISO(appointment.ConsultationDate), 'yyyy-MM-dd') ===
+              dateStr
           ) {
             const currentSlot = slots.find(
               (s: Slot) => s.SlotID === appointment.SlotID
@@ -217,11 +192,9 @@ export function ScheduleDialog({
     if (slot.SlotID === appointment.SlotID) {
       return 'bg-blue-100 border-blue-300 text-blue-700';
     }
-
     if (slot.AvailableSlots > 0 && slot.IsBooked === 0) {
       return 'bg-green-100 border-green-300 text-green-700';
     }
-
     return 'bg-red-100 border-red-300 text-red-700';
   };
 
@@ -229,11 +202,9 @@ export function ScheduleDialog({
     if (slot.SlotID === appointment.SlotID) {
       return 'Current';
     }
-
     if (slot.AvailableSlots > 0 && slot.IsBooked === 0) {
       return 'Available';
     }
-
     return 'Booked';
   };
 
@@ -241,28 +212,36 @@ export function ScheduleDialog({
     if (slot.SlotID === appointment.SlotID) {
       return <Info className="h-4 w-4 text-blue-500" />;
     }
-
     if (slot.AvailableSlots > 0 && slot.IsBooked === 0) {
       return <CheckCircle className="h-4 w-4 text-green-500" />;
     }
-
     return <XCircle className="h-4 w-4 text-red-500" />;
   };
 
-  // Custom calendar day renderer to highlight dates with available slots
+  // Custom calendar modifiers
   const modifiersStyles = {
     hasSlots: {
-      backgroundColor: '#10B98133', // Light green with transparency
-      border: '1px solid #10B981', // Green border
-      color: '#065F46', // Dark green text
+      backgroundColor: '#10B98133',
+      border: '1px solid #10B981',
+      color: '#065F46',
       fontWeight: 'bold' as const,
     },
   };
 
   // Function to check if a date has available slots
   const hasAvailableSlots = (date: Date) => {
-    const dateStr = date.toISOString().split('T')[0];
+    const dateStr = format(normalizeToUTC(date), 'yyyy-MM-dd');
     return datesWithSlots.has(dateStr);
+  };
+
+  // Disabled dates for calendar
+  const isDateDisabled = (date: Date) => {
+    const utcDate = normalizeToUTC(date);
+    const today = normalizeToUTC(new Date());
+    const futureLimit = new Date(today);
+    futureLimit.setDate(futureLimit.getDate() + 30);
+
+    return utcDate < today || utcDate > futureLimit;
   };
 
   if (!appointment) {
@@ -289,7 +268,7 @@ export function ScheduleDialog({
                 <span className="font-medium">
                   {appointment.ConsultationDate
                     ? format(
-                        new Date(appointment.ConsultationDate),
+                        parseISO(appointment.ConsultationDate),
                         'MMMM d, yyyy'
                       )
                     : 'No date selected'}
@@ -318,10 +297,7 @@ export function ScheduleDialog({
                   selected={selectedDate}
                   onSelect={setSelectedDate}
                   className="rounded-md"
-                  disabled={(date) =>
-                    date < new Date() ||
-                    date > new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-                  }
+                  disabled={isDateDisabled}
                   modifiers={{
                     hasSlots: (date) => hasAvailableSlots(date),
                   }}
@@ -404,7 +380,6 @@ export function ScheduleDialog({
                                     <span className="text-xs text-muted-foreground">
                                       to {formatTime(slot.SlotEndTime)}
                                     </span>
-                                    <small>{slot.ConsultantID}</small>
                                   </div>
                                   {getSlotStatusIcon(slot)}
                                 </Button>

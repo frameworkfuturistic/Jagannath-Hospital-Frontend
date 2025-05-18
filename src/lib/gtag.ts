@@ -1,3 +1,10 @@
+// Extend the Window interface to include gtag
+declare global {
+  interface Window {
+    gtag?: (...args: any[]) => void;
+  }
+}
+
 // Define the interface for trackEvent parameters
 interface TrackEventParams {
     action: string;

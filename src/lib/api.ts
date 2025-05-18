@@ -187,6 +187,20 @@ export const fetchSlots = async (
   }
 };
 
+export const fetchConsultantSlots = async (
+  consultantId: number,
+): Promise<Slot[]> => {
+  try {
+    const response = await api.get<{ data: Slot[] }>(
+      `/slots/${consultantId}`
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error('Error fetching slots for reschedule:', error);
+    throw error;
+  }
+};
+
 export const fetchAvailableSlotsForReschedule = async (
   consultantId: number,
   date: string | null,

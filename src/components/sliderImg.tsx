@@ -174,7 +174,7 @@ export function CarouselDemo() {
                 >
                   <Image
                     src={heroImages[currentHeroImage]}
-                    alt={`Hospital Facility ${currentHeroImage + 1}`}
+                    alt={`Hospital Facility `}
                     fill
                     loading="lazy"
                     style={{ objectFit: 'cover' }}
