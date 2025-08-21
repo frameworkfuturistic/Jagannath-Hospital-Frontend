@@ -8,9 +8,16 @@ import { DashboardStatstypes } from '@/types/types';
 import { useDashboardData } from '@/context/useDashboardData';
 
 export default function DashboardStats() {
-  const { stats, loading, timeRange, setTimeRange, formattedDate } =
-    useDashboardData();
+  const {
+    stats,
+    loading,
+    timeRange,
+    setTimeRange,
+    formattedDate,
+    getRevenueForDate,
+  } = useDashboardData();
 
+  // console.log(stats);
   return (
     <div className="space-y-4">
       <Tabs
@@ -27,12 +34,12 @@ export default function DashboardStats() {
               </p>
             )}
           </div>
-          <TabsList>
+          {/* <TabsList>
             <TabsTrigger value="today">Today</TabsTrigger>
             <TabsTrigger value="week">Week</TabsTrigger>
             <TabsTrigger value="month">Month</TabsTrigger>
             <TabsTrigger value="year">Year</TabsTrigger>
-          </TabsList>
+          </TabsList> */}
         </div>
 
         <TabsContent value={timeRange}>
@@ -79,14 +86,15 @@ export default function DashboardStats() {
               loading={loading}
             />
             <StatsCard
-              title="Total Revenue"
-              subTitleOne=""
+              title="Revenue"
+              subTitleOne="Total"
               subTitleTwo=""
               subTitleThree=""
+              valueOne={formatCurrency(getRevenueForDate(new Date()))}
               value={formatCurrency(stats.totalRevenue)}
               icon="IndianRupee"
               trend={stats.revenueChange}
-              description="from last period"
+              description="today"
               loading={loading}
             />
           </div>

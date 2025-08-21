@@ -30,6 +30,8 @@ export function useDashboardData() {
   const [timeRange, setTimeRange] = useState<TimeRange>('today');
   const [lastRefresh, setLastRefresh] = useState<number>(0);
 
+  // console.log("data",data);
+
   const fetchData = useCallback(async (forceRefresh = false) => {
     try {
       setLoading(true);
@@ -111,13 +113,15 @@ export function useDashboardData() {
     fullSlots: parseInt(data?.slots.availability.full || '0'),
     activeDoctors: data?.slots.byConsultant.length || 0,
     totalDoctors: data?.slots.byConsultant.length || 0,
-    totalRevenue: calculateTotalRevenue(data?.appointments.latestAppointments || []),
+    totalRevenue: Number(data?.appointments.revenueStats?.total || 0),
     appointmentsChange: 0,
     slotsChange: parseFloat(data?.slots.availability.utilizationRate || '0'),
     revenueChange: timeBasedMetrics?.revenueChange || 0,
     recentAppointments: data?.appointments.latestAppointments.slice(0, 5) || [],
     upcomingAppointments: getUpcomingAppointments(data?.appointments.latestAppointments || []),
   }), [data, timeBasedMetrics]);
+
+  // console.log(stats);
 
   return {
     data,
@@ -129,6 +133,19 @@ export function useDashboardData() {
     setTimeRange,
     refetch: () => fetchData(true),
     lastRefresh,
+    getRevenueForDate: (target: Date): number => {
+      if (!data) return 0;
+      // Prefer dailyTrends if available
+      const trends = data.appointments.dailyTrends || [];
+      const match = trends.find(t => isSameDay(new Date(t.date), target));
+      if (match) return Number(parseFloat(match.dailyRevenue) || 0);
+
+      // Fallback: sum from appointments of that date
+      const appts = (data.appointments.latestAppointments || []).filter(appt =>
+        isSameDay(new Date(appt.ConsultationDate), target)
+      );
+      return calculateTotalRevenue(appts);
+    },
   };
 }
 
@@ -144,4 +161,8 @@ function getUpcomingAppointments(appointments: any[]): any[] {
     .filter(appt => new Date(appt.ConsultationDate) > now)
     .sort((a, b) => new Date(a.ConsultationDate).getTime() - new Date(b.ConsultationDate).getTime())
     .slice(0, 5);
+}
+
+function isSameDay(a: Date, b: Date): boolean {
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 }

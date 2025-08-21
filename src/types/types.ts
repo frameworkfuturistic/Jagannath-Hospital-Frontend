@@ -193,6 +193,11 @@ export  interface DashboardDataStats {
       completed: string;
       dailyRevenue: string;
     }[];
+    // Optional aggregate revenue stats (backend may provide this)
+    revenueStats?: {
+      total: string;
+      avgRevenue?: string;
+    };
   };
   timestamp: string;
 }

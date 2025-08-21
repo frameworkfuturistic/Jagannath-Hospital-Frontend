@@ -19,6 +19,7 @@ const heroImages = [
   '/sliderPic/min.png',
   '/sliderPic/newreception.png',
   '/sliderPic/sjhrchos1.png',
+  '/sliderPic/sjhrc_banner_l.jpg',
 ];
 
 const specialties = [

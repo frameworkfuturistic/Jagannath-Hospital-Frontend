@@ -1,8 +1,8 @@
+'use client';
 // eslint-disable-next-line
 // @ts-nocheck
-'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import {
@@ -62,7 +62,6 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import axios from 'axios';
 import axiosInstance from '@/lib/axiosInstance';
 
 interface ConsultantSchedule {
@@ -78,6 +77,14 @@ interface ConsultantSchedule {
   createdAt: string;
   updatedAt: string;
 }
+
+// Form model: use boolean[] for checkbox group
+type ScheduleForm = Omit<
+  ConsultantSchedule,
+  '_id' | 'days' | 'createdAt' | 'updatedAt'
+> & {
+  days: boolean[];
+};
 
 const DAYS_OF_WEEK = [
   'Monday',
@@ -145,9 +152,14 @@ function ScheduleManagementContent() {
     reset,
     setValue,
     formState: { errors },
-  } = useForm<ConsultantSchedule>({
+  } = useForm<ScheduleForm>({
     defaultValues: {
-      days: ['Monday'],
+      consultantName: '',
+      departmentName: '',
+      designation: '',
+      opdTiming: { from: '', to: '' },
+      // Monday selected by default
+      days: DAYS_OF_WEEK.map((day) => day === 'Monday'),
     },
   });
 
@@ -159,13 +171,14 @@ function ScheduleManagementContent() {
     queryKey: ['schedules'],
     queryFn: async () => {
       const response = await axiosInstance.get('/consultant');
-      return response;
+      return response.data ?? response;
     },
   });
 
   const createScheduleMutation = useMutation({
-    mutationFn: (newSchedule: Omit<ConsultantSchedule, '_id'>) =>
-      axiosInstance.post('/consultant', newSchedule),
+    mutationFn: (
+      newSchedule: Omit<ConsultantSchedule, '_id' | 'createdAt' | 'updatedAt'>
+    ) => axiosInstance.post('/consultant', newSchedule),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['schedules'] });
       setIsDialogOpen(false);
@@ -174,7 +187,10 @@ function ScheduleManagementContent() {
   });
 
   const updateScheduleMutation = useMutation({
-    mutationFn: (updatedSchedule: ConsultantSchedule) =>
+    // For update, backend can derive timestamps; exclude them from required payload
+    mutationFn: (
+      updatedSchedule: Omit<ConsultantSchedule, 'createdAt' | 'updatedAt'>
+    ) =>
       axiosInstance.put(`/consultant/${updatedSchedule._id}`, updatedSchedule),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['schedules'] });
@@ -193,12 +209,18 @@ function ScheduleManagementContent() {
     },
   });
 
-  const onSubmit = async (data: ConsultantSchedule) => {
-    const selectedDays = DAYS_OF_WEEK.filter((_, index) => data.days[index]);
+  const onSubmit = async (data: ScheduleForm) => {
+    const selectedDays: string[] = DAYS_OF_WEEK.filter(
+      (_, index) => data.days[index]
+    );
     const scheduleData = {
       ...data,
       days: selectedDays,
     };
+
+    console.log('[Schedule] onSubmit payload', scheduleData, {
+      editingSchedule,
+    });
 
     if (editingSchedule) {
       updateScheduleMutation.mutate({
@@ -211,6 +233,7 @@ function ScheduleManagementContent() {
   };
 
   const openDialog = (schedule?: ConsultantSchedule) => {
+    console.log('[Schedule] openDialog', schedule);
     if (schedule) {
       setEditingSchedule(schedule);
       reset({
@@ -219,7 +242,13 @@ function ScheduleManagementContent() {
       });
     } else {
       setEditingSchedule(null);
-      reset({ days: DAYS_OF_WEEK.map((day) => day === 'Monday') });
+      reset({
+        consultantName: '',
+        departmentName: '',
+        designation: '',
+        opdTiming: { from: '', to: '' },
+        days: DAYS_OF_WEEK.map((day) => day === 'Monday'),
+      });
     }
     setIsDialogOpen(true);
   };
@@ -230,6 +259,7 @@ function ScheduleManagementContent() {
   };
 
   const deleteSchedule = async () => {
+    console.log('[Schedule] deleteSchedule', { scheduleToDelete });
     if (scheduleToDelete) {
       deleteScheduleMutation.mutate(scheduleToDelete);
     }
@@ -265,9 +295,19 @@ function ScheduleManagementContent() {
     );
   }, [sortedSchedules, filterDepartment]);
 
+  useEffect(() => {
+    console.log('[Schedule] query state', {
+      isLoading,
+      error,
+      schedulesLength: schedules?.length,
+      schedules,
+    });
+  }, [isLoading, error, schedules]);
+
   const tableHeaderVariants = {
     hover: { backgroundColor: '#f0f9ff', transition: { duration: 0.2 } },
   };
+  console.log(filteredSchedules);
 
   const SkeletonRow = () => (
     <TableRow>
@@ -293,7 +333,7 @@ function ScheduleManagementContent() {
   );
 
   return (
-    <ErrorBoundary fallback={<ErrorFallback />}>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
       <main className="flex-1 overflow-hidden flex flex-col">
         <div className="flex-1 overflow-auto p-4 md:p-6 space-y-6">
           <div className="">
@@ -748,12 +788,13 @@ function ScheduleManagementContent() {
                                 <Controller
                                   name={`days.${index}`}
                                   control={control}
-                                  defaultValue={false}
                                   render={({ field }) => (
                                     <Checkbox
                                       id={day}
-                                      checked={field.value}
-                                      onCheckedChange={field.onChange}
+                                      checked={Boolean(field.value)}
+                                      onCheckedChange={(val) =>
+                                        field.onChange(Boolean(val))
+                                      }
                                     />
                                   )}
                                 />

@@ -5,22 +5,14 @@ import {
   ArrowUpCircleIcon,
   BarChartIcon,
   CalendarDays,
-  CalendarPlus,
-  CalendarRange,
   CameraIcon,
   ClipboardListIcon,
   Clock,
   DatabaseIcon,
-  FileCodeIcon,
   FileIcon,
-  FileTextIcon,
   FolderIcon,
-  HelpCircleIcon,
   InboxIcon,
   LayoutDashboardIcon,
-  ListIcon,
-  SearchIcon,
-  SettingsIcon,
   UsersIcon,
 } from 'lucide-react';
 
@@ -86,9 +78,14 @@ const data = {
       icon: UsersIcon,
     },
     {
-      title: 'Job Application',
+      title: 'Job Applications',
       icon: CameraIcon,
       url: '/dashboard/JobApplications',
+    },
+    {
+      title: 'Schedule Management',
+      icon: CameraIcon,
+      url: '/dashboard/masters/schedule',
     },
   ],
 
@@ -123,7 +120,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             >
               <a href="#">
                 <ArrowUpCircleIcon className="h-5 w-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
+                <span className="text-base font-semibold">SJHRC DASHBOARD</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
