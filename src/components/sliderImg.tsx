@@ -16,10 +16,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 const heroImages = [
-  '/sliderPic/min.png',
-  '/sliderPic/newreception.png',
-  '/sliderPic/sjhrchos1.png',
-  '/sliderPic/sjhrc_banner_l.jpg',
+  '/sliderPic/1s-min.jpg',
+  '/sliderPic/sjhrc photo 1_11zon.png',
+  '/sliderPic/sjhrc photo 2.png',
+  '/sliderPic/4s.webp',
 ];
 
 const specialties = [

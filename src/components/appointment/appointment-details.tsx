@@ -50,6 +50,18 @@ export default function AppointmentDetails({
     }
   };
 
+    const formatTime = (timeString: string) => {
+      try {
+        const [hours, minutes] = timeString.split(':');
+        const date = new Date();
+        date.setHours(Number(hours));
+        date.setMinutes(Number(minutes));
+        return format(date, 'h:mm a');
+      } catch {
+        return timeString;
+      }
+    };
+
   // const handlePrint = () => {
   //   window.print();
   // };
@@ -126,7 +138,7 @@ export default function AppointmentDetails({
           </div>
           <div className="space-y-1">
             <p className="text-sm text-gray-500">Slot Time</p>
-            <p className="font-medium">{appointment.SlotTime || 'N/A'}</p>
+            <p className="font-medium">{formatTime(appointment.SlotTime) || 'N/A'}</p>
           </div>
         </div>
       </div>

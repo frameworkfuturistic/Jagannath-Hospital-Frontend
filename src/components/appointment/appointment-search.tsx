@@ -211,6 +211,17 @@ export default function AppointmentSearch() {
       toast.error('Failed to display appointment details');
     }
   };
+    const formatTime = (timeString: string) => {
+      try {
+        const [hours, minutes] = timeString.split(':');
+        const date = new Date();
+        date.setHours(Number(hours));
+        date.setMinutes(Number(minutes));
+        return format(date, 'h:mm a');
+      } catch {
+        return timeString;
+      }
+    };
 
   const downloadReceipt = (appointment: Appointment) => {
     try {
@@ -292,7 +303,7 @@ export default function AppointmentSearch() {
       y += lineHeight;
       doc.setFont('helvetica', 'normal');
       doc.text(`Department: ${appointment.DepartmentName || 'N/A'}`, margin, y);
-      doc.text(`Time: ${appointment.SlotTime}`, pageWidth / 2, y);
+      doc.text(`Time: ${formatTime(appointment.SlotTime)}`, pageWidth / 2, y);
       y += lineHeight;
       doc.text(`Doctor: ${appointment.ConsultantName || 'N/A'}`, margin, y);
       doc.text(

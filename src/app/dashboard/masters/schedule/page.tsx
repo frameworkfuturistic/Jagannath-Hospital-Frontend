@@ -111,6 +111,8 @@ const DEPARTMENTS = [
   'Bio-Chemistry',
   'Pathology',
   'Emergency & Trauma',
+  'Urology',
+  'Obs & Gynae',
 ];
 
 const queryClient = new QueryClient();

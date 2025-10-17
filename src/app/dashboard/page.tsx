@@ -19,6 +19,14 @@ import {
 import { Search, ChevronDown, ChevronUp } from 'lucide-react';
 import axiosInstance from '@/lib/axiosInstance';
 import { Input } from '@/components/ui/input';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -201,7 +209,7 @@ export default function AdvancedDoctorDashboard() {
           <CardHeader>
             <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
               <div>
-                <CardTitle className="text-lg font-medium">Queries</CardTitle>
+                <CardTitle className="text-lg font-medium">QueriesX</CardTitle>
                 <CardDescription>Manage and respond inquiries</CardDescription>
               </div>
               <div className="flex space-x-2">
@@ -259,8 +267,8 @@ export default function AdvancedDoctorDashboard() {
                           </div>
                         </TableHead>
                         <TableHead>Phone</TableHead>
-                        <TableHead>Query</TableHead>
-                        <TableHead
+                        <TableHead>QueryX</TableHead>
+                        {/* <TableHead
                           className="cursor-pointer hover:bg-accent"
                           onClick={() => handleSort('status')}
                         >
@@ -273,7 +281,7 @@ export default function AdvancedDoctorDashboard() {
                                 <ChevronDown className="ml-1 h-4 w-4" />
                               ))}
                           </div>
-                        </TableHead>
+                        </TableHead> */}
                         <TableHead
                           className="cursor-pointer hover:bg-accent"
                           onClick={() => handleSort('createdAt')}
@@ -304,9 +312,19 @@ export default function AdvancedDoctorDashboard() {
                           </TableCell>
                           <TableCell>{contact.phone}</TableCell>
                           <TableCell className="max-w-[200px] truncate">
-                            {contact.query}
+                            <Dialog>
+                              <DialogTrigger>view query</DialogTrigger>
+                              <DialogContent>
+                                <DialogHeader>
+                                  <DialogTitle>Query</DialogTitle>
+                                  <DialogDescription>
+                                    {contact.query}
+                                  </DialogDescription>
+                                </DialogHeader>
+                              </DialogContent>
+                            </Dialog>
                           </TableCell>
-                          <TableCell>{getStatusBadge('new')}</TableCell>
+                          {/* <TableCell>{getStatusBadge('new')}</TableCell> */}
 
                           <TableCell className="text-muted-foreground">
                             {formatDate(contact.createdAt)}
